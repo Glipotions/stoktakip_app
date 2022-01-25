@@ -75,13 +75,18 @@ class APIServices {
   }
 
   static Future fetchUrunIdByBarcode(String barkod) async {
-    Uri barkodUrl = Uri.parse('$urunBarkodBilgileriGetUrunUrl$barkod');
-    return await http.get(barkodUrl);
+    Uri urunUrl = Uri.parse('$urunBarkodBilgileriGetUrunUrl$barkod');
+    return await http.get(urunUrl);
   }
 
   static Future fetchUrunById(int? id) async {
-    Uri barkodUrl = Uri.parse('$urunGetByIdUrl$id');
-    return await http.get(barkodUrl);
+    Uri urunUrl = Uri.parse('$urunGetByIdUrl$id');
+    return await http.get(urunUrl);
+  }
+
+  static Future fetchUrunByCode(String? code) async {
+    Uri urunUrl = Uri.parse('$urunGetByCodeUrl$code');
+    return await http.get(urunUrl);
   }
 
   static Future getUrunById(UrunBilgileri cart) async {
@@ -98,15 +103,26 @@ class APIServices {
     return urunAdi;
   }
 
+  static Future updateUrunStokById(int id, int stok) async {
+    var url = Uri.parse('${updateUrunById}${id}&stok=${stok}');
+    var res = await http.patch(url);
+    print("ürün stok update result kod: ${res.statusCode}");
+    return res.statusCode;
+  }
+
   static Future updateCariBakiyeById(int id, double bakiye) async {
+    // Map<String, String> header = {
+    //   'Content-type': 'application/json-patch+json',
+    //   'Accept': '*/*'
+    // };
     Map<String, String> header = {
-      'Content-type': 'application/json-patch+json',
-      'Accept': '*/*'
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
     };
     var url = Uri.parse('${updateCariHesapBakiyeById}${id}&bakiye=${bakiye}');
-    return await http.put(url, headers: header);
-    // var res = await http.post(url, headers: header);
-    // print(res.statusCode);
-    // return res.statusCode;
+    // return await http.put(url, headers: header);
+    var res = await http.patch(url);
+    print("Cari Bakiye result kod: ${res.statusCode}");
+    return res.statusCode;
   }
 }

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/constants.dart';
-import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/kdv_data.dart';
@@ -26,7 +23,7 @@ class CheckoutCard extends StatefulWidget {
 class _CheckoutCardState extends State<CheckoutCard> {
   bool isCheckedKdv = false, isCheckedIskonto = false;
   double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
-  int _iskontoOrani = 0;
+  double _iskontoOrani = 0;
   var kdvController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
@@ -81,15 +78,14 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           }
                         } else {
                           for (var item in urunBilgileriList) {
-                            _iskontoOrani =
-                                _currentSliderValue.round(); //değişecek
+                            _iskontoOrani = _currentSliderValue; //değişecek
                           }
                         }
                       });
                     },
                   ),
                 ),
-                Flexible(flex: 2, child: const Text("İskonto")),
+                const Flexible(flex: 2, child: Text("İskonto")),
                 SizedBox(width: getProportionateScreenWidth(10)),
                 const Icon(
                   Icons.arrow_forward_ios,
@@ -108,9 +104,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     onChanged: (double value) {
                       setState(() {
                         _currentSliderValue = value;
-                        _iskontoOrani = isCheckedIskonto == false
-                            ? 0
-                            : _currentSliderValue.round();
+                        _iskontoOrani =
+                            isCheckedIskonto == false ? 0 : _currentSliderValue;
                       });
                     },
                   ),
@@ -190,8 +185,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       satisFaturaNew.cariHesapId = cariHesapSingle.id!;
                       satisFaturaNew.id = urunBilgileriList.first.satisFaturaId;
                       satisFaturaNew.kod = "Flutter-00003";
-                      satisFaturaNew.dovizTutar =
-                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                      satisFaturaNew.dovizTutar = 0;
                       satisFaturaNew.iskontoOrani = _iskontoOrani;
                       satisFaturaNew.iskontoTutari =
                           iskontoTutarHesap(urunBilgileriList, _iskontoOrani);
@@ -202,19 +196,33 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       satisFaturaNew.tarih = DateTime.now();
                       satisFaturaNew.kdvTutari =
                           kdvHesapla(urunBilgileriList, _iskontoOrani);
+
+                      isCheckedKdv
+                          ? satisFaturaNew.faturaKdvOrani = kdvOrani.toDouble()
+                          : 0;
+                      isCheckedKdv
+                          ? satisFaturaNew.kdvSekli = 1
+                          : satisFaturaNew.kdvSekli = 2;
                       await APIServices.postSatisFatura(satisFaturaNew);
                       print('SatisFatura Eklendi');
 
-                      // cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
-                      //     totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      // await APIServices.updateCariBakiyeById(
-                      //     cariHesapSingle.id!, cariHesapSingle.bakiye!);
-                      // print('Cari Hesap Bakiye Güncellendi.');
+                      cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
+                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                      await APIServices.updateCariBakiyeById(
+                          cariHesapSingle.id!, cariHesapSingle.bakiye!);
+                      print('Cari Hesap Bakiye Güncellendi.');
 
-                      for (int i = 0; i < urunBilgileriList.length; i++) {
-                        await APIServices.postUrunBilgileri(
-                            urunBilgileriList[i]);
+                      for (var urun in urunBilgileriList) {
+                        await APIServices.updateUrunStokById(
+                            urun.urunId, urun.miktar);
+
+                        await APIServices.postUrunBilgileri(urun);
                       }
+                      // for (int i = 0; i < urunBilgileriList.length; i++) {
+                      //   await APIServices.postUrunBilgileri(
+                      //       urunBilgileriList[i]);
+                      // }
+
                       urunBilgileriList.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);

@@ -6,7 +6,7 @@ import 'package:stoktakip_app/model/urun_bilgileri.dart';
 // }
 double sonuc = 0;
 
-double kdvHesapla(List<UrunBilgileri> urun, int iskonto) {
+double kdvHesapla(List<UrunBilgileri> urun, double iskonto) {
   for (var i = 0; i < urun.length; i++) {
     sonuc = iskontoluTutariHesapla(urun, iskonto) * urun[i].kdvOrani / 100;
   }
@@ -21,16 +21,16 @@ double totalTutarHesapla(List<UrunBilgileri> urun) {
   return sonuc;
 }
 
-double iskontoTutarHesap(List<UrunBilgileri> urun, int iskontoOrani) {
+double iskontoTutarHesap(List<UrunBilgileri> urun, double iskontoOrani) {
   return sonuc = (totalTutarHesapla(urun) * iskontoOrani) / 100;
 }
 
-double iskontoluTutariHesapla(List<UrunBilgileri> urun, int iskontoOrani) {
+double iskontoluTutariHesapla(List<UrunBilgileri> urun, double iskontoOrani) {
   return sonuc =
       totalTutarHesapla(urun) - iskontoTutarHesap(urun, iskontoOrani);
 }
 
-double totalTutarwithKdv(List<UrunBilgileri> urun, int iskontoOrani) {
+double totalTutarwithKdv(List<UrunBilgileri> urun, double iskontoOrani) {
   for (var i = 0; i < urun.length; i++) {
     sonuc = iskontoluTutariHesapla(urun, iskontoOrani) +
         iskontoluTutariHesapla(urun, iskontoOrani) * urun[i].kdvOrani / 100;

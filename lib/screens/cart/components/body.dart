@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 import 'cart_card.dart';

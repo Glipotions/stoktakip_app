@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,15 +32,18 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   var formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
       kdvHaricTutarController = TextEditingController(),
+      urunKoduController = TextEditingController(),
       urunAdiController = TextEditingController(),
       birimFiyatController = TextEditingController(),
       miktarController = TextEditingController(),
       adetController = TextEditingController();
+  final _adetFocus = FocusNode();
 
   @override
   void dispose() {
     barkodController.dispose();
     kdvHaricTutarController.dispose();
+    urunKoduController.dispose();
     urunAdiController.dispose();
     birimFiyatController.dispose();
     miktarController.dispose();
@@ -89,9 +91,11 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
               // buildIdBuild(),
               buildBarcode(),
               SizedBox(height: getProportionateScreenHeight(10)),
+              buildUrunKodu(),
+              SizedBox(height: getProportionateScreenHeight(10)),
               buildUrunAdi(),
               SizedBox(height: getProportionateScreenHeight(10)),
-              buildBirimAdedi(),
+              buildBirimFiyati(),
               SizedBox(height: getProportionateScreenHeight(10)),
               buildAdet(),
               // buildKdvHaricToplamTutar(),
@@ -114,17 +118,17 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       child: Row(
         children: [
           Flexible(
-            flex: 6,
+            flex: 5,
             fit: FlexFit.tight,
             child: TextFormField(
-              style: kMetinStili,
+              style: kFontStili(12),
               onEditingComplete: () async {
                 await getUrunIdByBarcode();
                 await getUrunById();
               },
               controller: barkodController,
               decoration: const InputDecoration(
-                  labelText: "Barkod Okutunuz.",
+                  labelText: "Barkod",
                   icon: Icon(Icons.qr_code_scanner_outlined)),
               validator: (val) {
                 if (val!.isEmpty) {
@@ -144,12 +148,39 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             child: ElevatedButton.icon(
               onPressed: scanBarcode,
               icon: const Icon(Icons.camera_alt_outlined),
-              label: const Text('Tara'),
+              label: Text('Tara', style: kFontStili(12)),
               style: ElevatedButton.styleFrom(
                   primary: Colors.amber, onPrimary: Colors.black),
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget buildUrunKodu() {
+    return Container(
+      key: UniqueKey(),
+      height: 60,
+      // decoration: BoxDecorationSettings(),
+      // color: Colors.orangeAccent,
+      child: TextFormField(
+        onEditingComplete: () async {
+          await getUrunByCode();
+        },
+        decoration: const InputDecoration(
+            labelText: "Ürün Kodu",
+            icon: Icon(Icons.paste_rounded),
+            border: InputBorder.none),
+        controller: urunKoduController,
+        style: kFontStili(16),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Ürün Kodu Boş Bırakılamaz";
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }
@@ -167,12 +198,19 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             border: InputBorder.none),
         controller: urunAdiController,
         readOnly: true,
-        style: kMetinStili,
+        style: kFontStili(13),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Ürün Adı Boş Bırakılamaz";
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }
 
-  Widget buildBirimAdedi() {
+  Widget buildBirimFiyati() {
     return Container(
       key: UniqueKey(),
       height: 60,
@@ -183,8 +221,16 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             icon: Icon(Icons.money),
             border: InputBorder.none),
         controller: birimFiyatController,
+        focusNode: _adetFocus,
         readOnly: true,
         style: kMetinStili,
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Birim Fiyatı Boş Bırakılamaz";
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }
@@ -243,6 +289,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           text: "Ekle",
           press: () {
             formKey.currentState!.save();
+
             _birimFiyat = double.parse(birimFiyatController.text);
             _miktar = int.parse(adetController.text);
             _kdvHaricTutar = _miktar! * _birimFiyat!;
@@ -251,17 +298,24 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
                 urunId: _urunId!,
                 // satisFaturaId: 1,
                 satisFaturaId: _satisFaturaId!,
+                birimFiyat: _birimFiyat!,
                 kdvHaricTutar: _kdvHaricTutar!,
                 miktar: _miktar!,
-                dovizliBirimFiyat: _birimFiyat != null ? _birimFiyat! : 1,
+                dovizliBirimFiyat: 0,
                 kdvOrani: 0,
                 tutar: _kdvHaricTutar! + _kdvTutari!,
                 kdvTutari: 0,
-                urunAdi: urunAdiController.text);
+                urunAdi: urunAdiController.text,
+                urunKodu: urunKoduController.text);
             print("Satış Fatura ID: ${_satisFaturaId}");
             urunBilgileriList.add(urunBilgileri);
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             (context as Element).reassemble();
+            adetController.clear();
+            urunAdiController.clear();
+            urunKoduController.clear();
+            barkodController.clear();
+            birimFiyatController.clear();
           },
         ),
       ),
@@ -287,7 +341,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   Future scanBarcode() async {
     barkodController.text = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", "İptal", false, ScanMode.DEFAULT);
-    getUrunIdByBarcode();
+    await getUrunIdByBarcode();
+    await getUrunById();
   }
 
   Future getUrunIdByBarcode() async {
@@ -317,7 +372,23 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         for (var element in urun) {
           urunAdiController.text = element.urunAdi;
           birimFiyatController.text = element.fiyat.toString();
-          print('Get ürün by id döngü');
+          urunKoduController.text = element.urunKodu;
+        }
+      });
+    });
+  }
+
+  Future getUrunByCode() async {
+    await APIServices.fetchUrunByCode(urunKoduController.text).then((response) {
+      setState(() {
+        dynamic list = json.decode(response.body);
+        List data = list;
+        // List data = list['data'];
+        urun = data.map((model) => Urun.fromJson(model)).toList();
+        for (var element in urun) {
+          urunAdiController.text = element.urunAdi;
+          birimFiyatController.text = element.fiyat.toString();
+          _urunId = element.id;
         }
       });
     });

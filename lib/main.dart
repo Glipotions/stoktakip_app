@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/model/kdv_data.dart';
 import 'package:stoktakip_app/routes.dart';
-import 'package:stoktakip_app/screens/cari_hesap/cari_hesap_list.dart';
+import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/theme.dart';
-
-import 'size_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,8 +24,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme(),
-      home: CariHesapList(),
-      initialRoute: CariHesapList.routeName,
+      home: FaturaOlustur(),
+      initialRoute: FaturaOlustur.routeName,
       routes: routes,
     );
   }

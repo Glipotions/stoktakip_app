@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
-import 'package:stoktakip_app/components/default_button.dart';
-import 'package:stoktakip_app/const/constants.dart';
-import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
-import 'package:stoktakip_app/model/kdv_data.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 
 import '../../../size_config.dart';

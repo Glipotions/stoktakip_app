@@ -1,6 +1,9 @@
-const host = '10.0.2.2:5001/api/';
-const https = 'https://';
-const mainUrl = 'https://10.0.2.2:5001/api/';
+// const host = '192.168.1.200:8081/api/';
+// const host = '10.0.2.2:5001/api/';
+const host = '192.168.1.129:8082/api/';
+// const host = 'stoktakip.local/api';
+const http = 'http://';
+const mainUrl = 'http://${host}';
 
 const satisFaturaAddUrl = '${mainUrl}SatisFatura';
 Uri satisFaturaGetUrl = Uri.http(host, 'satisfatura/getall');
@@ -20,6 +23,8 @@ Uri urunBarkodBilgileriGetUrunUri =
     Uri.parse('${mainUrl}UrunBarkodBilgileri/getbybarcode?barkod=');
 
 const urunGetByIdUrl = '${mainUrl}Urun/getbyid?id=';
+const urunGetByCodeUrl = '${mainUrl}Urun/getbycode?code=';
+const updateUrunById = '${mainUrl}Urun/updateurunbyid?id=';
 
 const updateCariHesapBakiyeById =
     '${mainUrl}CariHesap/updatecaribakiyebyid?id=';

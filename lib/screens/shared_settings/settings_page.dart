@@ -70,7 +70,7 @@ class _SwitchCardState extends State<SwitchCard> {
                   },
                 ),
                 Text("Oran: ${_currentSliderValue.round().toString()}",
-                    style: kSayiStili),
+                    style: kMetinStili),
               ],
             ),
           ),

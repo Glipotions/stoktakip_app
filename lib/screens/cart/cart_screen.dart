@@ -1,5 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:stoktakip_app/model/kdv_data.dart';
+import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 // import 'package:shop_app/models/Cart.dart';
@@ -24,14 +25,28 @@ class CartScreen extends StatelessWidget {
     return AppBar(
       title: Column(
         children: [
-          Text(
+          const Text(
             "Sepet",
             style: TextStyle(color: Colors.black),
           ),
-          Text(
-            "${urunBilgileriList.length} ürün",
-            style: Theme.of(context).textTheme.caption,
-          ),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "${urunBilgileriList.length} ürün",
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                TextSpan(
+                    text: '  Sepeti Temizle',
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        urunBilgileriList.clear();
+                        Navigator.pop(context);
+                      }),
+              ],
+            ),
+          )
         ],
       ),
       actions: [

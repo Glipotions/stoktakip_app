@@ -2,8 +2,6 @@
 //
 //     final urun = urunFromJson(jsonString);
 
-import 'dart:convert';
-
 // List<Urun> urunFromJson(String str) => List<Urun>.from(json.decode(str).map((x) => Urun.fromJson(x)));
 
 // String urunToJson(List<Urun> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

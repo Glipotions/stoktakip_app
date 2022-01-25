@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:stoktakip_app/screens/cari_hesap/cari_hesap_list.dart';
+import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/cart/cart_screen.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/urun_bilgileri_add.dart';
@@ -18,7 +18,7 @@ final Map<String, WidgetBuilder> routes = {
   // DetailsScreen.routeName: (context) => DetailsScreen(),
   CartScreen.routeName: (context) => CartScreen(),
   UrunBilgileriAdd.routeName: (context) => UrunBilgileriAdd(),
-  CariHesapList.routeName: (context) => CariHesapList(),
+  FaturaOlustur.routeName: (context) => FaturaOlustur(),
   SettingsPage.routeName: (context) => SettingsPage(),
   // ProfileScreen.routeName: (context) => ProfileScreen(),
 };

@@ -16,11 +16,12 @@ class SatisFatura {
   DateTime tarih;
   int kdvSekli;
   double? kdvHaricTutar;
+  double? faturaKdvOrani;
   double? iskontoTutari;
   double? kdvTutari;
   double? toplamTutar;
   double? dovizTutar;
-  int? iskontoOrani;
+  double? iskontoOrani;
   String? aciklama;
   int odemeTipi;
   bool durum;
@@ -35,6 +36,7 @@ class SatisFatura {
     required this.dovizKuru,
     required this.tarih,
     required this.kdvSekli,
+    this.faturaKdvOrani,
     this.kdvHaricTutar,
     this.iskontoTutari,
     this.kdvTutari,
@@ -58,11 +60,12 @@ class SatisFatura {
         kdvSekli: json["kdvSekli"],
         kdvHaricTutar: json["kdvHaricTutar"].toDouble(),
         iskontoTutari: json["iskontoTutari"].toDouble(),
+        faturaKdvOrani: json["faturaKdvOrani"].toDouble(),
         kdvTutari: json["kdvTutari"].toDouble(),
         toplamTutar: json["toplamTutar"].toDouble(),
         aciklama: json["aciklama"],
         dovizTutar: json["dovizTutar"].toDouble(),
-        iskontoOrani: json["iskontoOrani"],
+        iskontoOrani: json["iskontoOrani"].toDouble(),
         odemeTipi: json["odemeTipi"],
         durum: json["durum"],
         id: json["id"],
@@ -77,6 +80,7 @@ class SatisFatura {
         "dovizKuru": dovizKuru,
         "tarih": tarih.toIso8601String(),
         "kdvSekli": kdvSekli,
+        "faturaKdvOrani": faturaKdvOrani,
         "kdvHaricTutar": kdvHaricTutar,
         "iskontoTutari": iskontoTutari,
         "kdvTutari": kdvTutari,

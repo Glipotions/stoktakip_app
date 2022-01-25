@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/constants.dart';
+import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/urun.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/size_config.dart';
@@ -33,6 +34,11 @@ class CartCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+              cart.urunKodu!,
+              style: kFontStili(13),
+              maxLines: 2,
+            ),
+            Text(
               cart.urunAdi!,
               style: const TextStyle(color: Colors.black, fontSize: 16),
               maxLines: 2,
@@ -40,7 +46,7 @@ class CartCard extends StatelessWidget {
             SizedBox(height: 10),
             Text.rich(
               TextSpan(
-                text: "₺${cart.dovizliBirimFiyat}",
+                text: "₺${cart.birimFiyat}",
                 style: const TextStyle(
                     fontWeight: FontWeight.w600, color: kPrimaryColor),
                 children: [
