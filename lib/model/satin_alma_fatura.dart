@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-List<SatisFatura> satisFaturaFromJson(String str) => List<SatisFatura>.from(
-    json.decode(str).map((x) => SatisFatura.fromJson(x)));
+List<SatinAlmaFatura> SatinAlmaFaturaFromJson(String str) =>
+    List<SatinAlmaFatura>.from(
+        json.decode(str).map((x) => SatinAlmaFatura.fromJson(x)));
 
-String satisFaturaToJson(List<SatisFatura> data) =>
+String SatinAlmaFaturaToJson(List<SatinAlmaFatura> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class SatisFatura {
+class SatinAlmaFatura {
   String? kod;
   int cariHesapId;
   int? ozelKod1Id;
@@ -16,7 +17,7 @@ class SatisFatura {
   DateTime tarih;
   int kdvSekli;
   double? kdvHaricTutar;
-  double? faturaKdvOrani;
+  int? faturaKdvOrani;
   double? iskontoTutari;
   double? kdvTutari;
   double? toplamTutar;
@@ -27,7 +28,7 @@ class SatisFatura {
   bool durum;
   int id;
 
-  SatisFatura({
+  SatinAlmaFatura({
     this.kod,
     required this.cariHesapId,
     this.ozelKod1Id,
@@ -49,7 +50,8 @@ class SatisFatura {
     required this.id,
   });
 
-  factory SatisFatura.fromJson(Map<String, dynamic> json) => SatisFatura(
+  factory SatinAlmaFatura.fromJson(Map<String, dynamic> json) =>
+      SatinAlmaFatura(
         kod: json["kod"],
         cariHesapId: json["cariHesapId"],
         ozelKod1Id: json["ozelKod1Id"],

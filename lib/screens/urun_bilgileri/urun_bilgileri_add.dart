@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/text_const.dart';
+import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun.dart';
 import 'package:stoktakip_app/model/urun_barkod_bilgileri.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/screens/cart/cart_screen.dart';
+import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
+import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/components/check_out_card.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -54,7 +57,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   // List<UrunBilgileri> urunBilgileriList = [];
   var urunBarkodBilgileri = <UrunBarkodBilgileri>[];
   var urun = <Urun>[];
-  int? _urunId, _miktar, _tutar, _satisFaturaId = buildId();
+  int? _urunId, _miktar, _tutar, _faturaId = buildId();
   double? _birimFiyat, _kdvHaricTutar, _kdvTutari;
   // int kdvHaricTutar = _miktar * _birimFiyat;
 
@@ -63,7 +66,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Ürün Ekle",
+          "Sepete Ürün Ekle",
           style: kMetinStili,
         ),
         actions: [
@@ -76,7 +79,11 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
               //     builder: (context) => CartScreen(),
               //   ),
               // );
-              Navigator.pushNamed(context, CartScreen.routeName);
+              faturaDurum!
+                  ? Navigator.pushNamed(
+                      context, CartScreenSatisFatura.routeName)
+                  : Navigator.pushNamed(
+                      context, CartScreenSatinAlmaFatura.routeName);
             },
           ),
         ],
@@ -111,7 +118,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Widget buildBarcode() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       // decoration: BoxDecorationSettings(),
@@ -159,34 +166,41 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Widget buildUrunKodu() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       // decoration: BoxDecorationSettings(),
       // color: Colors.orangeAccent,
-      child: TextFormField(
-        onEditingComplete: () async {
-          await getUrunByCode();
-        },
-        decoration: const InputDecoration(
-            labelText: "Ürün Kodu",
-            icon: Icon(Icons.paste_rounded),
-            border: InputBorder.none),
-        controller: urunKoduController,
-        style: kFontStili(16),
-        validator: (val) {
-          if (val!.isEmpty) {
-            return "Ürün Kodu Boş Bırakılamaz";
-          } else {
-            return null;
+      child: FocusScope(
+        onFocusChange: (value) async {
+          if (!value) {
+            await getUrunByCode();
           }
         },
+        child: TextFormField(
+          onEditingComplete: () async {
+            await getUrunByCode();
+          },
+          decoration: const InputDecoration(
+              labelText: "Ürün Kodu",
+              icon: Icon(Icons.paste_rounded),
+              border: InputBorder.none),
+          controller: urunKoduController,
+          style: kFontStili(16),
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Ürün Kodu Boş Bırakılamaz";
+            } else {
+              return null;
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget buildUrunAdi() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       // decoration: BoxDecorationSettings(),
@@ -211,7 +225,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Widget buildBirimFiyati() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       // decoration: BoxDecorationSettings(),
@@ -236,7 +250,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Widget buildAdet() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       // decoration: BoxDecorationSettings(),
@@ -281,7 +295,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   // }
 
   Widget buildAddButton() {
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       height: 60,
       child: ButtonTheme(
@@ -294,21 +308,41 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             _miktar = int.parse(adetController.text);
             _kdvHaricTutar = _miktar! * _birimFiyat!;
             _kdvTutari = _miktar! * 0 / 100;
-            UrunBilgileri urunBilgileri = UrunBilgileri(
-                urunId: _urunId!,
-                // satisFaturaId: 1,
-                satisFaturaId: _satisFaturaId!,
-                birimFiyat: _birimFiyat!,
-                kdvHaricTutar: _kdvHaricTutar!,
-                miktar: _miktar!,
-                dovizliBirimFiyat: 0,
-                kdvOrani: 0,
-                tutar: _kdvHaricTutar! + _kdvTutari!,
-                kdvTutari: 0,
-                urunAdi: urunAdiController.text,
-                urunKodu: urunKoduController.text);
-            print("Satış Fatura ID: ${_satisFaturaId}");
-            urunBilgileriList.add(urunBilgileri);
+
+            if (faturaDurum!) {
+              UrunBilgileri urunBilgileri = UrunBilgileri(
+                  urunId: _urunId!,
+                  // satisFaturaId: 1,
+                  satisFaturaId: _faturaId!,
+                  birimFiyat: _birimFiyat!,
+                  kdvHaricTutar: _kdvHaricTutar!,
+                  miktar: _miktar!,
+                  dovizliBirimFiyat: 0,
+                  kdvOrani: 0,
+                  tutar: _kdvHaricTutar! + _kdvTutari!,
+                  kdvTutari: 0,
+                  urunAdi: urunAdiController.text,
+                  urunKodu: urunKoduController.text);
+              urunBilgileriList.add(urunBilgileri);
+            } else if (!faturaDurum!) {
+              UrunBilgileriSatinAlma urunBilgileriSatinAlma =
+                  UrunBilgileriSatinAlma(
+                      urunId: _urunId!,
+                      satinAlmaFaturaId: _faturaId!,
+                      birimFiyat: _birimFiyat!,
+                      kdvHaricTutar: _kdvHaricTutar!,
+                      miktar: _miktar!,
+                      dovizliBirimFiyat: 0,
+                      kdvOrani: 0,
+                      tutar: _kdvHaricTutar! + _kdvTutari!,
+                      kdvTutari: 0,
+                      urunAdi: urunAdiController.text,
+                      urunKodu: urunKoduController.text);
+              urunBilgileriSatinAlmaList.add(urunBilgileriSatinAlma);
+            }
+
+            print("Fatura ID: $_faturaId");
+
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             (context as Element).reassemble();
             adetController.clear();
@@ -394,7 +428,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     });
   }
 
-  BoxDecoration BoxDecorationSettings() {
+  BoxDecoration boxDecorationSettings() {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(10), color: Colors.green[200]);
   }

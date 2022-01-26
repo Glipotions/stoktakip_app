@@ -4,10 +4,12 @@ import 'dart:convert';
 
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/satin_alma_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/model/urun.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
 
 class APIServices {
   List<UrunBilgileri> fetchUrunBilgileri(String responseBody) {
@@ -17,24 +19,33 @@ class APIServices {
     return urunbilgileris;
   }
 
-  static Future postUrunBilgileri(UrunBilgileri urunBilgileri) async {
+  static Future postUrunBilgileri(UrunBilgileri entity) async {
     Map<String, String> header = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
     var url = Uri.parse(urunBilgileriAddUrl);
-    var myEntity = urunBilgileri.toJson();
+    var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
     print(res.statusCode);
     return res.statusCode;
   }
 
-  // List<CariHesap> fetchCariHesap(String responseBody) {
-  //   var l = json.decode(responseBody) as List<dynamic>;
-  //   var carihesaps = l.map((model) => CariHesap.fromJson(model)).toList();
-  //   return carihesaps;
-  // }
+  static Future postUrunBilgileriSatinAlma(
+      UrunBilgileriSatinAlma entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+    var url = Uri.parse(urunBilgileriSatinAlmaAddUrl);
+    var myEntity = entity.toJson();
+    var postBody = json.encode(myEntity);
+    var res = await http.post(url, headers: header, body: postBody);
+    print(res.statusCode);
+    return res.statusCode;
+  }
+
   static Future fetchSatisFatura() async {
     return await http.get(satisFaturaGetUrl);
   }
@@ -46,6 +57,19 @@ class APIServices {
     };
     var url = Uri.parse(satisFaturaAddUrl);
     var myEntity = satisFatura.toJson();
+    var postBody = json.encode(myEntity);
+    var res = await http.post(url, headers: header, body: postBody);
+    print("Satış Fatura result kod: ${res.statusCode}");
+    return res.statusCode;
+  }
+
+  static Future postSatinAlmaFatura(SatinAlmaFatura satinAlmaFatura) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json-patch+json',
+      'Accept': '*/*'
+    };
+    var url = Uri.parse(satinAlmaFaturaAddUrl);
+    var myEntity = satinAlmaFatura.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
     print(res.statusCode);
@@ -103,8 +127,8 @@ class APIServices {
     return urunAdi;
   }
 
-  static Future updateUrunStokById(int id, int stok) async {
-    var url = Uri.parse('${updateUrunById}${id}&stok=${stok}');
+  static Future updateUrunStokById(int id, int stok, bool durum) async {
+    var url = Uri.parse('$updateUrunById$id&stok=$stok&durum=$durum');
     var res = await http.patch(url);
     print("ürün stok update result kod: ${res.statusCode}");
     return res.statusCode;
@@ -112,14 +136,10 @@ class APIServices {
 
   static Future updateCariBakiyeById(int id, double bakiye) async {
     // Map<String, String> header = {
-    //   'Content-type': 'application/json-patch+json',
-    //   'Accept': '*/*'
+    //   'Content-type': 'application/json',
+    //   'Accept': 'application/json'
     // };
-    Map<String, String> header = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json'
-    };
-    var url = Uri.parse('${updateCariHesapBakiyeById}${id}&bakiye=${bakiye}');
+    var url = Uri.parse('$updateCariHesapBakiyeById$id&bakiye=$bakiye');
     // return await http.put(url, headers: header);
     var res = await http.patch(url);
     print("Cari Bakiye result kod: ${res.statusCode}");

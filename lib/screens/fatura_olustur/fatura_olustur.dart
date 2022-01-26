@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/services/api.services.dart';
-
 import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
 
@@ -66,69 +66,101 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        floatingActionButton: _buidFloatingButton(),
+        // floatingActionButton: _buidFloatingButton(),
         appBar: AppBar(
           title: const Text("Stok App"),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Text('data'),
-              DropdownButton(
-                hint: const Text('Firma Seçiniz'),
-                value: dropDownMenu,
-                items: cariHesap.map((cari) {
-                  return DropdownMenuItem(
-                    value: cari.id,
-                    child: Text(cari.firma.toString()),
-                  );
-                }).toList(),
-                onChanged: (newValue) async {
-                  setState(() {
-                    dropDownMenu = newValue;
-                    cariHesapSingle.id = int.parse(dropDownMenu.toString());
-                    // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
-                  });
-                  await getCariHesapById();
-                },
-              ),
-
-              // DropdownSearch<String>(
-              //     mode: Mode.MENU,
-              //     onFind: ,
-              //     label: 'Firma Seç',
-              //     hint: "Firma Seç",
-              //     popupItemDisabled: (String s) => s.startsWith('I'),
-              //     onChanged: (newValue) {
-              //     setState(() async {
-              //       dropDownMenu = newValue;
-              //       cariHesapSingle.id = int.parse(dropDownMenu.toString());
-              //       // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
-              //       await getCariHesapById();
-              //     });
-              //   },
-              //     selectedItem: "Brazil"),
-
-              Container(
-                child: Row(
-                  children: [],
+        body: Container(
+          margin: const EdgeInsets.all(2),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Text('data'),
+                DropdownButton(
+                  hint: const Text('Firma Seçiniz'),
+                  value: dropDownMenu,
+                  items: cariHesap.map((cari) {
+                    return DropdownMenuItem(
+                      value: cari.id,
+                      child: Text(cari.firma.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) async {
+                    setState(() {
+                      dropDownMenu = newValue;
+                      cariHesapSingle.id = int.parse(dropDownMenu.toString());
+                      // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
+                    });
+                    await getCariHesapById();
+                  },
                 ),
-              )
-            ],
+
+                // DropdownSearch<String>(
+                //     mode: Mode.MENU,
+                //     onFind: ,
+                //     label: 'Firma Seç',
+                //     hint: "Firma Seç",
+                //     popupItemDisabled: (String s) => s.startsWith('I'),
+                //     onChanged: (newValue) {
+                //     setState(() async {
+                //       dropDownMenu = newValue;
+                //       cariHesapSingle.id = int.parse(dropDownMenu.toString());
+                //       // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
+                //       await getCariHesapById();
+                //     });
+                //   },
+                //     selectedItem: "Brazil"),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: ElevatedButton(
+                            child: const Text("Satın Alma Faturası"),
+                            onPressed: () {
+                              if (dropDownMenu == null) {
+                              } else {
+                                faturaDurum = false;
+                                Navigator.pushNamed(
+                                    context, UrunBilgileriAdd.routeName);
+                              }
+                            }),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: ElevatedButton(
+                            child: const Text("Satış Faturası"),
+                            onPressed: () {
+                              if (dropDownMenu == null) {
+                              } else {
+                                faturaDurum = true;
+                                Navigator.pushNamed(
+                                    context, UrunBilgileriAdd.routeName);
+                              }
+                            }),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }
 
-  Widget _buidFloatingButton() {
-    return FloatingActionButton(
-      child: const Icon(Icons.add_chart),
-      onPressed: () {
-        if (dropDownMenu == null) {
-        } else {
-          Navigator.pushNamed(context, UrunBilgileriAdd.routeName);
-        }
-      },
-    );
-  }
+  // Widget _buidFloatingButton() {
+  //   return FloatingActionButton(
+  //     child: const Icon(Icons.add_chart),
+  //     onPressed: () {
+  //       if (dropDownMenu == null) {
+  //       } else {
+  //         Navigator.pushNamed(context, UrunBilgileriAdd.routeName);
+  //       }
+  //     },
+  //   );
+  // }
 }

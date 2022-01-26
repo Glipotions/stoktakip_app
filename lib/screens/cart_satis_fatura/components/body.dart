@@ -39,9 +39,9 @@ class _BodyState extends State<Body> {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
-                children: [
-                  const Spacer(),
-                  const Icon(Icons.restore_from_trash),
+                children: const [
+                  Spacer(),
+                  Icon(Icons.restore_from_trash),
                   // SvgPicture.asset("assets/icons/Trash.svg"),
                 ],
               ),

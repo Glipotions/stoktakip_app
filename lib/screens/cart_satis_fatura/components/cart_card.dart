@@ -8,7 +8,10 @@ import 'package:stoktakip_app/size_config.dart';
 class CartCard extends StatelessWidget {
   CartCard({Key? key, required this.cart}) : super(key: key);
 
-  final UrunBilgileri cart;
+  // final UrunBilgileri cart;
+
+  UrunBilgileri cart;
+
   var urun = <Urun>[];
 
   @override
@@ -43,7 +46,7 @@ class CartCard extends StatelessWidget {
               style: const TextStyle(color: Colors.black, fontSize: 16),
               maxLines: 2,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text.rich(
               TextSpan(
                 text: "₺${cart.birimFiyat}",

@@ -1,8 +1,8 @@
-import 'package:stoktakip_app/model/entity.dart';
+import 'entity.dart';
 
-class UrunBilgileri implements FaturaBilgileriEntity {
+class UrunBilgileriSatinAlma implements FaturaBilgileriEntity {
   int urunId;
-  int satisFaturaId;
+  int satinAlmaFaturaId;
   int miktar;
   double birimFiyat;
   double dovizliBirimFiyat;
@@ -13,9 +13,9 @@ class UrunBilgileri implements FaturaBilgileriEntity {
   String? urunAdi;
   String? urunKodu;
 
-  UrunBilgileri(
+  UrunBilgileriSatinAlma(
       {required this.urunId,
-      required this.satisFaturaId,
+      required this.satinAlmaFaturaId,
       required this.miktar,
       required this.birimFiyat,
       required this.dovizliBirimFiyat,
@@ -26,9 +26,10 @@ class UrunBilgileri implements FaturaBilgileriEntity {
       this.urunAdi,
       this.urunKodu});
 
-  factory UrunBilgileri.fromJson(Map<String, dynamic> json) => UrunBilgileri(
+  factory UrunBilgileriSatinAlma.fromJson(Map<String, dynamic> json) =>
+      UrunBilgileriSatinAlma(
         urunId: json['urunId'],
-        satisFaturaId: json['satisFaturaId'],
+        satinAlmaFaturaId: json['satinAlmaFaturaId'],
         miktar: json['miktar'],
         birimFiyat: json['birimFiyat'],
         dovizliBirimFiyat: json['dovizliBirimFiyat'],
@@ -40,7 +41,7 @@ class UrunBilgileri implements FaturaBilgileriEntity {
 
   Map<String, dynamic> toJson() => {
         'urunId': urunId,
-        'satisFaturaId': satisFaturaId,
+        'satinAlmaFaturaId': satinAlmaFaturaId,
         'miktar': miktar,
         'birimFiyat': birimFiyat,
         'dovizliBirimFiyat': dovizliBirimFiyat,
@@ -51,4 +52,4 @@ class UrunBilgileri implements FaturaBilgileriEntity {
       };
 }
 
-List<UrunBilgileri> urunBilgileriList = [];
+List<UrunBilgileriSatinAlma> urunBilgileriSatinAlmaList = [];

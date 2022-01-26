@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/constants.dart';
+import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/kdv_data.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../../size_config.dart';
@@ -73,13 +73,9 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       setState(() {
                         isCheckedIskonto = value!;
                         if (value == false) {
-                          for (var item in urunBilgileriList) {
-                            _iskontoOrani = 0;
-                          }
+                          _iskontoOrani = 0;
                         } else {
-                          for (var item in urunBilgileriList) {
-                            _iskontoOrani = _currentSliderValue; //değişecek
-                          }
+                          _iskontoOrani = _currentSliderValue; //değişecek
                         }
                       });
                     },
@@ -127,14 +123,14 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     setState(() {
                       isCheckedKdv = value!;
                       if (value == false) {
-                        for (var item in urunBilgileriList) {
+                        for (var item in urunBilgileriSatinAlmaList) {
                           item.kdvOrani = 0;
                           item.kdvTutari = 0;
                           item.tutar = item.kdvHaricTutar + item.kdvOrani;
                           // item.kdvHaricTutar=
                         }
                       } else {
-                        for (var item in urunBilgileriList) {
+                        for (var item in urunBilgileriSatinAlmaList) {
                           item.kdvOrani = kdvOrani.round();
                           double iskontoUygulanmis = item.kdvHaricTutar -
                               (item.kdvHaricTutar * _iskontoOrani / 100);
@@ -162,16 +158,16 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   children: [
                     buildTextRich("Toplam: ", Colors.black87),
                     buildTextRich(
-                        "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
+                        "   ${totalTutarHesaplaSatinAlma(urunBilgileriSatinAlmaList).toStringAsFixed(2)}₺",
                         Colors.black),
                     buildTextRich(
-                        "- ${iskontoTutarHesap(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺ İsk.",
+                        "- ${iskontoTutarHesapSatinAlma(urunBilgileriSatinAlmaList, _iskontoOrani).toStringAsFixed(2)}₺ İsk.",
                         Colors.green),
                     buildTextRich(
-                        "+ ${kdvHesapla(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺ Kdv",
+                        "+ ${kdvHesaplaSatinAlma(urunBilgileriSatinAlmaList, _iskontoOrani).toStringAsFixed(2)}₺ Kdv",
                         Colors.red),
                     buildTextRich(
-                        "= ${totalTutarwithKdv(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺",
+                        "= ${totalTutarwithKdvSatinAlma(urunBilgileriSatinAlmaList, _iskontoOrani).toStringAsFixed(2)}₺",
                         Colors.blue),
                   ],
                 ),
@@ -180,50 +176,47 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   child: DefaultButton(
                     text: "Alışverişi Tamamla",
                     press: () async {
-                      // formKey.currentState!.save(); //elimizdeki student oluştu
-                      // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
-                      satisFaturaNew.cariHesapId = cariHesapSingle.id!;
-                      satisFaturaNew.id = urunBilgileriList.first.satisFaturaId;
-                      satisFaturaNew.kod = "Flutter-00003";
-                      satisFaturaNew.dovizTutar = 0;
-                      satisFaturaNew.iskontoOrani = _iskontoOrani;
-                      satisFaturaNew.iskontoTutari =
-                          iskontoTutarHesap(urunBilgileriList, _iskontoOrani);
-                      satisFaturaNew.kdvHaricTutar =
-                          totalTutarHesapla(urunBilgileriList);
-                      satisFaturaNew.toplamTutar =
-                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      satisFaturaNew.tarih = DateTime.now();
-                      satisFaturaNew.kdvTutari =
-                          kdvHesapla(urunBilgileriList, _iskontoOrani);
+                      satinAlmaFaturaNew.cariHesapId = cariHesapSingle.id!;
+                      satinAlmaFaturaNew.id =
+                          urunBilgileriSatinAlmaList.first.satinAlmaFaturaId;
+                      satinAlmaFaturaNew.dovizTutar = 0;
+                      satinAlmaFaturaNew.iskontoOrani = _iskontoOrani;
+                      satinAlmaFaturaNew.iskontoTutari =
+                          iskontoTutarHesapSatinAlma(
+                              urunBilgileriSatinAlmaList, _iskontoOrani);
+                      satinAlmaFaturaNew.kdvHaricTutar =
+                          totalTutarHesaplaSatinAlma(
+                              urunBilgileriSatinAlmaList);
+                      satinAlmaFaturaNew.toplamTutar =
+                          totalTutarwithKdvSatinAlma(
+                              urunBilgileriSatinAlmaList, _iskontoOrani);
+                      satinAlmaFaturaNew.tarih = DateTime.now();
+                      satinAlmaFaturaNew.kdvTutari = kdvHesaplaSatinAlma(
+                          urunBilgileriSatinAlmaList, _iskontoOrani);
 
+                      satinAlmaFaturaNew.faturaKdvOrani =
+                          isCheckedKdv ? kdvOrani : 0;
                       isCheckedKdv
-                          ? satisFaturaNew.faturaKdvOrani = kdvOrani.toDouble()
-                          : 0;
-                      isCheckedKdv
-                          ? satisFaturaNew.kdvSekli = 1
-                          : satisFaturaNew.kdvSekli = 2;
-                      await APIServices.postSatisFatura(satisFaturaNew);
+                          ? satinAlmaFaturaNew.kdvSekli = 1
+                          : satinAlmaFaturaNew.kdvSekli = 2;
+                      await APIServices.postSatinAlmaFatura(satinAlmaFaturaNew);
                       print('SatisFatura Eklendi');
 
-                      cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
-                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                      cariHesapSingle.bakiye = cariHesapSingle.bakiye! -
+                          totalTutarwithKdvSatinAlma(
+                              urunBilgileriSatinAlmaList, _iskontoOrani);
                       await APIServices.updateCariBakiyeById(
                           cariHesapSingle.id!, cariHesapSingle.bakiye!);
                       print('Cari Hesap Bakiye Güncellendi.');
 
-                      for (var urun in urunBilgileriList) {
+                      for (var urun in urunBilgileriSatinAlmaList) {
                         await APIServices.updateUrunStokById(
-                            urun.urunId, urun.miktar);
+                            urun.urunId, urun.miktar, false);
 
-                        await APIServices.postUrunBilgileri(urun);
+                        await APIServices.postUrunBilgileriSatinAlma(urun);
                       }
-                      // for (int i = 0; i < urunBilgileriList.length; i++) {
-                      //   await APIServices.postUrunBilgileri(
-                      //       urunBilgileriList[i]);
-                      // }
 
-                      urunBilgileriList.clear();
+                      urunBilgileriSatinAlmaList.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

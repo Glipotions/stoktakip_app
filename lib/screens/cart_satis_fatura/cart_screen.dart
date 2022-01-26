@@ -8,10 +8,10 @@ import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'components/body.dart';
 import 'components/check_out_card.dart';
 
-class CartScreen extends StatelessWidget {
-  static String routeName = "/cart";
+class CartScreenSatisFatura extends StatelessWidget {
+  static String routeName = "/cartsatisfatura";
 
-  CartScreen({Key? key}) : super(key: key);
+  CartScreenSatisFatura({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

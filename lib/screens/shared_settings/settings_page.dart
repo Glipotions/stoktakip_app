@@ -13,7 +13,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Ayarlar'),
+          title: const Text('Ayarlar'),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SwitchCard());

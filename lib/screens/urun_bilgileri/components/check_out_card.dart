@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
 
 import '../../../size_config.dart';
 
@@ -45,15 +47,19 @@ class _CheckoutCardState extends State<CheckoutCard> {
               children: [
                 Column(children: [
                   buildTextRich(
-                      "Sepetteki Ürün Sayısı: ${urunBilgileriList.length}",
+                      "Sepetteki Ürün Sayısı: ${faturaDurum! ? urunBilgileriList.length : urunBilgileriSatinAlmaList.length}",
                       Colors.black87),
                 ]),
                 Column(
                   children: [
                     buildTextRich("Toplam: ", Colors.black87),
-                    buildTextRich(
-                        "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
-                        Colors.black)
+                    faturaDurum!
+                        ? buildTextRich(
+                            "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
+                            Colors.black)
+                        : buildTextRich(
+                            "   ${totalTutarHesaplaSatinAlma(urunBilgileriSatinAlmaList).toStringAsFixed(2)}₺",
+                            Colors.black)
                   ],
                 ),
               ],

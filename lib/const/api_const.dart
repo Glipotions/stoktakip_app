@@ -1,12 +1,15 @@
-// const host = '192.168.1.200:8081/api/';
+const host = '192.168.1.200:8081/api/';
 // const host = '10.0.2.2:5001/api/';
-const host = '192.168.1.129:8082/api/';
+// const host = '192.168.1.129:8082/api/';
 // const host = 'stoktakip.local/api';
 const http = 'http://';
 const mainUrl = 'http://${host}';
 
 const satisFaturaAddUrl = '${mainUrl}SatisFatura';
-Uri satisFaturaGetUrl = Uri.http(host, 'satisfatura/getall');
+Uri satisFaturaGetUrl = Uri.http(host, 'SatisFatura/getall');
+
+const satinAlmaFaturaAddUrl = '${mainUrl}SatinAlmaFatura';
+Uri satinAlmaFaturaGetUrl = Uri.http(host, 'SatinAlmaFatura/getall');
 
 const cariHesapAddUrl = '${mainUrl}CariHesap';
 const cariHesapGetUrl = '${mainUrl}CariHesap/getall';
@@ -15,6 +18,10 @@ Uri cariHesapGetUri = Uri.parse('${mainUrl}CariHesap/getall');
 
 const urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
 Uri urunBilgileriGetUrl = Uri.http(host, 'UrunBilgileri/getall');
+
+const urunBilgileriSatinAlmaAddUrl = '${mainUrl}UrunBilgileriSatinAlma';
+Uri urunBilgileriSatinAlmaGetUrl =
+    Uri.http(host, 'UrunBilgileriSatinAlma/getallbysatinalmafaturaid?id=');
 
 const urunBarkodBilgileriAddUrl = '${mainUrl}UrunBarkodBilgileri';
 const urunBarkodBilgileriGetUrunUrl =
