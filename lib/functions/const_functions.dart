@@ -1,3 +1,5 @@
+import 'package:stoktakip_app/model/kasa.dart';
+import 'package:stoktakip_app/model/nakit.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/satin_alma_fatura.dart';
 
@@ -28,3 +30,14 @@ SatinAlmaFatura satinAlmaFaturaNew = SatinAlmaFatura(
     odemeTipi: 0,
     durum: true,
     id: 1);
+
+Nakit nakitEntity = Nakit(
+    dovizliTutar: 0,
+    id: 0,
+    tutar: 0,
+    cariHesapId: 0,
+    cariHesapTuru: 2,
+    dovizTuru: 1,
+    kasaId: 0);
+
+Kasa kasaEntity = Kasa(bakiye: 0, id: 0, kasaAdi: "-");

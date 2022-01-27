@@ -1,6 +1,6 @@
-const host = '192.168.1.200:8081/api/';
+// const host = '192.168.1.200:8081/api/';
 // const host = '10.0.2.2:5001/api/';
-// const host = '192.168.1.129:8082/api/';
+const host = '192.168.1.129:8082/api/';
 // const host = 'stoktakip.local/api';
 const http = 'http://';
 const mainUrl = 'http://${host}';
@@ -15,6 +15,26 @@ const cariHesapAddUrl = '${mainUrl}CariHesap';
 const cariHesapGetUrl = '${mainUrl}CariHesap/getall';
 const cariHesapGetByIdUrl = '${mainUrl}CariHesap/getbyid?id=';
 Uri cariHesapGetUri = Uri.parse('${mainUrl}CariHesap/getall');
+
+cariHesapHareketleriAddUrl(int cariHesapId, int hareketId, String durum) {
+  '${mainUrl}CariHesapHareketleri?cariHesapId=$cariHesapId&hareketId=$hareketId&durum=$durum';
+}
+
+kasaHareketleriAddUrl(int kasaId, int hareketId, String durum) {
+  '${mainUrl}KasaHareketleri?kasaId=$kasaId&hareketId=$hareketId&durum=$durum';
+}
+
+kasaUpdateBakiyeUrl(int id, double bakiye) {
+  '${mainUrl}Kasa/updatekasabakiyebyid?id=$id&bakiye=$bakiye';
+}
+
+kasaGetByIdUrl(int id) {
+  '${mainUrl}Kasa/getbyid?id=$id';
+}
+
+Uri kasaGetUrl = Uri.parse('${mainUrl}Kasa/getall');
+
+const nakitAddUrl = '${mainUrl}Nakit';
 
 const urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
 Uri urunBilgileriGetUrl = Uri.http(host, 'UrunBilgileri/getall');

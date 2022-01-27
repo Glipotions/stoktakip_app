@@ -31,7 +31,10 @@ class UrunBilgileriAdd extends StatefulWidget {
 }
 
 class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
-  final snackBar = const SnackBar(content: Text('Ürün Sepete Eklendi!'));
+  final snackBarUrunEkle =
+      const SnackBar(content: Text("Ürün Başarıyla Eklendi."));
+  final snackBarKontrol = const SnackBar(content: Text("Ürün Bulunamadı."));
+
   var formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
       kdvHaricTutarController = TextEditingController(),
@@ -73,12 +76,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CartScreen(),
-              //   ),
-              // );
               faturaDurum!
                   ? Navigator.pushNamed(
                       context, CartScreenSatisFatura.routeName)
@@ -174,12 +171,20 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       child: FocusScope(
         onFocusChange: (value) async {
           if (!value) {
-            await getUrunByCode();
+            try {
+              await getUrunByCode();
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(snackBarKontrol);
+            }
           }
         },
         child: TextFormField(
           onEditingComplete: () async {
-            await getUrunByCode();
+            try {
+              await getUrunByCode();
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(snackBarKontrol);
+            }
           },
           decoration: const InputDecoration(
               labelText: "Ürün Kodu",
@@ -343,7 +348,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
 
             print("Fatura ID: $_faturaId");
 
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
             (context as Element).reassemble();
             adetController.clear();
             urunAdiController.clear();

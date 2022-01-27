@@ -5,7 +5,7 @@ import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/kdv_data.dart';
+import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
@@ -21,11 +21,14 @@ class CheckoutCard extends StatefulWidget {
 }
 
 class _CheckoutCardState extends State<CheckoutCard> {
+  final snackBar =
+      const SnackBar(content: Text('Satın Alma Faturası Oluşturuldu!'));
+  var formKey = GlobalKey<FormState>();
+
   bool isCheckedKdv = false, isCheckedIskonto = false;
   double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
   double _iskontoOrani = 0;
   var kdvController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -37,6 +40,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   Widget build(BuildContext context) {
     int kdvOrani = Provider.of<KdvData>(context).kdv;
     return Container(
+      key: formKey,
       padding: EdgeInsets.symmetric(
           vertical: getProportionateScreenWidth(15),
           horizontal: getProportionateScreenWidth(30)),
@@ -219,6 +223,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       urunBilgileriSatinAlmaList.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                   ),
                 ),

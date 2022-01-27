@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/cari_hesap_hareketleri.dart';
+import 'package:stoktakip_app/model/nakit.dart';
 import 'package:stoktakip_app/model/satin_alma_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:http/http.dart' as http;
@@ -50,26 +52,26 @@ class APIServices {
     return await http.get(satisFaturaGetUrl);
   }
 
-  static Future postSatisFatura(SatisFatura satisFatura) async {
+  static Future postSatisFatura(SatisFatura entity) async {
     Map<String, String> header = {
       'Content-type': 'application/json-patch+json',
       'Accept': '*/*'
     };
     var url = Uri.parse(satisFaturaAddUrl);
-    var myEntity = satisFatura.toJson();
+    var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
     print("Satış Fatura result kod: ${res.statusCode}");
     return res.statusCode;
   }
 
-  static Future postSatinAlmaFatura(SatinAlmaFatura satinAlmaFatura) async {
+  static Future postSatinAlmaFatura(SatinAlmaFatura entity) async {
     Map<String, String> header = {
       'Content-type': 'application/json-patch+json',
       'Accept': '*/*'
     };
     var url = Uri.parse(satinAlmaFaturaAddUrl);
-    var myEntity = satinAlmaFatura.toJson();
+    var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
     print(res.statusCode);
@@ -85,17 +87,62 @@ class APIServices {
     return await http.get(idUrl);
   }
 
-  static Future postCariHesap(CariHesap cariHesap) async {
+  static Future postCariHesap(CariHesap entity) async {
     Map<String, String> header = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
     var url = Uri.parse(cariHesapAddUrl);
-    var myCariHesap = cariHesap.toJson();
+    var myCariHesap = entity.toJson();
     var cariHesapBody = json.encode(myCariHesap);
     var res = await http.post(url, headers: header, body: cariHesapBody);
     print(res.statusCode);
     return res.statusCode;
+  }
+
+  static Future postNakit(Nakit entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+    var url = Uri.parse(nakitAddUrl);
+    var myEntity = entity.toJson();
+    var entityBody = json.encode(myEntity);
+    var res = await http.post(url, headers: header, body: entityBody);
+    print(res.statusCode);
+    return res.statusCode;
+  }
+
+  static Future postCariHesapHareketleri(
+      int cariHesapId, int hareketId, String durum) async {
+    var url =
+        Uri.parse(cariHesapHareketleriAddUrl(cariHesapId, hareketId, durum));
+    var res = await http.post(url);
+    print(res.statusCode);
+    return res.statusCode;
+  }
+
+  static Future postKasaHareketleri(
+      int kasaId, int hareketId, String durum) async {
+    var url = Uri.parse(kasaHareketleriAddUrl(kasaId, hareketId, durum));
+    var res = await http.post(url);
+    print(res.statusCode);
+    return res.statusCode;
+  }
+
+  static Future updateKasa(int id, double bakiye) async {
+    var url = Uri.parse(kasaUpdateBakiyeUrl(id, bakiye));
+    var res = await http.patch(url);
+    return res.statusCode;
+  }
+
+  static Future fetchKasa() async {
+    return await http.get(kasaGetUrl);
+  }
+
+  static Future fetchKasaById(int id) async {
+    Uri idUrl = Uri.parse(kasaGetByIdUrl(id));
+    return await http.get(idUrl);
   }
 
   static Future fetchUrunIdByBarcode(String barkod) async {

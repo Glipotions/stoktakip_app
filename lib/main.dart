@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stoktakip_app/model/kdv_data.dart';
+import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
+import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/routes.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/theme.dart';
@@ -10,8 +11,12 @@ import 'package:stoktakip_app/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await KdvData().createPrefObject();
+  await KasaData().createPrefObject();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<KdvData>(create: (BuildContext context) => KdvData())
+    ChangeNotifierProvider<KdvData>(
+        create: (BuildContext context) => KdvData()),
+    ChangeNotifierProvider<KasaData>(
+        create: (BuildContext context) => KasaData()),
   ], child: MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
@@ -21,8 +26,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<KdvData>(context).loadKdvToSharedPref();
+    Provider.of<KasaData>(context).loadKasaToSharedPref();
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),
       home: FaturaOlustur(),
       initialRoute: FaturaOlustur.routeName,

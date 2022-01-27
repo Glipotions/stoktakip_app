@@ -5,8 +5,9 @@ import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/kdv_data.dart';
+import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../../size_config.dart';
@@ -21,11 +22,15 @@ class CheckoutCard extends StatefulWidget {
 }
 
 class _CheckoutCardState extends State<CheckoutCard> {
+  final snackBar = const SnackBar(content: Text('Satış Faturası Oluşturuldu!'));
+  var formKey = GlobalKey<FormState>();
+  // final GlobalKey<ScaffoldMessengerState> snackbarKey =
+  //     GlobalKey<ScaffoldMessengerState>();
+
   bool isCheckedKdv = false, isCheckedIskonto = false;
   double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
   double _iskontoOrani = 0;
   var kdvController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -37,6 +42,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   Widget build(BuildContext context) {
     int kdvOrani = Provider.of<KdvData>(context).kdv;
     return Container(
+      key: formKey,
       padding: EdgeInsets.symmetric(
           vertical: getProportionateScreenWidth(15),
           horizontal: getProportionateScreenWidth(30)),
@@ -217,7 +223,12 @@ class _CheckoutCardState extends State<CheckoutCard> {
 
                       urunBilgileriList.clear();
                       Navigator.pop(context);
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
+                      var navigationResult = Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FaturaOlustur()));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                   ),
                 ),
