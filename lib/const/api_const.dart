@@ -1,6 +1,7 @@
-// const host = '192.168.1.200:8081/api/';
+// const host = '192.168.1.200:8081/api/'; //KOTA FABRİKA SERVER
+const host = '192.168.2.150:8081/api/'; // KOTA MAĞAZA SERVER
 // const host = '10.0.2.2:5001/api/';
-const host = '192.168.1.129:8082/api/';
+// const host = '192.168.1.129:8082/api/';
 // const host = 'stoktakip.local/api';
 const http = 'http://';
 const mainUrl = 'http://${host}';
@@ -16,20 +17,21 @@ const cariHesapGetUrl = '${mainUrl}CariHesap/getall';
 const cariHesapGetByIdUrl = '${mainUrl}CariHesap/getbyid?id=';
 Uri cariHesapGetUri = Uri.parse('${mainUrl}CariHesap/getall');
 
-cariHesapHareketleriAddUrl(int cariHesapId, int hareketId, String durum) {
-  '${mainUrl}CariHesapHareketleri?cariHesapId=$cariHesapId&hareketId=$hareketId&durum=$durum';
+String cariHesapHareketleriAddUrl(
+    int cariHesapId, int hareketId, String durum) {
+  return '${mainUrl}CariHesapHareketleri?cariHesapId=$cariHesapId&hareketId=$hareketId&durum=$durum';
 }
 
-kasaHareketleriAddUrl(int kasaId, int hareketId, String durum) {
-  '${mainUrl}KasaHareketleri?kasaId=$kasaId&hareketId=$hareketId&durum=$durum';
+String kasaHareketleriAddUrl(int kasaId, int hareketId, String durum) {
+  return '${mainUrl}KasaHareketleri?kasaId=$kasaId&hareketId=$hareketId&durum=$durum';
 }
 
-kasaUpdateBakiyeUrl(int id, double bakiye) {
-  '${mainUrl}Kasa/updatekasabakiyebyid?id=$id&bakiye=$bakiye';
+String kasaUpdateBakiyeUrl(int id, double bakiye) {
+  return '${mainUrl}Kasa/updatekasabakiyebyid?id=$id&bakiye=$bakiye';
 }
 
-kasaGetByIdUrl(int id) {
-  '${mainUrl}Kasa/getbyid?id=$id';
+String kasaGetByIdUrl(int id) {
+  return '${mainUrl}Kasa/getbyid?id=$id';
 }
 
 Uri kasaGetUrl = Uri.parse('${mainUrl}Kasa/getall');

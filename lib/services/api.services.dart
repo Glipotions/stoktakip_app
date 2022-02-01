@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/cari_hesap_hareketleri.dart';
 import 'package:stoktakip_app/model/nakit.dart';
 import 'package:stoktakip_app/model/satin_alma_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
@@ -109,7 +108,7 @@ class APIServices {
     var myEntity = entity.toJson();
     var entityBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: entityBody);
-    print(res.statusCode);
+    print("Nakit Ekle: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -118,7 +117,7 @@ class APIServices {
     var url =
         Uri.parse(cariHesapHareketleriAddUrl(cariHesapId, hareketId, durum));
     var res = await http.post(url);
-    print(res.statusCode);
+    print("Cari Hareketleri: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -126,13 +125,15 @@ class APIServices {
       int kasaId, int hareketId, String durum) async {
     var url = Uri.parse(kasaHareketleriAddUrl(kasaId, hareketId, durum));
     var res = await http.post(url);
-    print(res.statusCode);
+    print("Kasa Hareketleri: ${res.statusCode}");
     return res.statusCode;
   }
 
   static Future updateKasa(int id, double bakiye) async {
+    String urlString = kasaUpdateBakiyeUrl(id, bakiye);
     var url = Uri.parse(kasaUpdateBakiyeUrl(id, bakiye));
     var res = await http.patch(url);
+    print("Kasa Bakiye Update: ${res.statusCode}");
     return res.statusCode;
   }
 

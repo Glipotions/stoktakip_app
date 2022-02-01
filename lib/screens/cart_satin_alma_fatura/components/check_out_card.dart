@@ -28,16 +28,18 @@ class _CheckoutCardState extends State<CheckoutCard> {
   bool isCheckedKdv = false, isCheckedIskonto = false;
   double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
   double _iskontoOrani = 0;
-  var kdvController = TextEditingController();
 
   @override
   void dispose() {
-    kdvController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // setState(() {
+    //   void hesapla() {}
+    // });
+
     int kdvOrani = Provider.of<KdvData>(context).kdv;
     return Container(
       key: formKey,

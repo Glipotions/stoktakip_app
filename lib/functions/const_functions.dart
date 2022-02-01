@@ -38,6 +38,10 @@ Nakit nakitEntity = Nakit(
     cariHesapId: 0,
     cariHesapTuru: 2,
     dovizTuru: 1,
-    kasaId: 0);
+    kasaId: 0,
+    aciklama: null,
+    kod: "Mobil-0001",
+    makbuzNo: null,
+    yaziIleTutar: "");
 
 Kasa kasaEntity = Kasa(bakiye: 0, id: 0, kasaAdi: "-");

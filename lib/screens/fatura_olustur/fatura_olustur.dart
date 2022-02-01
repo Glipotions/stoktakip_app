@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
@@ -118,28 +119,6 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.deepOrange,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                      ),
-                      child: const Text("Satın Alma Faturası"),
-                      onPressed: () {
-                        if (dropDownMenu == null) {
-                        } else {
-                          faturaDurum = false;
-                          Navigator.pushNamed(
-                              context, UrunBilgileriAdd.routeName);
-                        }
-                      }),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: getProportionateScreenHeight(90),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: ElevatedButton(
                       child: const Text("Satış Faturası"),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.brown,
@@ -156,42 +135,28 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       }),
                 ),
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: Padding(
-              //         padding: const EdgeInsets.all(12),
-              //         child: ElevatedButton(
-              //             child: const Text("Satın Alma Faturası"),
-              //             onPressed: () {
-              //               if (dropDownMenu == null) {
-              //               } else {
-              //                 faturaDurum = false;
-              //                 Navigator.pushNamed(
-              //                     context, UrunBilgileriAdd.routeName);
-              //               }
-              //             }),
-              //       ),
-              //     ),
-              //     Expanded(
-              //       child: Padding(
-              //         padding: const EdgeInsets.all(12),
-              //         child: ElevatedButton(
-              //             child: const Text("Satış Faturası"),
-              //             style:
-              //                 ElevatedButton.styleFrom(primary: Colors.brown),
-              //             onPressed: () {
-              //               if (dropDownMenu == null) {
-              //               } else {
-              //                 faturaDurum = true;
-              //                 Navigator.pushNamed(
-              //                     context, UrunBilgileriAdd.routeName);
-              //               }
-              //             }),
-              //       ),
-              //     )
-              //   ],
-              // )
+              SizedBox(
+                width: double.infinity,
+                height: getProportionateScreenHeight(90),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.deepOrange,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
+                      child: const Text("Satın Alma Faturası"),
+                      onPressed: () {
+                        if (dropDownMenu == null) {
+                        } else {
+                          faturaDurum = false;
+                          Navigator.pushNamed(
+                              context, UrunBilgileriAdd.routeName);
+                        }
+                      }),
+                ),
+              ),
             ],
           ),
         ),

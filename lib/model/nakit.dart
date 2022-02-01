@@ -15,6 +15,10 @@ class Nakit {
     required this.tutar,
     required this.dovizliTutar,
     required this.id,
+    this.kod,
+    this.makbuzNo,
+    this.yaziIleTutar,
+    this.aciklama,
   });
 
   int cariHesapId;
@@ -25,6 +29,10 @@ class Nakit {
   double tutar;
   double dovizliTutar;
   int id;
+  String? kod;
+  String? makbuzNo;
+  String? yaziIleTutar;
+  String? aciklama;
 
   factory Nakit.fromJson(Map<String, dynamic> json) => Nakit(
         cariHesapId: json["cariHesapId"],
@@ -35,6 +43,10 @@ class Nakit {
         tutar: json["tutar"].toDouble(),
         dovizliTutar: json["dovizliTutar"].toDouble(),
         id: json["id"],
+        kod: json["kod"],
+        makbuzNo: json["makbuzNo"],
+        yaziIleTutar: json["yaziIleTutar"],
+        aciklama: json["aciklama"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,5 +58,9 @@ class Nakit {
         "tutar": tutar,
         "dovizliTutar": dovizliTutar,
         "id": id,
+        "kod": kod,
+        "makbuzNo": makbuzNo,
+        "yaziIleTutar": yaziIleTutar,
+        "aciklama": aciklama,
       };
 }

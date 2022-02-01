@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/functions/const_functions.dart';
+import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
@@ -23,11 +25,16 @@ class CheckoutCard extends StatefulWidget {
 
 class _CheckoutCardState extends State<CheckoutCard> {
   final snackBar = const SnackBar(content: Text('Satış Faturası Oluşturuldu!'));
+  final snackBarSatisFaturaEkle = const SnackBar(
+      content: Text('Satış Faturası Oluştururken 1 hata meydana geldi!'));
+  final snackBarNakitEkle =
+      const SnackBar(content: Text('Nakit Eklerken bir hata meydana geldi!'));
+
   var formKey = GlobalKey<FormState>();
   // final GlobalKey<ScaffoldMessengerState> snackbarKey =
   //     GlobalKey<ScaffoldMessengerState>();
 
-  bool isCheckedKdv = false, isCheckedIskonto = false;
+  bool isCheckedKdv = false, isCheckedIskonto = false, isCheckedNakit = false;
   double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
   double _iskontoOrani = 0;
   var kdvController = TextEditingController();
@@ -41,6 +48,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
   @override
   Widget build(BuildContext context) {
     int kdvOrani = Provider.of<KdvData>(context).kdv;
+    int kasaId = Provider.of<KasaData>(context).kasaId!;
+
     return Container(
       key: formKey,
       padding: EdgeInsets.symmetric(
@@ -148,12 +157,31 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   },
                 ),
                 const Text("Kdv"),
-                SizedBox(width: getProportionateScreenWidth(10)),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                  color: kTextColor,
+                SizedBox(width: getProportionateScreenWidth(100)),
+
+                // const Icon(
+                //   Icons.money,
+                //   size: 12,
+                //   color: kTextColor,
+                // ),
+                Checkbox(
+                  checkColor: Colors.white,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: isCheckedNakit,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isCheckedNakit = value!;
+                      if (value == false) {
+                        //Nakit Enum'ı 1 te
+                        satisFaturaNew.odemeTipi = 0;
+                      } else {
+                        satisFaturaNew.odemeTipi = 1;
+                      }
+                    });
+                  },
                 ),
+                const Text("Nakit"),
+                SizedBox(width: getProportionateScreenWidth(10)),
               ],
             ),
             SizedBox(height: getProportionateScreenHeight(20)),
@@ -205,13 +233,15 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       isCheckedKdv
                           ? satisFaturaNew.kdvSekli = 1
                           : satisFaturaNew.kdvSekli = 2;
-                      await APIServices.postSatisFatura(satisFaturaNew);
+                      var resultSatisFaturaAdd =
+                          await APIServices.postSatisFatura(satisFaturaNew);
                       print('SatisFatura Eklendi');
 
                       cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
                           totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      await APIServices.updateCariBakiyeById(
-                          cariHesapSingle.id!, cariHesapSingle.bakiye!);
+                      var resultCarihesapUpdate =
+                          await APIServices.updateCariBakiyeById(
+                              cariHesapSingle.id!, cariHesapSingle.bakiye!);
                       print('Cari Hesap Bakiye Güncellendi.');
 
                       for (var urun in urunBilgileriList) {
@@ -221,14 +251,63 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         await APIServices.postUrunBilgileri(urun);
                       }
 
+                      if (isCheckedNakit) {
+                        double toplamTutar =
+                            totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+
+                        int nakitId = buildId();
+                        nakitEntity.cariHesapId = cariHesapSingle.id!;
+                        nakitEntity.cariHesapTuru = 2; //Tahsilat=2
+                        nakitEntity.dovizTuru = 1; //TL=1
+                        nakitEntity.dovizliTutar = 0;
+                        nakitEntity.id = nakitId;
+                        nakitEntity.tarih = DateTime.now();
+                        nakitEntity.kasaId = kasaId;
+                        nakitEntity.tutar = toplamTutar;
+                        nakitEntity.aciklama = "Mobil Satış";
+                        nakitEntity.makbuzNo = null;
+
+                        var resultNakitAdd =
+                            await APIServices.postNakit(nakitEntity);
+
+                        var resultKasaUpdate =
+                            await APIServices.updateKasa(kasaId, toplamTutar);
+
+                        var resultKasaHareketleriAdd =
+                            await APIServices.postKasaHareketleri(
+                                kasaId, nakitId, "Nakit");
+                        var resultCariHesapHareketleriNakitAdd =
+                            await APIServices.postCariHesapHareketleri(
+                                cariHesapSingle.id!, nakitId, "Nakit");
+
+                        if (resultNakitAdd != 200 ||
+                            resultKasaUpdate != 200 ||
+                            resultKasaHareketleriAdd != 200 ||
+                            resultCariHesapHareketleriNakitAdd != 200) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBarNakitEkle);
+                        }
+                      }
+
+                      var resultCariHesapHareketleriSatisAdd =
+                          await APIServices.postCariHesapHareketleri(
+                              cariHesapSingle.id!, satisFaturaNew.id, "Satis");
+
                       urunBilgileriList.clear();
                       Navigator.pop(context);
                       // Navigator.pop(context);
-                      var navigationResult = Navigator.push(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => FaturaOlustur()));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      if (resultCariHesapHareketleriSatisAdd != 200 ||
+                          resultCarihesapUpdate != 200 ||
+                          resultSatisFaturaAdd != 200) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBarSatisFaturaEkle);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
                     },
                   ),
                 ),
