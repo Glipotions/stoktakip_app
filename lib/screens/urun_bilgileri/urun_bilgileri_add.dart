@@ -72,18 +72,68 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           "Sepete Ürün Ekle",
           style: kMetinStili,
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined),
-            onPressed: () {
-              faturaDurum!
-                  ? Navigator.pushNamed(
-                      context, CartScreenSatisFatura.routeName)
-                  : Navigator.pushNamed(
-                      context, CartScreenSatinAlmaFatura.routeName);
-            },
-          ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+                height: 150.0,
+                width: 30.0,
+                child: GestureDetector(
+                  onTap: () {
+                    faturaDurum!
+                        ? Navigator.pushNamed(
+                            context, CartScreenSatisFatura.routeName)
+                        : Navigator.pushNamed(
+                            context, CartScreenSatinAlmaFatura.routeName);
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      const IconButton(
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        ),
+                        onPressed: null,
+                      ),
+                      urunBilgileriList.isEmpty
+                          ? Container()
+                          : Positioned(
+                              child: Stack(
+                              children: <Widget>[
+                                Icon(Icons.shopping_cart_outlined,
+                                    size: getProportionateScreenHeight(30),
+                                    color: Colors.red[600]),
+                                Positioned(
+                                    top: -3.0,
+                                    right: -3.0,
+                                    child: Center(
+                                      child: Text(
+                                        urunBilgileriList.length.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )),
+                              ],
+                            )),
+                    ],
+                  ),
+                )),
+          )
         ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.shopping_cart_outlined),
+        //     onPressed: () {
+        //       faturaDurum!
+        //           ? Navigator.pushNamed(
+        //               context, CartScreenSatisFatura.routeName)
+        //           : Navigator.pushNamed(
+        //               context, CartScreenSatinAlmaFatura.routeName);
+        //     },
+        //   ),
+        // ],
       ),
       body: Container(
         margin: const EdgeInsets.all(20.0),
@@ -238,10 +288,15 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         decoration: const InputDecoration(
             labelText: "Birim Fiyatı",
             icon: Icon(Icons.money),
-            border: InputBorder.none),
+            hintText: "Birim Fiyat Giriniz."
+            // border: InputBorder.none),
+            ),
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(','),
+        ],
         controller: birimFiyatController,
         focusNode: _adetFocus,
-        readOnly: true,
         style: kMetinStili,
         validator: (val) {
           if (val!.isEmpty) {

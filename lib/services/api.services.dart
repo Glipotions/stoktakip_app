@@ -182,12 +182,13 @@ class APIServices {
     return res.statusCode;
   }
 
-  static Future updateCariBakiyeById(int id, double bakiye) async {
+  static Future updateCariBakiyeById(int id, double tutar, String durum) async {
     // Map<String, String> header = {
     //   'Content-type': 'application/json',
     //   'Accept': 'application/json'
     // };
-    var url = Uri.parse('$updateCariHesapBakiyeById$id&bakiye=$bakiye');
+    var url =
+        Uri.parse('$updateCariHesapBakiyeById$id&tutar=$tutar&durum=$durum');
     // return await http.put(url, headers: header);
     var res = await http.patch(url);
     print("Cari Bakiye result kod: ${res.statusCode}");

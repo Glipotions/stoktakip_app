@@ -19,9 +19,10 @@ final Map<String, WidgetBuilder> routes = {
   // HomeScreen.routeName: (context) => HomeScreen(),
   // DetailsScreen.routeName: (context) => DetailsScreen(),
   CartScreenSatisFatura.routeName: (context) => CartScreenSatisFatura(),
-  CartScreenSatinAlmaFatura.routeName: (context) => CartScreenSatinAlmaFatura(),
+  CartScreenSatinAlmaFatura.routeName: (context) =>
+      const CartScreenSatinAlmaFatura(),
   UrunBilgileriAdd.routeName: (context) => UrunBilgileriAdd(),
-  FaturaOlustur.routeName: (context) => FaturaOlustur(),
+  FaturaOlustur.routeName: (context) => const FaturaOlustur(),
   SettingsPage.routeName: (context) => SettingsPage(),
   // ProfileScreen.routeName: (context) => ProfileScreen(),
 };

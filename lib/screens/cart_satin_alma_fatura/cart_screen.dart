@@ -12,12 +12,12 @@ import 'components/check_out_card.dart';
 class CartScreenSatinAlmaFatura extends StatelessWidget {
   static String routeName = "/cartsatinalmafatura";
 
-  CartScreenSatinAlmaFatura({Key? key}) : super(key: key);
+  const CartScreenSatinAlmaFatura({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: Body(),
+      body: const Body(),
       bottomNavigationBar: CheckoutCard(),
     );
   }

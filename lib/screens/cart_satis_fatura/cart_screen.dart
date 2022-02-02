@@ -4,6 +4,7 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
+import 'package:stoktakip_app/screens/urun_bilgileri/urun_bilgileri_add.dart';
 // import 'package:shop_app/models/Cart.dart';
 
 import 'components/body.dart';
@@ -12,12 +13,12 @@ import 'components/check_out_card.dart';
 class CartScreenSatisFatura extends StatelessWidget {
   static String routeName = "/cartsatisfatura";
 
-  CartScreenSatisFatura({Key? key}) : super(key: key);
+  const CartScreenSatisFatura({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: Body(),
+      body: const Body(),
       bottomNavigationBar: CheckoutCard(),
     );
   }
@@ -43,7 +44,7 @@ class CartScreenSatisFatura extends StatelessWidget {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         urunBilgileriList.clear();
-                        Navigator.pop(context);
+                        Navigator.of(context).pop(true);
                       }),
               ],
             ),

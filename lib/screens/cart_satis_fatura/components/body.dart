@@ -5,6 +5,8 @@ import 'package:stoktakip_app/size_config.dart';
 import 'cart_card.dart';
 
 class Body extends StatefulWidget {
+  const Body({Key? key}) : super(key: key);
+
   // final UrunBilgileri urunBilgileriList;
   // const Body(this._urunBilgileri);
 

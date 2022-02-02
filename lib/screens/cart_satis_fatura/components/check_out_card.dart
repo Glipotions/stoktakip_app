@@ -35,13 +35,17 @@ class _CheckoutCardState extends State<CheckoutCard> {
   //     GlobalKey<ScaffoldMessengerState>();
 
   bool isCheckedKdv = false, isCheckedIskonto = false, isCheckedNakit = false;
-  double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
+  // double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
+  double _currentSliderValue = 15;
+
   double _iskontoOrani = 0;
   var kdvController = TextEditingController();
+  var _iskontoController = TextEditingController();
 
   @override
   void dispose() {
     kdvController.dispose();
+    _iskontoController.dispose();
     super.dispose();
   }
 
@@ -49,7 +53,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   Widget build(BuildContext context) {
     int kdvOrani = Provider.of<KdvData>(context).kdv;
     int kasaId = Provider.of<KasaData>(context).kasaId!;
-
+    _iskontoController.text = "0";
     return Container(
       key: formKey,
       padding: EdgeInsets.symmetric(
@@ -97,34 +101,39 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   ),
                 ),
                 const Flexible(flex: 2, child: Text("İskonto")),
-                SizedBox(width: getProportionateScreenWidth(10)),
+                SizedBox(width: getProportionateScreenWidth(5)),
                 const Icon(
                   Icons.arrow_forward_ios,
                   size: 12,
                   color: kTextColor,
                 ),
                 Flexible(
-                  flex: 5,
-                  child: Slider(
-                    value: _currentSliderValue,
-                    min: 0,
-                    max: 30,
-                    divisions: 30,
-                    label:
-                        "İskonto Oranı: ${_currentSliderValue.round().toString()}",
-                    onChanged: (double value) {
-                      setState(() {
-                        _currentSliderValue = value;
-                        _iskontoOrani =
-                            isCheckedIskonto == false ? 0 : _currentSliderValue;
-                      });
-                    },
+                  flex: 7,
+                  // child: buildIskonto(),
+
+                  child: SliderTheme(
+                    data: SliderThemeData(trackHeight: 10),
+                    child: Slider(
+                      value: _currentSliderValue,
+                      min: 0,
+                      max: 20,
+                      divisions: 20,
+                      label:
+                          "İskonto Oranı: ${_currentSliderValue.round().toString()}",
+                      onChanged: (double value) {
+                        setState(() {
+                          _currentSliderValue = value;
+                          _iskontoOrani = isCheckedIskonto == false
+                              ? 0
+                              : _currentSliderValue;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 Flexible(
                     flex: 2,
-                    child:
-                        Text("Oran: ${_currentSliderValue.toStringAsFixed(0)}"))
+                    child: Text("Oran: ${_currentSliderValue.toInt()}"))
               ],
             ),
             SizedBox(height: getProportionateScreenHeight(5)),
@@ -230,6 +239,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       satisFaturaNew.faturaKdvOrani =
                           isCheckedKdv ? kdvOrani.toDouble() : 0;
 
+                      satisFaturaNew.odemeTipi = isCheckedNakit ? 1 : 0;
+
                       isCheckedKdv
                           ? satisFaturaNew.kdvSekli = 1
                           : satisFaturaNew.kdvSekli = 2;
@@ -239,9 +250,12 @@ class _CheckoutCardState extends State<CheckoutCard> {
 
                       cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
                           totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      var resultCarihesapUpdate =
+                      var resultCarihesapUpdateSatis =
                           await APIServices.updateCariBakiyeById(
-                              cariHesapSingle.id!, cariHesapSingle.bakiye!);
+                              cariHesapSingle.id!,
+                              totalTutarwithKdv(
+                                  urunBilgileriList, _iskontoOrani),
+                              "Borc");
                       print('Cari Hesap Bakiye Güncellendi.');
 
                       for (var urun in urunBilgileriList) {
@@ -276,6 +290,12 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         var resultKasaHareketleriAdd =
                             await APIServices.postKasaHareketleri(
                                 kasaId, nakitId, "Nakit");
+                        var resultCarihesapUpdateNakit =
+                            await APIServices.updateCariBakiyeById(
+                                cariHesapSingle.id!,
+                                totalTutarwithKdv(
+                                    urunBilgileriList, _iskontoOrani),
+                                "Odeme");
                         var resultCariHesapHareketleriNakitAdd =
                             await APIServices.postCariHesapHareketleri(
                                 cariHesapSingle.id!, nakitId, "Nakit");
@@ -283,7 +303,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         if (resultNakitAdd != 200 ||
                             resultKasaUpdate != 200 ||
                             resultKasaHareketleriAdd != 200 ||
-                            resultCariHesapHareketleriNakitAdd != 200) {
+                            resultCariHesapHareketleriNakitAdd != 200 ||
+                            resultCarihesapUpdateNakit != 200) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBarNakitEkle);
                         }
@@ -292,16 +313,21 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       var resultCariHesapHareketleriSatisAdd =
                           await APIServices.postCariHesapHareketleri(
                               cariHesapSingle.id!, satisFaturaNew.id, "Satis");
-
+                      //TEMİZLİK KISMI
                       urunBilgileriList.clear();
-                      Navigator.pop(context);
+                      cariHesapSingle.id = -1;
+                      cariHesapSingle.firma = null;
+                      cariHesapSingle.bakiye = 0;
+                      cariHesapSingle.iskontoOrani = 0;
+
+                      Navigator.of(context).pop(true);
                       // Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => FaturaOlustur()));
                       if (resultCariHesapHareketleriSatisAdd != 200 ||
-                          resultCarihesapUpdate != 200 ||
+                          resultCarihesapUpdateSatis != 200 ||
                           resultSatisFaturaAdd != 200) {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(snackBarSatisFaturaEkle);
@@ -327,4 +353,34 @@ class _CheckoutCardState extends State<CheckoutCard> {
       ),
     );
   }
+
+  // Widget buildIskonto() {
+  //   return SizedBox(
+  //     key: UniqueKey(),
+  //     height: 40,
+  //     // decoration: BoxDecorationSettings(),
+  //     child: TextFormField(
+  //       controller: _iskontoController,
+  //       keyboardType: TextInputType.number,
+  //       inputFormatters: [
+  //         FilteringTextInputFormatter.deny(','),
+  //       ],
+  //       decoration: const InputDecoration(
+  //         labelText: "İskonto Giriniz.",
+  //         hintText: "Sayı Giriniz.",
+  //       ),
+  //       onEditingComplete: () => setState(() {
+  //         _iskontoOrani = double.parse(_iskontoController.text);
+  //       }),
+  //       style: kMetinStili,
+  //       validator: (val) {
+  //         if (val!.isEmpty) {
+  //           return "İskonto Boş Bırakılamaz.";
+  //         } else {
+  //           return null;
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
 }

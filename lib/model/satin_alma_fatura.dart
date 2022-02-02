@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-List<SatinAlmaFatura> SatinAlmaFaturaFromJson(String str) =>
+List<SatinAlmaFatura> satinAlmaFaturaFromJson(String str) =>
     List<SatinAlmaFatura>.from(
         json.decode(str).map((x) => SatinAlmaFatura.fromJson(x)));
 
-String SatinAlmaFaturaToJson(List<SatinAlmaFatura> data) =>
+String satinAlmaFaturaToJson(List<SatinAlmaFatura> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class SatinAlmaFatura {

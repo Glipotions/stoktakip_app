@@ -77,5 +77,6 @@ class _CheckoutCardState extends State<CheckoutCard> {
         style: TextStyle(fontSize: 16, color: renk),
       ),
     );
+    ;
   }
 }

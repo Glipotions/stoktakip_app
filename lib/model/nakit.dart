@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 Nakit nakitFromJson(String str) => Nakit.fromJson(json.decode(str));

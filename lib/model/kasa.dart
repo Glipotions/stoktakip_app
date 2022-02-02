@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 Kasa kasaFromJson(String str) => Kasa.fromJson(json.decode(str));

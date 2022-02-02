@@ -2,24 +2,29 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:stoktakip_app/components/default_button.dart';
+import 'package:searchfield/searchfield.dart';
 import 'package:stoktakip_app/functions/const_functions.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
 
 class FaturaOlustur extends StatefulWidget {
   static String routeName = "/carihesaplist";
+
+  const FaturaOlustur({Key? key}) : super(key: key);
   @override
   _FaturaOlusturState createState() => _FaturaOlusturState();
 }
 
 class _FaturaOlusturState extends State<FaturaOlustur> {
   List<CariHesap> cariHesap = <CariHesap>[];
+  List<String> _suggestions = <String>[];
   var cariHesap1 = <CariHesap>[];
   Object? dropDownMenu;
+  String? _selectedItem;
+  int? _selectedItemId;
+  var searchController = TextEditingController();
 
   Future<List> _getCariHesaps() async {
     await APIServices.fetchCariHesap().then((response) {
@@ -28,6 +33,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
         // List data = list['data'];
         List data = list;
         cariHesap = data.map((model) => CariHesap.fromJson(model)).toList();
+        _suggestions =
+            data.map((model) => CariHesap.fromJson(model).firma!).toList();
       });
     });
     return cariHesap;
@@ -65,6 +72,12 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
@@ -79,40 +92,100 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               // Text('data'),
-              DropdownButton(
-                hint: const Text('Firma Seçiniz'),
-                value: dropDownMenu,
-                items: cariHesap.map((cari) {
-                  return DropdownMenuItem(
-                    value: cari.id,
-                    child: Text(cari.firma.toString()),
-                  );
-                }).toList(),
-                onChanged: (newValue) async {
-                  setState(() {
-                    dropDownMenu = newValue;
-                    cariHesapSingle.id = int.parse(dropDownMenu.toString());
-                    // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
-                  });
-                  await getCariHesapById();
-                },
-              ),
-
-              // DropdownSearch<String>(
-              //     mode: Mode.MENU,
-              //     onFind: ,
-              //     label: 'Firma Seç',
-              //     hint: "Firma Seç",
-              //     popupItemDisabled: (String s) => s.startsWith('I'),
-              //     onChanged: (newValue) {
-              //     setState(() async {
+              // DropdownButton(
+              //   hint: const Text('Firma Seçiniz'),
+              //   value: dropDownMenu,
+              //   items: cariHesap.map((cari) {
+              //     return DropdownMenuItem(
+              //       value: cari.id,
+              //       child: Text(cari.firma.toString()),
+              //     );
+              //   }).toList(),
+              //   onChanged: (newValue) async {
+              //     setState(() {
               //       dropDownMenu = newValue;
               //       cariHesapSingle.id = int.parse(dropDownMenu.toString());
               //       // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
-              //       await getCariHesapById();
               //     });
+              //     await getCariHesapById();
               //   },
-              //     selectedItem: "Brazil"),
+              // ),
+
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: SearchField(
+                  hint: 'Ara',
+                  controller: searchController,
+                  searchInputDecoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blueGrey.shade200,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Colors.blue.withOpacity(0.8),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  maxSuggestionsInViewPort: 6,
+                  itemHeight: 50,
+                  suggestionsDecoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onTap: (value) async {
+                    setState(() {
+                      _selectedItem = value!;
+                      cariHesapSingle.id = cariHesap
+                          .where((element) => element.firma == value)
+                          .single
+                          .id;
+                      dropDownMenu = 1;
+                    });
+                    await getCariHesapById();
+                    print(cariHesapSingle.id);
+                  },
+                  suggestions: _suggestions,
+                ),
+              ),
+
+              // DropdownSearch<DropdownMenuItem<int>>(
+              //   mode: Mode.MENU,
+              //   items: cariHesap.map((cari) {
+              //     return DropdownMenuItem(
+              //       value: cari.id,
+              //       child: Text(cari.firma.toString()),
+              //     );
+              //   }).toList(),
+              //   label: "Firma Seçiniz.",
+              //   onChanged: (newValue) async {
+              //     setState(() {
+              //       dropDownMenu = newValue;
+              //       cariHesapSingle.id = int.parse(dropDownMenu.toString());
+              //       // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
+              //     });
+              //     await getCariHesapById();
+              //     print(cariHesapSingle.id);
+              //   },
+              // ),
+
               SizedBox(
                 width: double.infinity,
                 height: getProportionateScreenHeight(90),
@@ -126,7 +199,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                             borderRadius: BorderRadius.circular(15)),
                       ),
                       onPressed: () {
-                        if (dropDownMenu == null) {
+                        if (searchController.text.isEmpty) {
                         } else {
                           faturaDurum = true;
                           Navigator.pushNamed(
@@ -159,6 +232,44 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
               ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 90,
+        padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _selectedItem == null
+                ? const Text(
+                    'Lütfen Firma Seçiniz!',
+                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                  )
+                : Text(
+                    "Seçili Firma: ${_selectedItem!}\nBakiye: ${cariHesapSingle.bakiye!.toStringAsFixed(2)}",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.w600)),
+            // MaterialButton(
+            //   onPressed: () {},
+            //   color: Colors.black,
+            //   minWidth: 50,
+            //   height: 50,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(50),
+            //   ),
+            //   padding: const EdgeInsets.all(0),
+            //   child: const Icon(
+            //     Icons.arrow_forward_ios,
+            //     color: Colors.blueGrey,
+            //     size: 24,
+            //   ),
+            // )
+          ],
         ),
       ),
     );

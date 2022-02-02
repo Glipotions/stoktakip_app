@@ -12,6 +12,8 @@ import 'package:stoktakip_app/services/api.services.dart';
 import '../../../size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
+  const CheckoutCard({Key? key}) : super(key: key);
+
   // const CheckoutCard({
   //   Key? key,
   // }) : super(key: key);
@@ -212,7 +214,10 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           totalTutarwithKdvSatinAlma(
                               urunBilgileriSatinAlmaList, _iskontoOrani);
                       await APIServices.updateCariBakiyeById(
-                          cariHesapSingle.id!, cariHesapSingle.bakiye!);
+                          cariHesapSingle.id!,
+                          totalTutarwithKdvSatinAlma(
+                              urunBilgileriSatinAlmaList, _iskontoOrani),
+                          "Odeme");
                       print('Cari Hesap Bakiye Güncellendi.');
 
                       for (var urun in urunBilgileriSatinAlmaList) {

@@ -17,11 +17,13 @@ void main() async {
         create: (BuildContext context) => KdvData()),
     ChangeNotifierProvider<KasaData>(
         create: (BuildContext context) => KasaData()),
-  ], child: MyApp()));
+  ], child: const MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),
-      home: FaturaOlustur(),
+      home: const FaturaOlustur(),
       initialRoute: FaturaOlustur.routeName,
       routes: routes,
     );
