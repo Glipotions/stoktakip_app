@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stoktakip_app/functions/const_functions.dart';
+import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';

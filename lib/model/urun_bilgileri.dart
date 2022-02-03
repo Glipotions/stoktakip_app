@@ -1,6 +1,4 @@
-import 'package:stoktakip_app/model/entity.dart';
-
-class UrunBilgileri implements FaturaBilgileriEntity {
+class UrunBilgileri {
   int urunId;
   int satisFaturaId;
   int miktar;

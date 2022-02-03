@@ -1,6 +1,9 @@
+import 'dart:js';
+
 import 'package:flutter/widgets.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
+import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/urun_bilgileri_add.dart';
 
@@ -18,11 +21,13 @@ final Map<String, WidgetBuilder> routes = {
   // OtpScreen.routeName: (context) => OtpScreen(),
   // HomeScreen.routeName: (context) => HomeScreen(),
   // DetailsScreen.routeName: (context) => DetailsScreen(),
-  CartScreenSatisFatura.routeName: (context) => CartScreenSatisFatura(),
+  CartScreenSatisFatura.routeName: (context) => const CartScreenSatisFatura(),
   CartScreenSatinAlmaFatura.routeName: (context) =>
       const CartScreenSatinAlmaFatura(),
+  ListScreenSatisFatura.routeName: (context) => const ListScreenSatisFatura(),
   UrunBilgileriAdd.routeName: (context) => UrunBilgileriAdd(),
   FaturaOlustur.routeName: (context) => const FaturaOlustur(),
+
   SettingsPage.routeName: (context) => SettingsPage(),
   // ProfileScreen.routeName: (context) => ProfileScreen(),
 };

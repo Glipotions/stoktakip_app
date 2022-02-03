@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/functions/const_functions.dart';
+import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/kasa.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/services/api.services.dart';

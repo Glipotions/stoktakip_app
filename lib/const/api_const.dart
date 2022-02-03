@@ -1,7 +1,7 @@
-const host = '192.168.1.200:8081/api/'; //KOTA FABRİKA SERVER
+// const host = '192.168.1.200:8081/api/'; //KOTA FABRİKA SERVER
 // const host = '192.168.2.150:8081/api/'; // KOTA MAĞAZA SERVER
 // const host = '10.0.2.2:5001/api/';
-// const host = '192.168.1.129:8082/api/';
+const host = '192.168.1.129:8082/api/';
 // const host = 'stoktakip.local/api';
 const http = 'http://';
 const mainUrl = 'http://$host';

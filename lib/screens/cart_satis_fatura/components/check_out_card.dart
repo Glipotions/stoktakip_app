@@ -3,11 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/constants.dart';
-import 'package:stoktakip_app/functions/const_functions.dart';
+import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
+import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/services/api.services.dart';
@@ -93,8 +94,19 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         isCheckedIskonto = value!;
                         if (value == false) {
                           _iskontoOrani = 0;
+                          for (var item in urunBilgileriList) {
+                            item.tutar = item.kdvHaricTutar + item.kdvTutari;
+                          }
                         } else {
                           _iskontoOrani = _currentSliderValue; //değişecek
+                          for (var item in urunBilgileriList) {
+                            item.tutar = item.kdvHaricTutar +
+                                item.kdvTutari -
+                                (((item.kdvHaricTutar + item.kdvTutari) *
+                                        _currentSliderValue) /
+                                    100);
+                            // item.kdvHaricTutar=
+                          }
                         }
                       });
                     },
@@ -150,7 +162,13 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         for (var item in urunBilgileriList) {
                           item.kdvOrani = 0;
                           item.kdvTutari = 0;
-                          item.tutar = item.kdvHaricTutar + item.kdvOrani;
+                          item.tutar = _iskontoOrani == 0
+                              ? item.kdvHaricTutar + item.kdvOrani
+                              : item.kdvHaricTutar +
+                                  item.kdvTutari -
+                                  (((item.kdvHaricTutar + item.kdvTutari) *
+                                          _currentSliderValue) /
+                                      100);
                           // item.kdvHaricTutar=
                         }
                       } else {
@@ -159,7 +177,13 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           double iskontoUygulanmis = item.kdvHaricTutar -
                               (item.kdvHaricTutar * _iskontoOrani / 100);
                           item.kdvTutari = iskontoUygulanmis * kdvOrani / 100;
-                          item.tutar = item.kdvHaricTutar + item.kdvOrani;
+                          item.tutar = item.tutar = _iskontoOrani == 0
+                              ? item.kdvHaricTutar + item.kdvOrani
+                              : item.kdvHaricTutar +
+                                  item.kdvTutari -
+                                  (((item.kdvHaricTutar + item.kdvTutari) *
+                                          _currentSliderValue) /
+                                      100);
                         }
                       }
                     });
@@ -319,13 +343,25 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       cariHesapSingle.firma = null;
                       cariHesapSingle.bakiye = 0;
                       cariHesapSingle.iskontoOrani = 0;
+                      satisFaturaNew = SatisFatura(
+                          cariHesapId: 1,
+                          kod: "Deneme-0001",
+                          aciklama: "Mobil Satış",
+                          faturaTuru: 3,
+                          dovizTuru: 1,
+                          dovizKuru: 1,
+                          tarih: DateTime.now(),
+                          kdvSekli: 1,
+                          odemeTipi: 0,
+                          durum: true,
+                          id: 1);
 
                       Navigator.of(context).pop(true);
                       // Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FaturaOlustur()));
+                              builder: (context) => const FaturaOlustur()));
                       if (resultCariHesapHareketleriSatisAdd != 200 ||
                           resultCarihesapUpdateSatis != 200 ||
                           resultSatisFaturaAdd != 200) {

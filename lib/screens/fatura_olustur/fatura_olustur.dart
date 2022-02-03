@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:searchfield/searchfield.dart';
-import 'package:stoktakip_app/functions/const_functions.dart';
+import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import '../../size_config.dart';
@@ -40,8 +40,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
     return cariHesap;
   }
 
-  Future getCariHesapById() async {
-    await APIServices.fetchCariHesapById(cariHesapSingle.id!).then((response) {
+  Future getCariHesapById(int id) async {
+    await APIServices.fetchCariHesapById(id).then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;
@@ -159,7 +159,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                           .id;
                       dropDownMenu = 1;
                     });
-                    await getCariHesapById();
+                    await getCariHesapById(cariHesapSingle.id!);
                     print(cariHesapSingle.id);
                   },
                   suggestions: _suggestions,
