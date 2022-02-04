@@ -28,6 +28,7 @@ class _BodyState extends State<Body> {
             onDismissed: (direction) {
               setState(() {
                 urunBilgileriSatinAlmaList.removeAt(index);
+                // ignore: invalid_use_of_protected_member
                 (context as Element).reassemble();
               });
             },

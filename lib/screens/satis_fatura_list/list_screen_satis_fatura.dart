@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
@@ -18,29 +19,6 @@ class ListScreenSatisFatura extends StatefulWidget {
 }
 
 class _ListScreenSatisFaturaState extends State<ListScreenSatisFatura> {
-  Future<List> _getSatisFaturas() async {
-    await APIServices.fetchSatisFatura().then((response) {
-      setState(() {
-        dynamic list = json.decode(response.body);
-        // List data = list['data'];
-        List data = list;
-        satisFaturaList =
-            data.map((model) => SatisFatura.fromJson(model)).toList();
-      });
-    });
-    return satisFaturaList;
-  }
-
-  Future<void> initStateAsync() async {
-    await _getSatisFaturas();
-  }
-
-  @override
-  void initState() {
-    initStateAsync();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

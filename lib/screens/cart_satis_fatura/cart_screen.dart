@@ -4,7 +4,6 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
-import 'package:stoktakip_app/screens/urun_bilgileri/urun_bilgileri_add.dart';
 // import 'package:shop_app/models/Cart.dart';
 
 import 'components/body.dart';

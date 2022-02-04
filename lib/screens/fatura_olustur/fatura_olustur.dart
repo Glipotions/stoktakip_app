@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
@@ -227,6 +228,24 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                           Navigator.pushNamed(
                               context, UrunBilgileriAdd.routeName);
                         }
+                      }),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: getProportionateScreenHeight(90),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.cyan,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
+                      child: const Text("Satış Faturaları Listesi"),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, ListScreenSatisFatura.routeName);
                       }),
                 ),
               ),

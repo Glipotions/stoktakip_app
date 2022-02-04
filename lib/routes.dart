@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/widgets.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';

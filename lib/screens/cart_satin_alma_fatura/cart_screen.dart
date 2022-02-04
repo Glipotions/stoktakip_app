@@ -18,7 +18,7 @@ class CartScreenSatinAlmaFatura extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(context),
       body: const Body(),
-      bottomNavigationBar: CheckoutCard(),
+      bottomNavigationBar: const CheckoutCard(),
     );
   }
 

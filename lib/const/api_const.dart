@@ -7,7 +7,7 @@ const http = 'http://';
 const mainUrl = 'http://$host';
 
 const satisFaturaAddUrl = '${mainUrl}SatisFatura';
-Uri satisFaturaGetUrl = Uri.http(host, 'SatisFatura/getall');
+Uri satisFaturaGetUrl = Uri.parse('${mainUrl}SatisFatura/getall');
 
 const satinAlmaFaturaAddUrl = '${mainUrl}SatinAlmaFatura';
 Uri satinAlmaFaturaGetUrl = Uri.http(host, 'SatinAlmaFatura/getall');

@@ -24,8 +24,9 @@ class SatisFatura {
   double? iskontoOrani;
   String? aciklama;
   int odemeTipi;
-  bool durum;
+  bool? durum;
   int id;
+  String? firmaUnvani;
 
   SatisFatura({
     this.kod,
@@ -45,8 +46,9 @@ class SatisFatura {
     this.iskontoOrani,
     this.aciklama,
     required this.odemeTipi,
-    required this.durum,
+    this.durum,
     required this.id,
+    this.firmaUnvani,
   });
 
   factory SatisFatura.fromJson(Map<String, dynamic> json) => SatisFatura(
@@ -58,17 +60,28 @@ class SatisFatura {
         dovizKuru: json["dovizKuru"].toDouble(),
         tarih: DateTime.parse(json["tarih"]),
         kdvSekli: json["kdvSekli"],
-        kdvHaricTutar: json["kdvHaricTutar"].toDouble(),
-        iskontoTutari: json["iskontoTutari"].toDouble(),
-        faturaKdvOrani: json["faturaKdvOrani"].toDouble(),
-        kdvTutari: json["kdvTutari"].toDouble(),
+        kdvHaricTutar: json["kdvHaricTutar"] != null
+            ? json["kdvHaricTutar"].toDouble()
+            : json["kdvHaricTutar"],
+        iskontoTutari: json["iskontoTutari"] != null
+            ? json["iskontoTutari"].toDouble()
+            : json["iskontoTutari"],
+        faturaKdvOrani: json["faturaKdvOrani"] != null
+            ? json["faturaKdvOrani"].toDouble()
+            : json["faturaKdvOrani"],
+        kdvTutari: json["kdvTutari"] != null
+            ? json["kdvTutari"].toDouble()
+            : json["kdvTutari"],
         toplamTutar: json["toplamTutar"].toDouble(),
         aciklama: json["aciklama"],
         dovizTutar: json["dovizTutar"].toDouble(),
-        iskontoOrani: json["iskontoOrani"].toDouble(),
+        iskontoOrani: json["iskontoOrani"] != null
+            ? json["iskontoOrani"].toDouble()
+            : json["iskontoOrani"],
         odemeTipi: json["odemeTipi"],
         durum: json["durum"],
         id: json["id"],
+        firmaUnvani: json["firmaUnvani"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,5 +104,6 @@ class SatisFatura {
         "odemeTipi": odemeTipi,
         "durum": durum,
         "id": id,
+        "firmaUnvani": firmaUnvani,
       };
 }
