@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),
-      // home: const FaturaOlustur(),
-      home: const MyPdfPage(),
+      home: const FaturaOlustur(),
+      // home: const MyPdfPage(),
 
       // initialRoute: FaturaOlustur.routeName,
       routes: routes,

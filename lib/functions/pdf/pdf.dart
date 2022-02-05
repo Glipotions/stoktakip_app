@@ -56,17 +56,17 @@ class _MyPdfPageState extends State<MyPdfPage> {
 
 Future<void> _createPDF() async {
   PdfDocument document = PdfDocument();
-  final page = document.pages.add();
+  // final page = document.pages.add();
 
-  page.graphics.drawString('Welcome to PDF Succinctly!',
-      PdfStandardFont(PdfFontFamily.helvetica, 30));
+  // page.graphics.drawString('Welcome to PDF Succinctly!',
+  //     PdfStandardFont(PdfFontFamily.helvetica, 30));
 
-  page.graphics.drawImage(PdfBitmap(await _readImageData('Pdf_Succinctly.jpg')),
-      Rect.fromLTWH(0, 100, 440, 550));
+  // page.graphics.drawImage(PdfBitmap(await _readImageData('Pdf_Succinctly.jpg')),
+  //     Rect.fromLTWH(0, 100, 440, 550));
 
   PdfGrid grid = PdfGrid();
   grid.style = PdfGridStyle(
-    font: PdfStandardFont(PdfFontFamily.helvetica, 30),
+    font: PdfStandardFont(PdfFontFamily.helvetica, 8),
     cellPadding: PdfPaddings(left: 5, right: 2, top: 2, bottom: 2),
   );
 
@@ -74,13 +74,20 @@ Future<void> _createPDF() async {
   grid.headers.add(1);
 
   PdfGridRow header = grid.headers[0];
-  header.cells[0].value = 'Roll No';
-  header.cells[1].value = 'Name';
-  header.cells[2].value = 'Class';
+  header.cells[0].value = 'Kod';
+  header.cells[1].value = 'Miktar';
+  header.cells[2].value = 'Birim';
+  // header.cells[3].value = 'Tutar';
 
-  PdfGridRow row;
+  PdfGridRow row = grid.rows.add();
+  row.cells[0].value = "Musteri :";
+  row.cells[1].value = "Hamza";
+  row.cells[2].value = "s";
+  // row.cells[2].value = item.toplamTutar.toString();
+
   PdfGridRowStyle rowStyle = PdfGridRowStyle(
       backgroundBrush: PdfBrushes.aqua, textBrush: PdfBrushes.darkOrange);
+
   // PdfBorders border = PdfBorders(
   //     left: PdfPen(PdfColor(0, 0, 0), width: 2),
   //     top: PdfPen(PdfColor(0, 0, 0), width: 3),
@@ -100,16 +107,17 @@ Future<void> _createPDF() async {
   //   textBrush: PdfBrushes.white,
   //   textPen: PdfPens.orange,
   // );
-  for (var item in satisFaturaList) {
-    row = grid.rows.add();
-    row.cells[0].value = "${item.faturaTuru}";
-    row.cells[1].value = item.dovizTutar.toString();
-    row.cells[2].value = item.toplamTutar.toString();
-    // row.style = rowStyle;
-    // row.cells[0].style = cellStyle;
-    // row.cells[1].style = cellStyle;
-    // row.cells[2].style = cellStyle;
-  }
+
+  // for (var item in satisFaturaList) {
+  //   row = grid.rows.add();
+  //   row.cells[0].value = "${item.faturaTuru}";
+  //   row.cells[1].value = item.dovizTutar.toString();
+  //   row.cells[2].value = item.toplamTutar.toString();
+  //   // row.style = rowStyle;
+  //   // row.cells[0].style = cellStyle;
+  //   // row.cells[1].style = cellStyle;
+  //   // row.cells[2].style = cellStyle;
+  // }
   PdfGridStyle gridStyle = PdfGridStyle(
     cellSpacing: 2,
     cellPadding: PdfPaddings(left: 2, right: 3, top: 4, bottom: 5),
@@ -117,7 +125,7 @@ Future<void> _createPDF() async {
     backgroundBrush: PdfBrushes.white,
     textPen: PdfPens.black,
     textBrush: PdfBrushes.black,
-    font: PdfStandardFont(PdfFontFamily.timesRoman, 8),
+    font: PdfStandardFont(PdfFontFamily.timesRoman, 7),
   );
   grid.rows.applyStyle(gridStyle);
   grid.draw(
