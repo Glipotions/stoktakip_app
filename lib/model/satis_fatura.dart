@@ -27,6 +27,8 @@ class SatisFatura {
   bool? durum;
   int id;
   String? firmaUnvani;
+  double? bakiye;
+  String? tutarYazi;
 
   SatisFatura({
     this.kod,
@@ -49,6 +51,8 @@ class SatisFatura {
     this.durum,
     required this.id,
     this.firmaUnvani,
+    this.bakiye,
+    this.tutarYazi,
   });
 
   factory SatisFatura.fromJson(Map<String, dynamic> json) => SatisFatura(
@@ -82,6 +86,9 @@ class SatisFatura {
         durum: json["durum"],
         id: json["id"],
         firmaUnvani: json["firmaUnvani"],
+        bakiye:
+            json["bakiye"] != null ? json["bakiye"].toDouble() : json["bakiye"],
+        tutarYazi: json["tutarYazi"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,5 +112,7 @@ class SatisFatura {
         "durum": durum,
         "id": id,
         "firmaUnvani": firmaUnvani,
+        "bakiye": bakiye,
+        "tutarYazi": tutarYazi,
       };
 }
