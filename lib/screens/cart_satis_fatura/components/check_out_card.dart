@@ -173,7 +173,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         }
                       } else {
                         for (var item in urunBilgileriList) {
-                          item.kdvOrani = kdvOrani.round();
+                          item.kdvOrani = kdvOrani.toDouble();
                           double iskontoUygulanmis = item.kdvHaricTutar -
                               (item.kdvHaricTutar * _iskontoOrani / 100);
                           item.kdvTutari = iskontoUygulanmis * kdvOrani / 100;

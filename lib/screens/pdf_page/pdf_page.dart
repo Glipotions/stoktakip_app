@@ -43,8 +43,8 @@ class _PdfPageState extends State<PdfPage> {
                     final invoice = Invoice(
                         satisFatura: satisFaturaNew,
                         info: InvoiceInfo(
-                          date: date,
-                          dueDate: dueDate,
+                          // date: date,
+                          // dueDate: dueDate,
                           description: 'My description...',
                           number: '${DateTime.now().year}-9999',
                         ),

@@ -20,6 +20,12 @@ class APIServices {
     return urunbilgileris;
   }
 
+  static Future fetchUrunBilgileriBySatisFaturaId(id) async {
+    // Uri idUrl = Uri.parse('$urunBilgileriGetBySatisFaturaIdUrl$id');
+    Uri idUrl = Uri.parse(urunBilgileriGetBySatisFaturaIdUrl(id));
+    return await http.get(idUrl);
+  }
+
   static Future postUrunBilgileri(UrunBilgileri entity) async {
     Map<String, String> header = {
       'Content-type': 'application/json',

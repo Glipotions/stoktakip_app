@@ -10,12 +10,13 @@ import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class ListCard extends StatelessWidget {
-  ListCard({Key? key, required this.cart, this.trailing}) : super(key: key);
+  ListCard({Key? key, required this.cart}) : super(key: key);
 
   // final UrunBilgileri cart;
 
   SatisFatura cart;
-  final Widget? trailing;
+  // final Widget? trailing;
+
   // @override
   // State<ListCard> createState() => _ListCardState();
 

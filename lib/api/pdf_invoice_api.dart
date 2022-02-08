@@ -1,45 +1,55 @@
 import 'dart:io';
-// import 'package:generate_pdf_invoice_example/api/pdf_api.dart';
-// import 'package:generate_pdf_invoice_example/model/customer.dart';
-// import 'package:generate_pdf_invoice_example/model/invoice.dart';
-// import 'package:generate_pdf_invoice_example/model/supplier.dart';
-// import 'package:generate_pdf_invoice_example/utils.dart';
+import 'dart:ui';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/customer.dart';
 import 'package:stoktakip_app/model/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/supplier.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-
-import '../utils.dart';
+import 'package:jiffy/jiffy.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
-    final pdf = Document();
+    final pdf = pw.Document();
+// pdf.document.fonts.
+    final fontBold = await rootBundle.load("assets/fonts/muli/Muli-Bold.ttf");
+    final fontItalic =
+        await rootBundle.load("assets/fonts/roboto/Roboto-Regular.ttf");
+    final fontBoldRoboto =
+        await rootBundle.load("assets/fonts/roboto/Roboto-Bold.ttf");
+
+    final ttfBold = pw.Font.ttf(fontBold);
+    final ttfBoldRoboto = pw.Font.ttf(fontBoldRoboto);
+    final ttfItalic = pw.Font.ttf(fontItalic);
 
     pdf.addPage(MultiPage(
       build: (context) => [
-        buildHeader(invoice),
-        SizedBox(height: 3 * PdfPageFormat.cm),
+        buildHeader(invoice, ttfBold, ttfItalic),
+        SizedBox(height: 1 * PdfPageFormat.cm),
         buildTitle(invoice),
-        buildInvoice(invoice),
+        buildInvoice(invoice, ttfBold, ttfItalic),
         Divider(),
-        buildTotal(invoice),
+        // buildCariTutari(invoice.satisFatura),
+        buildFooterh(invoice, ttfBold, ttfItalic, ttfBoldRoboto),
       ],
       // footer: (context) => buildFooter(invoice),
     ));
 
+    for (var i in pdf.document.fonts.toList()) {
+      print(i);
+    }
     return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
   }
 
-  static Widget buildHeader(Invoice invoice) => Column(
+  static Widget buildHeader(Invoice invoice, Font fontBold, Font fontItalic) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 1 * PdfPageFormat.cm),
+          SizedBox(height: 0.5 * PdfPageFormat.cm),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
           //   children: [
@@ -54,54 +64,72 @@ class PdfInvoiceApi {
           //     ),
           //   ],
           // ),
-          SizedBox(height: 1 * PdfPageFormat.cm),
+          // SizedBox(height: 1 * PdfPageFormat.cm),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildCariHesapUnvani(invoice.satisFatura),
-              buildInvoiceInfo(invoice.satisFatura),
+              buildCariHesapUnvani(invoice.satisFatura, fontBold, fontItalic),
+              buildInvoiceInfo(invoice.satisFatura, fontItalic),
             ],
           ),
         ],
       );
-  static Widget buildFooterh(Invoice invoice) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 1 * PdfPageFormat.cm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildCariTutari(invoice.satisFatura),
-              buildTotal(invoice),
-            ],
-          ),
-        ],
-      );
+  static Widget buildFooterh(
+      Invoice invoice, Font fontBold, Font fontItalic, Font fontBoldRoboto) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 0.5 * PdfPageFormat.cm),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Flexible(
+                child:
+                    buildCariTutari(invoice.satisFatura, fontBold, fontItalic),
+                flex: 1),
+            pw.Flexible(child: buildTotal(invoice, fontBoldRoboto), flex: 1),
+          ],
+        ),
+      ],
+    );
+  }
 
-  static Widget buildCariHesapUnvani(SatisFatura satisFatura) => Column(
+  static Widget buildCariHesapUnvani(
+          SatisFatura satisFatura, Font fontBold, Font fontItalic) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Cari Hesap Ünvanı:",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(satisFatura.firmaUnvani!),
+              style: TextStyle(fontWeight: FontWeight.bold, font: fontBold)),
+          Text(satisFatura.firmaUnvani!, style: TextStyle(font: fontItalic)),
         ],
       );
 
-  static Widget buildCariTutari(SatisFatura satisFatura) => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          buildText(
-              title: "Yalnız:",
-              value: satisFatura.tutarYazi!), // Yalnız Tutar ile değiştilecek
-          buildText(
-              title: "C.H Bakiye",
-              value: Utils.formatPrice(satisFatura.bakiye!))
-        ],
-      );
+  static Widget buildCariTutari(
+      SatisFatura satisFatura, Font fontBold, Font fontItalic) {
+    var number = NumberFormat("#,##0.00", "tr");
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        buildText(
+            title: "Yalnız:",
+            value: satisFatura.tutarYazi!,
+            unite: true,
+            font: fontItalic),
+        Divider(), // Yalnız Tutar ile değiştilecek
+        buildText(
+            title: "C.H Bakiye",
+            value: '₺${number.format(satisFatura.bakiye!.toDouble())}',
+            unite: true,
+            font: fontItalic)
+      ],
+    );
+  }
 
-  static Widget buildInvoiceInfo(SatisFatura info) {
+  static Widget buildInvoiceInfo(SatisFatura info, Font fontItalic) {
     // final paymentTerms = '${info.dueDate.difference(info.date).inDays} days';
     final titles = <String>[
       'Fatura Tarihi:',
@@ -110,7 +138,7 @@ class PdfInvoiceApi {
       // 'Due Date:'
     ];
     final data = <String>[
-      Utils.formatDate(info.tarih),
+      Jiffy(info.tarih).yMd,
       "Toptan Satış Faturası",
       // paymentTerms,
       // Utils.formatDate(info.dueDate),
@@ -122,7 +150,12 @@ class PdfInvoiceApi {
         final title = titles[index];
         final value = data[index];
 
-        return buildText(title: title, value: value, width: 200);
+        return buildText(
+            title: title,
+            value: value,
+            width: 200,
+            font: fontItalic,
+            unite: true);
       }),
     );
   }
@@ -140,36 +173,36 @@ class PdfInvoiceApi {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Satış Faturası',
+            'Satis Faturasi',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
-          Text(invoice.info.description),
-          SizedBox(height: 0.8 * PdfPageFormat.cm),
+          // Text(invoice.info.description),
+          // SizedBox(height: 0.8 * PdfPageFormat.cm),
         ],
       );
 
-  static Widget buildInvoice(Invoice invoice) {
+  static Widget buildInvoice(Invoice invoice, Font fontBold, Font fontItalic) {
     final headers = [
       'Ürün Kodu',
       'Ürün',
       'Miktar',
       'Birim Fiyat',
-      'İsk. Brm Fyt',
+      'Isk. Brm Fyt',
       'Tutar'
     ];
     final data = invoice.items.map((item) {
       double iskTutar = item.birimFiyat -
           (item.birimFiyat * (invoice.satisFatura.iskontoOrani!) / 100);
-      final total = item.birimFiyat * iskTutar;
+      final total = item.miktar * iskTutar;
 
       return [
         item.urunKodu,
         item.urunAdi,
         '${item.miktar}',
-        '\₺ ${item.birimFiyat}',
+        '₺${item.birimFiyat}',
         '₺$iskTutar',
-        '\$ ${total.toStringAsFixed(2)}',
+        '₺${total.toStringAsFixed(2)}',
       ];
     }).toList();
 
@@ -177,9 +210,11 @@ class PdfInvoiceApi {
       headers: headers,
       data: data,
       border: null,
-      headerStyle: TextStyle(fontWeight: FontWeight.bold),
+      headerStyle:
+          TextStyle(fontWeight: FontWeight.bold, fontSize: 9, font: fontBold),
       headerDecoration: const BoxDecoration(color: PdfColors.grey300),
       cellHeight: 30,
+      cellStyle: pw.TextStyle(fontSize: 9, font: fontItalic),
       cellAlignments: {
         0: Alignment.center,
         1: Alignment.center,
@@ -191,61 +226,68 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTotal(Invoice invoice) {
+  static Widget buildTotal(Invoice invoice, Font fontBold) {
     final netTotal = invoice.items
-        .map((item) => item.birimFiyat * item.miktar)
+        .map((item) => (item.birimFiyat) * item.miktar)
         .reduce((item1, item2) => item1 + item2);
-    // final vatPercent = invoice.items.first.vat;
-    const vatPercent = 8;
-    final vat = netTotal * vatPercent;
-    final total = netTotal + vat;
+    final vatTotal = invoice.satisFatura.kdvTutari;
+    // final iskontoOrani = invoice.satisFatura.iskontoOrani!;
+    final iskontoTutari = invoice.satisFatura.iskontoTutari!;
+    final total = netTotal - iskontoTutari;
+    final kdvHaricTutar = invoice.satisFatura.kdvHaricTutar;
+    var number = NumberFormat("#,##0.00", "tr");
 
     return Container(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Spacer(flex: 6),
+          Spacer(flex: 1),
           Expanded(
             flex: 4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                  title: 'Fatura Toplam',
-                  value: Utils.formatPrice(netTotal),
-                  unite: true,
-                ),
+                    title: 'Fatura Toplam',
+                    value: '₺${number.format(netTotal.toDouble())}',
+                    unite: true,
+                    font: fontBold),
                 Divider(),
                 buildText(
-                  title: 'Fat. Ind. Tutarı',
-                  value: Utils.formatPrice(vat),
+                  title: 'Fat. Ind. Tutar',
+                  value: '₺${number.format(iskontoTutari)}',
                   unite: true,
+                  font: fontBold,
                 ),
                 buildText(
                   title: "KDV'siz Toplam",
                   titleStyle: TextStyle(
-                    fontSize: 14,
+                    fontSize: 9,
                     fontWeight: FontWeight.bold,
+                    font: fontBold,
                   ),
-                  value: Utils.formatPrice(total),
+                  value: '₺${number.format(kdvHaricTutar)}',
                   unite: true,
                 ),
                 Divider(),
                 buildText(
-                  title: 'KDV Tutarı',
-                  value: Utils.formatPrice(vat),
+                  title: 'KDV Tutar',
+                  value: '₺${number.format(vatTotal)}',
                   unite: true,
+                  font: fontBold,
                 ),
                 buildText(
                   title: "Genel Toplam",
                   titleStyle: TextStyle(
-                    fontSize: 14,
+                    fontSize: 9,
                     fontWeight: FontWeight.bold,
+                    font: fontBold,
                   ),
-                  value: Utils.formatPrice(total),
+                  value: '₺${number.format(total)}',
+                  // value: Utils.formatPrice(total),
                   unite: true,
                 ),
-                SizedBox(height: 2 * PdfPageFormat.mm),
+                SizedBox(height: 1 * PdfPageFormat.mm),
                 Container(height: 1, color: PdfColors.grey400),
                 SizedBox(height: 0.5 * PdfPageFormat.mm),
                 Container(height: 1, color: PdfColors.grey400),
@@ -272,7 +314,9 @@ class PdfInvoiceApi {
     required String title,
     required String value,
   }) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
+    final style = TextStyle(
+      fontWeight: FontWeight.bold,
+    );
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -290,16 +334,33 @@ class PdfInvoiceApi {
     required String value,
     double width = double.infinity,
     TextStyle? titleStyle,
+    // TextStyle? valueStyle,
     bool unite = false,
+    Font? font,
   }) {
-    final style = titleStyle ?? TextStyle(fontWeight: FontWeight.bold);
-
+    // final googleStyle = GoogleFonts.piazzolla(
+    //   fontFeatures: <FontFeature>[
+    //     const FontFeature.subscripts(),
+    //   ],
+    // );
+    // final font = await rootBundle.load("assets/fonts/roboto/Roboto-Thin.ttf");
+    // final ttf = pw.Font.ttf(font);
+    final style = titleStyle ??
+        TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 9,
+          font: font,
+        );
+//TextStyle(fontWeight: FontWeight.bold, fontSize: 9)
     return Container(
       width: width,
       child: Row(
         children: [
           Expanded(child: Text(title, style: style)),
-          Text(value, style: unite ? style : null),
+          Text(
+            value,
+            style: unite ? style : null,
+          ),
         ],
       ),
     );

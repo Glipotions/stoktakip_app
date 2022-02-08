@@ -5,7 +5,7 @@ class UrunBilgileri {
   double birimFiyat;
   double dovizliBirimFiyat;
   double kdvHaricTutar;
-  int kdvOrani;
+  double kdvOrani;
   double kdvTutari;
   double tutar;
   String? urunAdi;
@@ -34,6 +34,8 @@ class UrunBilgileri {
         kdvOrani: json['kdvOrani'],
         kdvTutari: json['kdvTutari'],
         tutar: json['tutar'],
+        urunAdi: json['urunAdi'],
+        urunKodu: json['urunKodu'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,7 +48,10 @@ class UrunBilgileri {
         'kdvOrani': kdvOrani,
         'kdvTutari': kdvTutari,
         'tutar': tutar,
+        'urunKodu': urunKodu,
+        'urunAdi': urunAdi,
       };
 }
 
 List<UrunBilgileri> urunBilgileriList = [];
+List<UrunBilgileri> urunBilgileriGetIdList = [];

@@ -41,6 +41,10 @@ const nakitAddUrl = '${mainUrl}Nakit';
 const urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
 Uri urunBilgileriGetUrl = Uri.http(host, 'UrunBilgileri/getall');
 
+String urunBilgileriGetBySatisFaturaIdUrl(id) {
+  return '${mainUrl}UrunBilgileri/getallbysatisfaturaid?id=$id';
+}
+
 const urunBilgileriSatinAlmaAddUrl = '${mainUrl}UrunBilgileriSatinAlma';
 Uri urunBilgileriSatinAlmaGetUrl =
     Uri.http(host, 'UrunBilgileriSatinAlma/getallbysatinalmafaturaid?id=');
