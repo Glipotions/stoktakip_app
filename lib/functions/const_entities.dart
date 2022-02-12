@@ -47,3 +47,5 @@ Nakit nakitEntity = Nakit(
     yaziIleTutar: "");
 
 Kasa kasaEntity = Kasa(bakiye: 0, id: 0, kasaAdi: "-");
+
+String? faturaAciklama;

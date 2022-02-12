@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -9,8 +8,13 @@ import 'package:stoktakip_app/api/pdf_api.dart';
 import 'package:stoktakip_app/model/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/supplier.dart';
-import 'package:jiffy/jiffy.dart';
+import 'package:intl/date_symbol_data_local.dart';
 // import 'package:google_fonts/google_fonts.dart';
+
+// Future<Font> fontBold() async {
+//   final fontBold = await rootBundle.load("assets/fonts/muli/Muli-Bold.ttf");
+//   return pw.Font.ttf(fontBold);
+// }
 
 class PdfInvoiceApi {
   static Future<File> generate(Invoice invoice) async {
@@ -34,14 +38,10 @@ class PdfInvoiceApi {
         buildInvoice(invoice, ttfBold, ttfItalic),
         Divider(),
         // buildCariTutari(invoice.satisFatura),
-        buildFooterh(invoice, ttfBold, ttfItalic, ttfBoldRoboto),
+        buildFooter(invoice, ttfBold, ttfItalic, ttfBoldRoboto),
       ],
-      // footer: (context) => buildFooter(invoice),
     ));
 
-    for (var i in pdf.document.fonts.toList()) {
-      print(i);
-    }
     return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
   }
 
@@ -75,7 +75,7 @@ class PdfInvoiceApi {
           ),
         ],
       );
-  static Widget buildFooterh(
+  static Widget buildFooter(
       Invoice invoice, Font fontBold, Font fontItalic, Font fontBoldRoboto) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,6 +130,7 @@ class PdfInvoiceApi {
   }
 
   static Widget buildInvoiceInfo(SatisFatura info, Font fontItalic) {
+    initializeDateFormatting('tr');
     // final paymentTerms = '${info.dueDate.difference(info.date).inDays} days';
     final titles = <String>[
       'Fatura Tarihi:',
@@ -138,7 +139,8 @@ class PdfInvoiceApi {
       // 'Due Date:'
     ];
     final data = <String>[
-      Jiffy(info.tarih).yMd,
+      DateFormat.yMMMd('tr').format(info.tarih),
+      // Jiffy(info.tarih).yMd,
       "Toptan Satış Faturası",
       // paymentTerms,
       // Utils.formatDate(info.dueDate),
@@ -194,14 +196,14 @@ class PdfInvoiceApi {
     final data = invoice.items.map((item) {
       double iskTutar = item.birimFiyat -
           (item.birimFiyat * (invoice.satisFatura.iskontoOrani!) / 100);
-      final total = item.miktar * iskTutar;
+      final total = item.miktar * item.birimFiyat;
 
       return [
         item.urunKodu,
         item.urunAdi,
         '${item.miktar}',
         '₺${item.birimFiyat}',
-        '₺$iskTutar',
+        '₺${iskTutar.toStringAsFixed(2)}',
         '₺${total.toStringAsFixed(2)}',
       ];
     }).toList();
@@ -213,7 +215,7 @@ class PdfInvoiceApi {
       headerStyle:
           TextStyle(fontWeight: FontWeight.bold, fontSize: 9, font: fontBold),
       headerDecoration: const BoxDecoration(color: PdfColors.grey300),
-      cellHeight: 30,
+      cellHeight: 20,
       cellStyle: pw.TextStyle(fontSize: 9, font: fontItalic),
       cellAlignments: {
         0: Alignment.center,
@@ -233,8 +235,9 @@ class PdfInvoiceApi {
     final vatTotal = invoice.satisFatura.kdvTutari;
     // final iskontoOrani = invoice.satisFatura.iskontoOrani!;
     final iskontoTutari = invoice.satisFatura.iskontoTutari!;
-    final total = netTotal - iskontoTutari;
-    final kdvHaricTutar = invoice.satisFatura.kdvHaricTutar;
+
+    final kdvsizToplam = invoice.satisFatura.kdvHaricTutar! - iskontoTutari;
+    final total = invoice.satisFatura.toplamTutar!;
     var number = NumberFormat("#,##0.00", "tr");
 
     return Container(
@@ -266,7 +269,7 @@ class PdfInvoiceApi {
                     fontWeight: FontWeight.bold,
                     font: fontBold,
                   ),
-                  value: '₺${number.format(kdvHaricTutar)}',
+                  value: '₺${number.format(kdvsizToplam)}',
                   unite: true,
                 ),
                 Divider(),
@@ -299,17 +302,6 @@ class PdfInvoiceApi {
     );
   }
 
-  // static Widget buildFooter(Invoice invoice) => Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Divider(),
-  //         SizedBox(height: 2 * PdfPageFormat.mm),
-  //         buildSimpleText(title: 'Address', value: invoice.supplier.address),
-  //         SizedBox(height: 1 * PdfPageFormat.mm),
-  //         buildSimpleText(title: 'Paypal', value: invoice.supplier.paymentInfo),
-  //       ],
-  //     );
-
   static buildSimpleText({
     required String title,
     required String value,
@@ -338,20 +330,12 @@ class PdfInvoiceApi {
     bool unite = false,
     Font? font,
   }) {
-    // final googleStyle = GoogleFonts.piazzolla(
-    //   fontFeatures: <FontFeature>[
-    //     const FontFeature.subscripts(),
-    //   ],
-    // );
-    // final font = await rootBundle.load("assets/fonts/roboto/Roboto-Thin.ttf");
-    // final ttf = pw.Font.ttf(font);
     final style = titleStyle ??
         TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 9,
           font: font,
         );
-//TextStyle(fontWeight: FontWeight.bold, fontSize: 9)
     return Container(
       width: width,
       child: Row(

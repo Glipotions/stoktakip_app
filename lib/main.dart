@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
-import 'package:stoktakip_app/functions/pdf/pdf.dart';
 import 'package:stoktakip_app/routes.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/theme.dart';
@@ -33,9 +32,6 @@ class MyApp extends StatelessWidget {
       title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),
       home: const FaturaOlustur(),
-      // home: const MyPdfPage(),
-
-      // initialRoute: FaturaOlustur.routeName,
       routes: routes,
     );
   }

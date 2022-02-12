@@ -54,7 +54,14 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     birimFiyatController.dispose();
     miktarController.dispose();
     adetController.dispose();
+    _adetFocus.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    formKey;
+    super.initState();
   }
 
   // List<UrunBilgileri> urunBilgileriList = [];
@@ -122,18 +129,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
                 )),
           )
         ],
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.shopping_cart_outlined),
-        //     onPressed: () {
-        //       faturaDurum!
-        //           ? Navigator.pushNamed(
-        //               context, CartScreenSatisFatura.routeName)
-        //           : Navigator.pushNamed(
-        //               context, CartScreenSatinAlmaFatura.routeName);
-        //     },
-        //   ),
-        // ],
       ),
       body: Container(
         margin: const EdgeInsets.all(20.0),
@@ -216,8 +211,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     return SizedBox(
       key: UniqueKey(),
       height: 60,
-      // decoration: BoxDecorationSettings(),
-      // color: Colors.orangeAccent,
       child: FocusScope(
         onFocusChange: (value) async {
           if (!value) {
@@ -296,7 +289,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           FilteringTextInputFormatter.deny(','),
         ],
         controller: birimFiyatController,
-        focusNode: _adetFocus,
         style: kMetinStili,
         validator: (val) {
           if (val!.isEmpty) {
@@ -317,6 +309,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       child: TextFormField(
         // initialValue: '1',
         controller: adetController,
+        // focusNode: _adetFocus,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.deny(','),
@@ -338,21 +331,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       ),
     );
   }
-
-  // Widget buildKdvHaricToplamTutar() {
-  //   return Expanded(
-  //           key: UniqueKey(),
-  //     child: TextFormField(
-  //       controller: kdvHaricTutarController,
-  //       keyboardType: TextInputType.number,
-  //       inputFormatters: [
-  //         FilteringTextInputFormatter.deny(','),
-  //       ],
-  //       decoration: const InputDecoration(
-  //           labelText: "Kdv Hariç Toplam Tutar", hintText: "Sayı Giriniz."),
-  //     ),
-  //   );
-  // }
 
   Widget buildAddButton() {
     return SizedBox(

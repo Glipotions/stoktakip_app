@@ -262,6 +262,9 @@ class _CheckoutCardState extends State<CheckoutCard> {
 
                       satisFaturaNew.faturaKdvOrani =
                           isCheckedKdv ? kdvOrani.toDouble() : 0;
+                      faturaAciklama != null
+                          ? satisFaturaNew.aciklama = faturaAciklama
+                          : satinAlmaFaturaNew.aciklama;
 
                       satisFaturaNew.odemeTipi = isCheckedNakit ? 1 : 0;
 
@@ -339,10 +342,10 @@ class _CheckoutCardState extends State<CheckoutCard> {
                               cariHesapSingle.id!, satisFaturaNew.id, "Satis");
                       //TEMİZLİK KISMI
                       urunBilgileriList.clear();
-                      cariHesapSingle.id = -1;
-                      cariHesapSingle.firma = null;
-                      cariHesapSingle.bakiye = 0;
-                      cariHesapSingle.iskontoOrani = 0;
+                      faturaAciklama = null;
+                      cariHesapSingle =
+                          CariHesap(firma: null, bakiye: 0, id: -1);
+
                       satisFaturaNew = SatisFatura(
                           cariHesapId: 1,
                           kod: "Deneme-0001",
