@@ -24,7 +24,8 @@ class CheckoutCard extends StatefulWidget {
   State<CheckoutCard> createState() => _CheckoutCardState();
 }
 
-class _CheckoutCardState extends State<CheckoutCard> {
+class _CheckoutCardState extends State<CheckoutCard>
+    with TickerProviderStateMixin {
   final snackBar = const SnackBar(content: Text('Satış Faturası Oluşturuldu!'));
   final snackBarSatisFaturaEkle = const SnackBar(
       content: Text('Satış Faturası Oluştururken 1 hata meydana geldi!'));
@@ -32,8 +33,23 @@ class _CheckoutCardState extends State<CheckoutCard> {
       const SnackBar(content: Text('Nakit Eklerken bir hata meydana geldi!'));
 
   var formKey = GlobalKey<FormState>();
-  // final GlobalKey<ScaffoldMessengerState> snackbarKey =
-  //     GlobalKey<ScaffoldMessengerState>();
+
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
+    super.initState();
+  }
+
+  final GlobalKey<ScaffoldMessengerState> snackbarKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   bool isCheckedKdv = false, isCheckedIskonto = false, isCheckedNakit = false;
   // double _currentSliderValue = cariHesapSingle.iskontoOrani!.toDouble();
@@ -47,6 +63,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
   void dispose() {
     kdvController.dispose();
     _iskontoController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -245,7 +262,11 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     press: () async {
                       // formKey.currentState!.save(); //elimizdeki student oluştu
                       // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
-
+                      const CircularProgressIndicator(
+                        value: 0.5,
+                        backgroundColor: Colors.grey,
+                        strokeWidth: 8,
+                      );
                       satisFaturaNew.cariHesapId = cariHesapSingle.id!;
                       satisFaturaNew.id = urunBilgileriList.first.satisFaturaId;
                       satisFaturaNew.dovizTutar = 0;
