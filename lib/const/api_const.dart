@@ -1,20 +1,22 @@
-const host = '192.168.1.200:8081/api/'; //KOTA FABRİKA SERVER
-// const host = '192.168.2.150:8081/api/'; // KOTA MAĞAZA SERVER
-// const host = '10.0.2.2:5001/api/';
-// const host = '192.168.1.129:8082/api/';
-// const host = 'stoktakip.local/api';
-const http = 'http://';
-const mainUrl = 'http://$host';
+// const host = '192.168.1.200:8081'; //KOTA FABRİKA SERVER
+// const host = '192.168.2.150:8081'; // KOTA MAĞAZA SERVER
+// const host = '10.0.2.2:5001';
+// const host = '192.168.1.129:8082';
+String? host;
 
-const satisFaturaAddUrl = '${mainUrl}SatisFatura';
+// const host = '188.59.6.69:8082';
+const http = 'http://';
+String mainUrl = 'http://$host/api/';
+
+String satisFaturaAddUrl = '${mainUrl}SatisFatura';
 Uri satisFaturaGetUrl = Uri.parse('${mainUrl}SatisFatura/getall');
 
-const satinAlmaFaturaAddUrl = '${mainUrl}SatinAlmaFatura';
-Uri satinAlmaFaturaGetUrl = Uri.http(host, 'SatinAlmaFatura/getall');
+String satinAlmaFaturaAddUrl = '${mainUrl}SatinAlmaFatura';
+Uri satinAlmaFaturaGetUrl = Uri.http(host!, 'SatinAlmaFatura/getall');
 
-const cariHesapAddUrl = '${mainUrl}CariHesap';
-const cariHesapGetUrl = '${mainUrl}CariHesap/getall';
-const cariHesapGetByIdUrl = '${mainUrl}CariHesap/getbyid?id=';
+String cariHesapAddUrl = '${mainUrl}CariHesap';
+String cariHesapGetUrl = '${mainUrl}CariHesap/getall';
+String cariHesapGetByIdUrl = '${mainUrl}CariHesap/getbyid?id=';
 Uri cariHesapGetUri = Uri.parse('${mainUrl}CariHesap/getall');
 
 String cariHesapHareketleriAddUrl(
@@ -36,28 +38,28 @@ String kasaGetByIdUrl(int id) {
 
 Uri kasaGetUrl = Uri.parse('${mainUrl}Kasa/getall');
 
-const nakitAddUrl = '${mainUrl}Nakit';
+String nakitAddUrl = '${mainUrl}Nakit';
 
-const urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
-Uri urunBilgileriGetUrl = Uri.http(host, 'UrunBilgileri/getall');
+String urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
+Uri urunBilgileriGetUrl = Uri.http(host!, 'UrunBilgileri/getall');
 
 String urunBilgileriGetBySatisFaturaIdUrl(id) {
   return '${mainUrl}UrunBilgileri/getallbysatisfaturaid?id=$id';
 }
 
-const urunBilgileriSatinAlmaAddUrl = '${mainUrl}UrunBilgileriSatinAlma';
+String urunBilgileriSatinAlmaAddUrl = '${mainUrl}UrunBilgileriSatinAlma';
 Uri urunBilgileriSatinAlmaGetUrl =
-    Uri.http(host, 'UrunBilgileriSatinAlma/getallbysatinalmafaturaid?id=');
+    Uri.http(host!, 'UrunBilgileriSatinAlma/getallbysatinalmafaturaid?id=');
 
-const urunBarkodBilgileriAddUrl = '${mainUrl}UrunBarkodBilgileri';
-const urunBarkodBilgileriGetUrunUrl =
+String urunBarkodBilgileriAddUrl = '${mainUrl}UrunBarkodBilgileri';
+String urunBarkodBilgileriGetUrunUrl =
     '${mainUrl}UrunBarkodBilgileri/getbybarcode?barkod=';
 Uri urunBarkodBilgileriGetUrunUri =
     Uri.parse('${mainUrl}UrunBarkodBilgileri/getbybarcode?barkod=');
 
-const urunGetByIdUrl = '${mainUrl}Urun/getbyid?id=';
-const urunGetByCodeUrl = '${mainUrl}Urun/getbycode?code=';
-const updateUrunById = '${mainUrl}Urun/updateurunbyid?id=';
+String urunGetByIdUrl = '${mainUrl}Urun/getbyid?id=';
+String urunGetByCodeUrl = '${mainUrl}Urun/getbycode?code=';
+String updateUrunById = '${mainUrl}Urun/updateurunbyid?id=';
 
-const updateCariHesapBakiyeById =
+String updateCariHesapBakiyeById =
     '${mainUrl}CariHesap/updatecaribakiyebyid?id=';

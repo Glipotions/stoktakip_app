@@ -12,7 +12,7 @@ import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
 
 class FaturaOlustur extends StatefulWidget {
-  static String routeName = "/carihesaplist";
+  static String routeName = "/faturaolustur";
 
   const FaturaOlustur({Key? key}) : super(key: key);
   @override
@@ -90,15 +90,18 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         // floatingActionButton: _buidFloatingButton(),
-        appBar: AppBar(
-          title: const Text("Glipotions Stok Takip"),
-        ),
+        // appBar: AppBar(
+        //   title: const Text("Glipotions Stok Takip"),
+        // ),
         body: Container(
           margin: const EdgeInsets.all(2),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                SizedBox(
+                  height: getProportionateScreenHeight(20),
+                ),
                 // Text('data'),
                 // DropdownButton(
                 //   hint: const Text('Firma Seçiniz'),
