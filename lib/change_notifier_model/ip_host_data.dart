@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stoktakip_app/model/ip_host.dart';
+import 'package:stoktakip_app/screens/login/host_page.dart';
 
-class IpHost with ChangeNotifier {
+class IpHostData with ChangeNotifier {
   String? _hostAdi;
   String? _ip;
   static SharedPreferences _sharedPref = SharedPreferences as SharedPreferences;
@@ -35,5 +37,11 @@ class IpHost with ChangeNotifier {
     // _hostAdi = _sharedPref.getString('hostAdi') ?? "";
     // _ip = _sharedPref.getString('ip') ?? "";
     return await _sharedPref.getString('musics_key');
+  }
+
+  Future loadIpHostList() async {
+    final String iphostsString = _sharedPref.getString('ip_host_listesi')!;
+    final List<IpHost> ipHosts = IpHost.decode(iphostsString);
+    ipHostListe = ipHosts;
   }
 }

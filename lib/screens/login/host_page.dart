@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stoktakip_app/components/default_button.dart';
+import 'package:stoktakip_app/change_notifier_model/ip_host_data.dart';
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/ip_host.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
-import 'package:stoktakip_app/size_config.dart';
 
 class HostPage extends StatefulWidget {
   static String routeName = "/hostpage";
@@ -16,6 +16,8 @@ class HostPage extends StatefulWidget {
   @override
   _HostPageState createState() => _HostPageState();
 }
+
+List<IpHost> ipHostListe = [];
 
 class _HostPageState extends State<HostPage> {
   bool _isChecked = false;
@@ -27,22 +29,24 @@ class _HostPageState extends State<HostPage> {
   final TextEditingController _hostNameAddController = TextEditingController();
   final TextEditingController _ipHostAddController = TextEditingController();
 
-  List<IpHost> ipHostListe = [];
-
+  final snackBarMukerrerHost =
+      const SnackBar(content: Text('Aynı Host Adından zaten var!'));
+  final snackBarIslemBasarili =
+      const SnackBar(content: Text('İşlem Başarılı!'));
   // Future<void> createPrefObject() async {
   //   _pref = await SharedPreferences.getInstance();
   // }
 
-  // Future<void> initStateAsync() async {
-  //   await createPrefObject();
-  // }
+  Future<void> initStateAsync() async {
+    Provider.of<IpHostData>(context, listen: false).loadIpHostList();
+    // await _loadIpHostList();
+  }
 
   @override
   void initState() {
-    // _loadUserIpHost();
+    _loadUserIpHost();
     // initStateAsync();
-    _loadIpHostList();
-    // Timer(Duration(milliseconds: 100),);
+    // _loadIpHostList();
     super.initState();
   }
 
@@ -58,6 +62,7 @@ class _HostPageState extends State<HostPage> {
 
   @override
   Widget build(BuildContext context) {
+    initStateAsync();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
@@ -68,10 +73,10 @@ class _HostPageState extends State<HostPage> {
           padding: const EdgeInsets.all(10.0),
           child: Column(children: [
             Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(10),
               child: Container(
                 width: double.infinity,
-                margin: const EdgeInsets.all(15),
+                margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.orange[300],
                   shape: BoxShape.rectangle,
@@ -93,20 +98,19 @@ class _HostPageState extends State<HostPage> {
                       },
                     );
                   }).toList(),
-                  // onChanged: (newValue) async {
-                  //   setState(() {
-                  //     dropDownMenu = newValue;
-
-                  //   });
-                  // },
+                  onChanged: (newValue) async {
+                    setState(() {
+                      dropDownMenu = newValue;
+                    });
+                  },
                 ),
               ),
             ),
-            field(_hostNameController, Icon(Icons.email_outlined),
-                "Host Adı Gir"),
-            const SizedBox(
-              height: 10,
-            ),
+            // field(_hostNameController, Icon(Icons.email_outlined),
+            //     "Host Adı Gir"),
+            // const SizedBox(
+            //   height: 10,
+            // ),
             field(_ipHostController, Icon(Icons.import_export), "Ip:Host Gir"),
             const SizedBox(
               height: 10,
@@ -175,24 +179,66 @@ class _HostPageState extends State<HostPage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) => LogoutPage()));
-                          ipHostListe.add(IpHost(
-                              hostAdi: _hostNameAddController.text,
-                              ip: _ipHostAddController.text));
-                          _saveIpHostList();
-                          _loadIpHostList();
-                          for (var item in ipHostListe) {
-                            print(item.hostAdi);
-                          }
-                        },
-                        child: const Text("Ekle",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold))),
+                    Row(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(builder: (context) => LogoutPage()));
+                              // ipHostListe.remove(IpHost(
+                              //     hostAdi: _hostNameAddController.text,
+                              //     ip: _ipHostAddController.text));
+                              ipHostListe.removeWhere((item) =>
+                                  item.hostAdi == _hostNameAddController.text);
+                              _saveIpHostList();
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBarIslemBasarili);
+                              // _loadIpHostList();
+                              for (var item in ipHostListe) {
+                                print(item.hostAdi);
+                              }
+                            },
+                            child: const Text("Sil",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold))),
+                        GestureDetector(
+                            onTap: () {
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(builder: (context) => LogoutPage()));
+                              int mukerrerHost = ipHostListe
+                                  .where((element) =>
+                                      element.hostAdi ==
+                                      _hostNameAddController.text)
+                                  .length;
+                              if (mukerrerHost > 0) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBarMukerrerHost);
+                              } else {
+                                ipHostListe.add(IpHost(
+                                    hostAdi: _hostNameAddController.text,
+                                    ip: _ipHostAddController.text));
+                                _saveIpHostList();
+                                // _loadIpHostList();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBarIslemBasarili);
+                                for (var item in ipHostListe) {
+                                  print(item.hostAdi);
+                                }
+                              }
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Ekle",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold))),
+                      ],
+                    ),
                   ],
                 );
               });
@@ -237,7 +283,7 @@ class _HostPageState extends State<HostPage> {
     SharedPreferences.getInstance().then(
       (prefs) {
         prefs.setBool("remember_me", value);
-        prefs.setString('hostName', _hostNameController.text);
+        prefs.setString('hostName', dropDownMenu.toString());
         prefs.setString('ipHost', _ipHostController.text);
       },
     );
@@ -260,6 +306,7 @@ class _HostPageState extends State<HostPage> {
       if (_rememberMe) {
         setState(() {
           _isChecked = true;
+          dropDownMenu = _hostName;
           _hostNameController.text = _hostName;
           _ipHostController.text = _ipHost;
         });
@@ -269,12 +316,12 @@ class _HostPageState extends State<HostPage> {
     }
   }
 
-  void _loadIpHostList() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    final String iphostsString = _pref.getString('ip_host_listesi')!;
-    final List<IpHost> ipHosts = IpHost.decode(iphostsString);
-    ipHostListe = ipHosts;
-  }
+  // Future _loadIpHostList() async {
+  //   SharedPreferences _pref = await SharedPreferences.getInstance();
+  //   final String iphostsString = await _pref.getString('ip_host_listesi')!;
+  //   final List<IpHost> ipHosts = IpHost.decode(iphostsString);
+  //   ipHostListe = ipHosts;
+  // }
 
   void _saveIpHostList() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();

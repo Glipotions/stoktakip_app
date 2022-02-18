@@ -11,6 +11,7 @@ import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
+import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../../size_config.dart';
@@ -36,6 +37,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   late AnimationController controller;
 
+  bool _firstPress = true;
   @override
   void initState() {
     controller = AnimationController(
@@ -70,7 +72,7 @@ class _CheckoutCardState extends State<CheckoutCard>
   @override
   Widget build(BuildContext context) {
     int kdvOrani = Provider.of<KdvData>(context).kdv;
-    int kasaId = Provider.of<KasaData>(context).kasaId!;
+    int? kasaId = Provider.of<KasaData>(context).kasaId;
     _iskontoController.text = "0";
     return Container(
       key: formKey,
@@ -225,7 +227,11 @@ class _CheckoutCardState extends State<CheckoutCard>
                         //Nakit Enum'ı 1 te
                         satisFaturaNew.odemeTipi = 0;
                       } else {
-                        satisFaturaNew.odemeTipi = 1;
+                        if (kasaId! > 0) {
+                          satisFaturaNew.odemeTipi = 1;
+                        } else {
+                          Navigator.pushNamed(context, SettingsPage.routeName);
+                        }
                       }
                     });
                   },
@@ -262,137 +268,143 @@ class _CheckoutCardState extends State<CheckoutCard>
                     press: () async {
                       // formKey.currentState!.save(); //elimizdeki student oluştu
                       // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
-                      const CircularProgressIndicator(
-                        value: 0.5,
-                        backgroundColor: Colors.grey,
-                        strokeWidth: 8,
-                      );
-                      satisFaturaNew.cariHesapId = cariHesapSingle.id!;
-                      satisFaturaNew.id = urunBilgileriList.first.satisFaturaId;
-                      satisFaturaNew.dovizTutar = 0;
-                      satisFaturaNew.iskontoOrani = _iskontoOrani;
-                      satisFaturaNew.iskontoTutari =
-                          iskontoTutarHesap(urunBilgileriList, _iskontoOrani);
-                      satisFaturaNew.kdvHaricTutar =
-                          totalTutarHesapla(urunBilgileriList);
-                      satisFaturaNew.toplamTutar =
-                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      satisFaturaNew.tarih = DateTime.now();
-                      satisFaturaNew.kdvTutari =
-                          kdvHesapla(urunBilgileriList, _iskontoOrani);
+                      if (_firstPress) {
+                        _firstPress = false;
 
-                      satisFaturaNew.faturaKdvOrani =
-                          isCheckedKdv ? kdvOrani.toDouble() : 0;
-                      faturaAciklama != null
-                          ? satisFaturaNew.aciklama = faturaAciklama
-                          : satinAlmaFaturaNew.aciklama;
-
-                      satisFaturaNew.odemeTipi = isCheckedNakit ? 1 : 0;
-
-                      isCheckedKdv
-                          ? satisFaturaNew.kdvSekli = 1
-                          : satisFaturaNew.kdvSekli = 2;
-                      var resultSatisFaturaAdd =
-                          await APIServices.postSatisFatura(satisFaturaNew);
-                      print('SatisFatura Eklendi');
-
-                      cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
-                          totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                      var resultCarihesapUpdateSatis =
-                          await APIServices.updateCariBakiyeById(
-                              cariHesapSingle.id!,
-                              totalTutarwithKdv(
-                                  urunBilgileriList, _iskontoOrani),
-                              "Borc");
-                      print('Cari Hesap Bakiye Güncellendi.');
-
-                      for (var urun in urunBilgileriList) {
-                        await APIServices.updateUrunStokById(
-                            urun.urunId, urun.miktar, true);
-
-                        await APIServices.postUrunBilgileri(urun);
-                      }
-
-                      if (isCheckedNakit) {
-                        double toplamTutar =
+                        satisFaturaNew.cariHesapId = cariHesapSingle.id!;
+                        satisFaturaNew.id =
+                            urunBilgileriList.first.satisFaturaId;
+                        satisFaturaNew.dovizTutar = 0;
+                        satisFaturaNew.iskontoOrani = _iskontoOrani;
+                        satisFaturaNew.iskontoTutari =
+                            iskontoTutarHesap(urunBilgileriList, _iskontoOrani);
+                        satisFaturaNew.kdvHaricTutar =
+                            totalTutarHesapla(urunBilgileriList);
+                        satisFaturaNew.toplamTutar =
                             totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                        satisFaturaNew.tarih = DateTime.now();
+                        satisFaturaNew.kdvTutari =
+                            kdvHesapla(urunBilgileriList, _iskontoOrani);
 
-                        int nakitId = buildId();
-                        nakitEntity.cariHesapId = cariHesapSingle.id!;
-                        nakitEntity.cariHesapTuru = 2; //Tahsilat=2
-                        nakitEntity.dovizTuru = 1; //TL=1
-                        nakitEntity.dovizliTutar = 0;
-                        nakitEntity.id = nakitId;
-                        nakitEntity.tarih = DateTime.now();
-                        nakitEntity.kasaId = kasaId;
-                        nakitEntity.tutar = toplamTutar;
-                        nakitEntity.aciklama = "Mobil Satış";
-                        nakitEntity.makbuzNo = null;
+                        satisFaturaNew.faturaKdvOrani =
+                            isCheckedKdv ? kdvOrani.toDouble() : 0;
+                        faturaAciklama != null
+                            ? satisFaturaNew.aciklama = faturaAciklama
+                            : satinAlmaFaturaNew.aciklama;
 
-                        var resultNakitAdd =
-                            await APIServices.postNakit(nakitEntity);
+                        satisFaturaNew.odemeTipi = isCheckedNakit ? 1 : 0;
 
-                        var resultKasaUpdate =
-                            await APIServices.updateKasa(kasaId, toplamTutar);
+                        isCheckedKdv
+                            ? satisFaturaNew.kdvSekli = 1
+                            : satisFaturaNew.kdvSekli = 2;
+                        var resultSatisFaturaAdd =
+                            await APIServices.postSatisFatura(satisFaturaNew);
+                        print('SatisFatura Eklendi');
 
-                        var resultKasaHareketleriAdd =
-                            await APIServices.postKasaHareketleri(
-                                kasaId, nakitId, "Nakit");
-                        var resultCarihesapUpdateNakit =
+                        cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
+                            totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                        var resultCarihesapUpdateSatis =
                             await APIServices.updateCariBakiyeById(
                                 cariHesapSingle.id!,
                                 totalTutarwithKdv(
                                     urunBilgileriList, _iskontoOrani),
-                                "Odeme");
-                        var resultCariHesapHareketleriNakitAdd =
-                            await APIServices.postCariHesapHareketleri(
-                                cariHesapSingle.id!, nakitId, "Nakit");
+                                "Borc");
+                        print('Cari Hesap Bakiye Güncellendi.');
 
-                        if (resultNakitAdd != 200 ||
-                            resultKasaUpdate != 200 ||
-                            resultKasaHareketleriAdd != 200 ||
-                            resultCariHesapHareketleriNakitAdd != 200 ||
-                            resultCarihesapUpdateNakit != 200) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBarNakitEkle);
+                        for (var urun in urunBilgileriList) {
+                          await APIServices.updateUrunStokById(
+                              urun.urunId, urun.miktar, true);
+
+                          await APIServices.postUrunBilgileri(urun);
                         }
-                      }
 
-                      var resultCariHesapHareketleriSatisAdd =
-                          await APIServices.postCariHesapHareketleri(
-                              cariHesapSingle.id!, satisFaturaNew.id, "Satis");
-                      //TEMİZLİK KISMI
-                      urunBilgileriList.clear();
-                      faturaAciklama = null;
-                      cariHesapSingle =
-                          CariHesap(firma: null, bakiye: 0, id: -1);
+                        if (isCheckedNakit) {
+                          double toplamTutar = totalTutarwithKdv(
+                              urunBilgileriList, _iskontoOrani);
 
-                      satisFaturaNew = SatisFatura(
-                          cariHesapId: 1,
-                          kod: "Deneme-0001",
-                          aciklama: "Mobil Satış",
-                          faturaTuru: 3,
-                          dovizTuru: 1,
-                          dovizKuru: 1,
-                          tarih: DateTime.now(),
-                          kdvSekli: 1,
-                          odemeTipi: 0,
-                          durum: true,
-                          id: 1);
+                          int nakitId = buildId();
+                          nakitEntity.cariHesapId = cariHesapSingle.id!;
+                          nakitEntity.cariHesapTuru = 2; //Tahsilat=2
+                          nakitEntity.dovizTuru = 1; //TL=1
+                          nakitEntity.dovizliTutar = 0;
+                          nakitEntity.id = nakitId;
+                          nakitEntity.tarih = DateTime.now();
+                          nakitEntity.kasaId = kasaId!;
+                          nakitEntity.tutar = toplamTutar;
+                          nakitEntity.aciklama = "Mobil Satış";
+                          nakitEntity.makbuzNo = null;
 
-                      Navigator.of(context).pop(true);
-                      // Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FaturaOlustur()));
-                      if (resultCariHesapHareketleriSatisAdd != 200 ||
-                          resultCarihesapUpdateSatis != 200 ||
-                          resultSatisFaturaAdd != 200) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(snackBarSatisFaturaEkle);
+                          var resultNakitAdd =
+                              await APIServices.postNakit(nakitEntity);
+
+                          var resultKasaUpdate =
+                              await APIServices.updateKasa(kasaId, toplamTutar);
+
+                          var resultKasaHareketleriAdd =
+                              await APIServices.postKasaHareketleri(
+                                  kasaId, nakitId, "Nakit");
+                          var resultCarihesapUpdateNakit =
+                              await APIServices.updateCariBakiyeById(
+                                  cariHesapSingle.id!,
+                                  totalTutarwithKdv(
+                                      urunBilgileriList, _iskontoOrani),
+                                  "Odeme");
+                          var resultCariHesapHareketleriNakitAdd =
+                              await APIServices.postCariHesapHareketleri(
+                                  cariHesapSingle.id!, nakitId, "Nakit");
+
+                          if (resultNakitAdd != 200 ||
+                              resultKasaUpdate != 200 ||
+                              resultKasaHareketleriAdd != 200 ||
+                              resultCariHesapHareketleriNakitAdd != 200 ||
+                              resultCarihesapUpdateNakit != 200) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBarNakitEkle);
+                          }
+                        }
+
+                        var resultCariHesapHareketleriSatisAdd =
+                            await APIServices.postCariHesapHareketleri(
+                                cariHesapSingle.id!,
+                                satisFaturaNew.id,
+                                "Satis");
+                        //TEMİZLİK KISMI
+                        urunBilgileriList.clear();
+                        faturaAciklama = null;
+                        cariHesapSingle =
+                            CariHesap(firma: null, bakiye: 0, id: -1);
+
+                        satisFaturaNew = SatisFatura(
+                            cariHesapId: 1,
+                            kod: "Deneme-0001",
+                            aciklama: "Mobil Satış",
+                            faturaTuru: 3,
+                            dovizTuru: 1,
+                            dovizKuru: 1,
+                            tarih: DateTime.now(),
+                            kdvSekli: 1,
+                            odemeTipi: 0,
+                            durum: true,
+                            id: 1);
+
+                        Navigator.of(context).pop(true);
+                        // Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FaturaOlustur()));
+                        if (resultCariHesapHareketleriSatisAdd != 200 ||
+                            resultCarihesapUpdateSatis != 200 ||
+                            resultSatisFaturaAdd != 200) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBarSatisFaturaEkle);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'Birden Fazla Tıklamalar Dikkate Alınmadı!')));
                       }
                     },
                   ),
@@ -443,4 +455,5 @@ class _CheckoutCardState extends State<CheckoutCard>
   //     ),
   //   );
   // }
+
 }

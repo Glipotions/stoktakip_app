@@ -8,15 +8,20 @@ import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/login/host_page.dart';
 import 'package:stoktakip_app/theme.dart';
 
+import 'change_notifier_model/ip_host_data.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await KdvData().createPrefObject();
   await KasaData().createPrefObject();
+  await IpHostData().createPrefObject();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<KdvData>(
         create: (BuildContext context) => KdvData()),
     ChangeNotifierProvider<KasaData>(
         create: (BuildContext context) => KasaData()),
+    ChangeNotifierProvider<IpHostData>(
+        create: (BuildContext context) => IpHostData()),
   ], child: const MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
