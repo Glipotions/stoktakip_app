@@ -42,7 +42,10 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       urunAdiController = TextEditingController(),
       birimFiyatController = TextEditingController(),
       miktarController = TextEditingController(),
-      adetController = TextEditingController();
+      adetController = TextEditingController(),
+      paketIciAdetController = TextEditingController(),
+      paketSayisiController = TextEditingController();
+
   final _adetFocus = FocusNode();
 
   @override
@@ -54,6 +57,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     birimFiyatController.dispose();
     miktarController.dispose();
     adetController.dispose();
+    paketIciAdetController.dispose();
+    paketSayisiController.dispose();
     _adetFocus.dispose();
     super.dispose();
   }
@@ -145,6 +150,16 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
               buildUrunAdi(),
               SizedBox(height: getProportionateScreenHeight(10)),
               buildBirimFiyati(),
+              SizedBox(height: getProportionateScreenHeight(10)),
+              Row(
+                children: <Widget>[
+                  Expanded(child: buildPakettekiAdetSayisi()),
+                  Expanded(child: buildPaketSayisi()),
+                ],
+              ),
+              // buildPaketSayisi(),
+              // SizedBox(height: getProportionateScreenHeight(5)),
+              // buildPaketSayisi(),
               SizedBox(height: getProportionateScreenHeight(10)),
               buildAdet(),
               // buildKdvHaricToplamTutar(),
@@ -301,6 +316,70 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
     );
   }
 
+  Widget buildPakettekiAdetSayisi() {
+    return SizedBox(
+      key: UniqueKey(),
+      height: 40,
+      // decoration: BoxDecorationSettings(),
+      child: TextFormField(
+        // initialValue: '1',
+        controller: paketIciAdetController,
+        // focusNode: _adetFocus,
+        keyboardType: TextInputType.number,
+        // readOnly: true,
+        // inputFormatters: [
+        //   FilteringTextInputFormatter.deny(','),
+        // ],
+        decoration: const InputDecoration(
+          labelText: "Paket İçi Adet",
+          // labelStyle: kMetinStili,
+          icon: Icon(Icons.pages_sharp),
+        ),
+        style: kFontStili(12),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Adet Boş Bırakılamaz.";
+          } else {
+            return null;
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildPaketSayisi() {
+    return SizedBox(
+      key: UniqueKey(),
+      height: 40,
+      // decoration: BoxDecorationSettings(),
+      child: TextFormField(
+        // initialValue: '1',
+        onEditingComplete: () {
+          getPaketAdetleriToplami();
+        },
+        controller: paketSayisiController,
+        // focusNode: _adetFocus,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(','),
+        ],
+        decoration: const InputDecoration(
+          labelText: "Paket Sayısı",
+          // labelStyle: kMetinStili,
+          // icon: Icon(Icons.pages_sharp),
+        ),
+        style: kMetinStili,
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Adet Boş Bırakılamaz.";
+          } else {
+            return null;
+          }
+        },
+      ),
+    );
+  }
+
   Widget buildAdet() {
     return SizedBox(
       key: UniqueKey(),
@@ -388,6 +467,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             urunKoduController.clear();
             barkodController.clear();
             birimFiyatController.clear();
+            paketIciAdetController.clear();
+            paketSayisiController.clear();
           },
         ),
       ),
@@ -445,6 +526,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           urunAdiController.text = element.urunAdi;
           birimFiyatController.text = element.fiyat.toString();
           urunKoduController.text = element.urunKodu;
+          paketIciAdetController.text = element.paketIciAdet.toString();
         }
       });
     });
@@ -460,9 +542,18 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         for (var element in urun) {
           urunAdiController.text = element.urunAdi;
           birimFiyatController.text = element.fiyat.toString();
+          paketIciAdetController.text = element.paketIciAdet.toString();
           _urunId = element.id;
         }
       });
+    });
+  }
+
+  getPaketAdetleriToplami() {
+    setState(() {
+      adetController.text = (int.parse(paketIciAdetController.text) *
+              int.parse(paketSayisiController.text))
+          .toString();
     });
   }
 

@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
 import 'package:stoktakip_app/api/pdf_invoice_api.dart';
-import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
 
@@ -57,7 +55,7 @@ class _BodyState extends State<Body> {
             itemBuilder: (context, index) {
               String firma = satisFaturaList[index].firmaUnvani!;
 
-              Future<List> _getUrunBilgleri() async {
+              Future<List> _getUrunBilgileri() async {
                 print(satisFaturaList[index].id);
                 await APIServices.fetchUrunBilgileriBySatisFaturaId(
                         satisFaturaList[index].id)
@@ -88,11 +86,15 @@ class _BodyState extends State<Body> {
                           const PopupMenuItem(
                             value: 'SatisRaporu',
                             child: Text("Satış Raporu"),
-                          )
+                          ),
+                          const PopupMenuItem(
+                            value: 'Duzenle',
+                            child: Text("Düzenle"),
+                          ),
                         ];
                       },
                       onSelected: (String value) async {
-                        await _getUrunBilgleri();
+                        await _getUrunBilgileri();
                         actionPopUpItemSelected(value, urunBilgileriGetIdList,
                             satisFaturaList[index]);
                       },
@@ -149,7 +151,8 @@ class _BodyState extends State<Body> {
 
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.
-    } else if (value == 'delete') {
+    } else if (value == 'Duzenle') {
+      print("Düzenle");
     } else {}
   }
 }

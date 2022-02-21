@@ -240,12 +240,15 @@ class _CheckoutCardState extends State<CheckoutCard>
                 SizedBox(width: getProportionateScreenWidth(10)),
               ],
             ),
+            buildTextRich("Toplam Adet: ${toplamMiktar()}", Colors.teal),
             SizedBox(height: getProportionateScreenHeight(20)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   children: [
+                    // buildTextRich(
+                    //     "Toplam Adet: ${toplamMiktar()}", Colors.black87),
                     buildTextRich("Toplam: ", Colors.black87),
                     buildTextRich(
                         "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
@@ -424,6 +427,16 @@ class _CheckoutCardState extends State<CheckoutCard>
         style: TextStyle(fontSize: 16, color: renk),
       ),
     );
+  }
+
+  String toplamMiktar() {
+    int toplam = 0;
+    setState(() {
+      for (var item in urunBilgileriList) {
+        toplam += item.miktar;
+      }
+    });
+    return toplam.toString();
   }
 
   // Widget buildIskonto() {

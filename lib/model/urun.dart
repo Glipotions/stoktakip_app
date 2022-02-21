@@ -14,6 +14,7 @@ class Urun {
     required this.birim,
     required this.fiiliStok,
     required this.gercekStok,
+    this.paketIciAdet,
     required this.fiyat,
     this.aciklama,
     // required this.durum,
@@ -26,6 +27,7 @@ class Urun {
   int birim;
   int fiiliStok;
   int gercekStok;
+  int? paketIciAdet;
   double fiyat;
   String? aciklama;
   // bool durum = true;
@@ -38,6 +40,7 @@ class Urun {
         birim: json["birim"],
         fiiliStok: json["fiiliStok"],
         gercekStok: json["gercekStok"],
+        paketIciAdet: json["paketIciAdet"],
         fiyat: json["fiyat"].toDouble(),
         aciklama: json["aciklama"],
         // durum: json["durum"],
@@ -51,6 +54,7 @@ class Urun {
         "birim": birim,
         "fiiliStok": fiiliStok,
         "gercekStok": gercekStok,
+        "paketIciAdet": paketIciAdet,
         "fiyat": fiyat,
         "aciklama": aciklama,
         // "durum": durum,
