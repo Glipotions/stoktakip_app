@@ -10,19 +10,26 @@ class UrunBilgileri {
   double tutar;
   String? urunAdi;
   String? urunKodu;
+  bool? insert;
+  bool? update;
+  bool? delete;
 
-  UrunBilgileri(
-      {required this.urunId,
-      required this.satisFaturaId,
-      required this.miktar,
-      required this.birimFiyat,
-      required this.dovizliBirimFiyat,
-      required this.kdvHaricTutar,
-      required this.kdvOrani,
-      required this.kdvTutari,
-      required this.tutar,
-      this.urunAdi,
-      this.urunKodu});
+  UrunBilgileri({
+    required this.urunId,
+    required this.satisFaturaId,
+    required this.miktar,
+    required this.birimFiyat,
+    required this.dovizliBirimFiyat,
+    required this.kdvHaricTutar,
+    required this.kdvOrani,
+    required this.kdvTutari,
+    required this.tutar,
+    this.urunAdi,
+    this.urunKodu,
+    this.insert,
+    this.update,
+    this.delete,
+  });
 
   factory UrunBilgileri.fromJson(Map<String, dynamic> json) => UrunBilgileri(
         urunId: json['urunId'],

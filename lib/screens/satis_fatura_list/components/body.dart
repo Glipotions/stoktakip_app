@@ -6,7 +6,10 @@ import 'package:stoktakip_app/api/pdf_invoice_api.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/screens/cart_satis_fatura_duzenle/cart_screen.dart';
+import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
 
@@ -140,9 +143,7 @@ class _BodyState extends State<Body> {
       final invoice = Invoice(
           satisFatura: satisFatura,
           info: InvoiceInfo(
-            // date: DateTime.now(),
-            // dueDate: DateTime.now(),
-            description: 'My description...',
+            description: 'Açıklama',
             number: '${DateTime.now().year}-9999',
           ),
           items: urunBilgileriListesi);
@@ -152,7 +153,14 @@ class _BodyState extends State<Body> {
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.
     } else if (value == 'Duzenle') {
-      print("Düzenle");
+      satisFaturaDuzenle = SatisFaturaDuzenle(
+          oncekiTutar: satisFatura.toplamTutar!,
+          cariHesapAdi: satisFatura.firmaUnvani,
+          cariHesapId: satisFatura.cariHesapId,
+          satisFaturaId: satisFatura.id);
+      print("${satisFaturaDuzenle.oncekiTutar}");
+      faturaDurum = true;
+      Navigator.pushNamed(context, UrunBilgileriDuzenleAdd.routeName);
     } else {}
   }
 }

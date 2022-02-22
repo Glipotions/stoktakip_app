@@ -35,7 +35,7 @@ class APIServices {
     var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
-    print(res.statusCode);
+    print("Ürün Bilgisi Ekle: ${res.statusCode}");
     return res.statusCode;
   }
 

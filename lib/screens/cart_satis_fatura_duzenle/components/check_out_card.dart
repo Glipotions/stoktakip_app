@@ -9,6 +9,7 @@ import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
@@ -113,12 +114,12 @@ class _CheckoutCardState extends State<CheckoutCard>
                         isCheckedIskonto = value!;
                         if (value == false) {
                           _iskontoOrani = 0;
-                          for (var item in urunBilgileriList) {
+                          for (var item in urunBilgileriGetIdList) {
                             item.tutar = item.kdvHaricTutar + item.kdvTutari;
                           }
                         } else {
                           _iskontoOrani = _currentSliderValue; //değişecek
-                          for (var item in urunBilgileriList) {
+                          for (var item in urunBilgileriGetIdList) {
                             item.tutar = item.kdvHaricTutar +
                                 item.kdvTutari -
                                 (((item.kdvHaricTutar + item.kdvTutari) *
@@ -178,7 +179,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                     setState(() {
                       isCheckedKdv = value!;
                       if (value == false) {
-                        for (var item in urunBilgileriList) {
+                        for (var item in urunBilgileriGetIdList) {
                           item.kdvOrani = 0;
                           item.kdvTutari = 0;
                           item.tutar = _iskontoOrani == 0
@@ -191,7 +192,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                           // item.kdvHaricTutar=
                         }
                       } else {
-                        for (var item in urunBilgileriList) {
+                        for (var item in urunBilgileriGetIdList) {
                           item.kdvOrani = kdvOrani.toDouble();
                           double iskontoUygulanmis = item.kdvHaricTutar -
                               (item.kdvHaricTutar * _iskontoOrani / 100);
@@ -251,43 +252,44 @@ class _CheckoutCardState extends State<CheckoutCard>
                     //     "Toplam Adet: ${toplamMiktar()}", Colors.black87),
                     buildTextRich("Toplam: ", Colors.black87),
                     buildTextRich(
-                        "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
+                        "   ${totalTutarHesapla(urunBilgileriGetIdList).toStringAsFixed(2)}₺",
                         Colors.black),
                     buildTextRich(
-                        "- ${iskontoTutarHesap(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺ İsk.",
+                        "- ${iskontoTutarHesap(urunBilgileriGetIdList, _iskontoOrani).toStringAsFixed(2)}₺ İsk.",
                         Colors.green),
                     buildTextRich(
-                        "+ ${kdvHesapla(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺ Kdv",
+                        "+ ${kdvHesapla(urunBilgileriGetIdList, _iskontoOrani).toStringAsFixed(2)}₺ Kdv",
                         Colors.red),
                     buildTextRich(
-                        "= ${totalTutarwithKdv(urunBilgileriList, _iskontoOrani).toStringAsFixed(2)}₺",
+                        "= ${totalTutarwithKdv(urunBilgileriGetIdList, _iskontoOrani).toStringAsFixed(2)}₺",
                         Colors.blue),
                   ],
                 ),
                 SizedBox(
                   width: getProportionateScreenWidth(190),
                   child: DefaultButton(
-                    text: "Alışverişi Tamamla",
+                    text: "Güncelle",
                     press: () async {
                       // formKey.currentState!.save(); //elimizdeki student oluştu
                       // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
                       if (_firstPress) {
                         _firstPress = false;
 
-                        satisFaturaNew.cariHesapId = cariHesapSingle.id!;
+                        satisFaturaNew.cariHesapId =
+                            satisFaturaDuzenle.cariHesapId!;
                         satisFaturaNew.id =
-                            urunBilgileriList.first.satisFaturaId;
+                            urunBilgileriGetIdList.first.satisFaturaId;
                         satisFaturaNew.dovizTutar = 0;
                         satisFaturaNew.iskontoOrani = _iskontoOrani;
-                        satisFaturaNew.iskontoTutari =
-                            iskontoTutarHesap(urunBilgileriList, _iskontoOrani);
+                        satisFaturaNew.iskontoTutari = iskontoTutarHesap(
+                            urunBilgileriGetIdList, _iskontoOrani);
                         satisFaturaNew.kdvHaricTutar =
-                            totalTutarHesapla(urunBilgileriList);
-                        satisFaturaNew.toplamTutar =
-                            totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                            totalTutarHesapla(urunBilgileriGetIdList);
+                        satisFaturaNew.toplamTutar = totalTutarwithKdv(
+                            urunBilgileriGetIdList, _iskontoOrani);
                         satisFaturaNew.tarih = DateTime.now();
                         satisFaturaNew.kdvTutari =
-                            kdvHesapla(urunBilgileriList, _iskontoOrani);
+                            kdvHesapla(urunBilgileriGetIdList, _iskontoOrani);
 
                         satisFaturaNew.faturaKdvOrani =
                             isCheckedKdv ? kdvOrani.toDouble() : 0;
@@ -302,28 +304,28 @@ class _CheckoutCardState extends State<CheckoutCard>
                             : satisFaturaNew.kdvSekli = 2;
                         var resultSatisFaturaAdd =
                             await APIServices.postSatisFatura(satisFaturaNew);
-                        print('SatisFatura Eklendi');
 
-                        cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
-                            totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
+                        double sonrakiTutar = totalTutarwithKdv(
+                            urunBilgileriGetIdList, _iskontoOrani);
                         var resultCarihesapUpdateSatis =
                             await APIServices.updateCariBakiyeById(
-                                cariHesapSingle.id!,
-                                totalTutarwithKdv(
-                                    urunBilgileriList, _iskontoOrani),
+                                satisFaturaDuzenle.cariHesapId!,
+                                sonrakiTutar - satisFaturaDuzenle.oncekiTutar,
                                 "Borc");
                         print('Cari Hesap Bakiye Güncellendi.');
 
-                        for (var urun in urunBilgileriList) {
-                          await APIServices.updateUrunStokById(
-                              urun.urunId, urun.miktar, true);
+                        for (var urun in urunBilgileriGetIdList) {
+                          if (urun.insert == true) {
+                            await APIServices.updateUrunStokById(
+                                urun.urunId, urun.miktar, true);
 
-                          await APIServices.postUrunBilgileri(urun);
+                            await APIServices.postUrunBilgileri(urun);
+                          }
                         }
 
                         if (isCheckedNakit) {
                           double toplamTutar = totalTutarwithKdv(
-                              urunBilgileriList, _iskontoOrani);
+                              urunBilgileriGetIdList, _iskontoOrani);
 
                           int nakitId = buildId();
                           nakitEntity.cariHesapId = cariHesapSingle.id!;
@@ -337,42 +339,43 @@ class _CheckoutCardState extends State<CheckoutCard>
                           nakitEntity.aciklama = "Mobil Satış";
                           nakitEntity.makbuzNo = null;
 
-                          var resultNakitAdd =
-                              await APIServices.postNakit(nakitEntity);
+                          // var resultNakitAdd =
+                          //     await APIServices.postNakit(nakitEntity);
 
                           var resultKasaUpdate =
                               await APIServices.updateKasa(kasaId, toplamTutar);
 
-                          var resultKasaHareketleriAdd =
-                              await APIServices.postKasaHareketleri(
-                                  kasaId, nakitId, "Nakit");
+                          // var resultKasaHareketleriAdd =
+                          //     await APIServices.postKasaHareketleri(
+                          //         kasaId, nakitId, "Nakit");
                           var resultCarihesapUpdateNakit =
                               await APIServices.updateCariBakiyeById(
                                   cariHesapSingle.id!,
                                   totalTutarwithKdv(
-                                      urunBilgileriList, _iskontoOrani),
+                                      urunBilgileriGetIdList, _iskontoOrani),
                                   "Odeme");
                           var resultCariHesapHareketleriNakitAdd =
                               await APIServices.postCariHesapHareketleri(
                                   cariHesapSingle.id!, nakitId, "Nakit");
 
-                          if (resultNakitAdd != 200 ||
+                          if (
+                              // resultNakitAdd != 200 ||
                               resultKasaUpdate != 200 ||
-                              resultKasaHareketleriAdd != 200 ||
-                              resultCariHesapHareketleriNakitAdd != 200 ||
-                              resultCarihesapUpdateNakit != 200) {
+                                  // resultKasaHareketleriAdd != 200 ||
+                                  resultCariHesapHareketleriNakitAdd != 200 ||
+                                  resultCarihesapUpdateNakit != 200) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBarNakitEkle);
                           }
                         }
 
-                        var resultCariHesapHareketleriSatisAdd =
-                            await APIServices.postCariHesapHareketleri(
-                                cariHesapSingle.id!,
-                                satisFaturaNew.id,
-                                "Satis");
+                        // var resultCariHesapHareketleriSatisAdd =
+                        //     await APIServices.postCariHesapHareketleri(
+                        //         cariHesapSingle.id!,
+                        //         satisFaturaNew.id,
+                        //         "Satis");
                         //TEMİZLİK KISMI
-                        urunBilgileriList.clear();
+                        urunBilgileriGetIdList.clear();
                         faturaAciklama = null;
                         cariHesapSingle =
                             CariHesap(firma: null, bakiye: 0, id: -1);
@@ -391,15 +394,12 @@ class _CheckoutCardState extends State<CheckoutCard>
                             id: 1);
 
                         Navigator.of(context).pop(true);
-                        // Navigator.pop(context);
                         Navigator.of(context).pop(true);
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const FaturaOlustur()));
-                        if (resultCariHesapHareketleriSatisAdd != 200 ||
+                        // Navigator.pop(context);
+                        if (
+                            // resultCariHesapHareketleriSatisAdd != 200 ||
                             resultCarihesapUpdateSatis != 200 ||
-                            resultSatisFaturaAdd != 200) {
+                                resultSatisFaturaAdd != 200) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBarSatisFaturaEkle);
                         } else {
@@ -433,41 +433,10 @@ class _CheckoutCardState extends State<CheckoutCard>
   String toplamMiktar() {
     int toplam = 0;
     setState(() {
-      for (var item in urunBilgileriList) {
+      for (var item in urunBilgileriGetIdList) {
         toplam += item.miktar;
       }
     });
     return toplam.toString();
   }
-
-  // Widget buildIskonto() {
-  //   return SizedBox(
-  //     key: UniqueKey(),
-  //     height: 40,
-  //     // decoration: BoxDecorationSettings(),
-  //     child: TextFormField(
-  //       controller: _iskontoController,
-  //       keyboardType: TextInputType.number,
-  //       inputFormatters: [
-  //         FilteringTextInputFormatter.deny(','),
-  //       ],
-  //       decoration: const InputDecoration(
-  //         labelText: "İskonto Giriniz.",
-  //         hintText: "Sayı Giriniz.",
-  //       ),
-  //       onEditingComplete: () => setState(() {
-  //         _iskontoOrani = double.parse(_iskontoController.text);
-  //       }),
-  //       style: kMetinStili,
-  //       validator: (val) {
-  //         if (val!.isEmpty) {
-  //           return "İskonto Boş Bırakılamaz.";
-  //         } else {
-  //           return null;
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
-
 }
