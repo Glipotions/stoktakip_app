@@ -28,9 +28,10 @@ class CheckoutCard extends StatefulWidget {
 
 class _CheckoutCardState extends State<CheckoutCard>
     with TickerProviderStateMixin {
-  final snackBar = const SnackBar(content: Text('Satış Faturası Oluşturuldu!'));
+  final snackBar =
+      const SnackBar(content: Text('Satış Faturası Başarıyla Güncellendi!'));
   final snackBarSatisFaturaEkle = const SnackBar(
-      content: Text('Satış Faturası Oluştururken 1 hata meydana geldi!'));
+      content: Text('Satış Faturası Güncellenirken 1 hata meydana geldi!'));
   final snackBarNakitEkle =
       const SnackBar(content: Text('Nakit Eklerken bir hata meydana geldi!'));
 
@@ -277,6 +278,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                         satisFaturaNew.cariHesapId =
                             satisFaturaDuzenle.cariHesapId!;
+                        satisFaturaNew.kod = satisFaturaDuzenle.satisFaturaKod;
                         satisFaturaNew.id =
                             urunBilgileriGetIdList.first.satisFaturaId;
                         satisFaturaNew.dovizTutar = 0;
@@ -296,14 +298,19 @@ class _CheckoutCardState extends State<CheckoutCard>
                         faturaAciklama != null
                             ? satisFaturaNew.aciklama = faturaAciklama
                             : satinAlmaFaturaNew.aciklama;
-
+                        satisFaturaNew.aciklama =
+                            satisFaturaDuzenle.satisFaturaAciklama;
                         satisFaturaNew.odemeTipi = isCheckedNakit ? 1 : 0;
 
                         isCheckedKdv
                             ? satisFaturaNew.kdvSekli = 1
                             : satisFaturaNew.kdvSekli = 2;
+
+                        // var resultSatisFaturaAdd =
+                        //     await APIServices.postSatisFatura(satisFaturaNew);
+
                         var resultSatisFaturaAdd =
-                            await APIServices.postSatisFatura(satisFaturaNew);
+                            await APIServices.updateSatisFatura(satisFaturaNew);
 
                         double sonrakiTutar = totalTutarwithKdv(
                             urunBilgileriGetIdList, _iskontoOrani);
@@ -312,7 +319,6 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 satisFaturaDuzenle.cariHesapId!,
                                 sonrakiTutar - satisFaturaDuzenle.oncekiTutar,
                                 "Borc");
-                        print('Cari Hesap Bakiye Güncellendi.');
 
                         for (var urun in urunBilgileriGetIdList) {
                           if (urun.insert == true) {
@@ -322,6 +328,13 @@ class _CheckoutCardState extends State<CheckoutCard>
                             await APIServices.postUrunBilgileri(urun);
                           }
                         }
+                        for (var urunDelete in urunBilgileriDeleteList) {
+                          urunDelete.dovizTuru = 1;
+                          await APIServices.deleteUrunBilgileri(urunDelete);
+                        }
+                        // await APIServices.deleteUrunBilgileri(
+                        //     urunBilgileriDeleteList);
+                        urunBilgileriDeleteList = [];
 
                         if (isCheckedNakit) {
                           double toplamTutar = totalTutarwithKdv(

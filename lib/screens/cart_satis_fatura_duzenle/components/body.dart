@@ -30,10 +30,13 @@ class _BodyState extends State<Body> {
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               setState(() {
-                // urunBilgileriGetIdList.removeAt(index);
+                urunBilgileriDeleteList.add(urunBilgileriGetIdList[index]);
+                urunBilgileriGetIdList.removeAt(index);
+                // urunBilgileriGetIdList[index].delete = true;
                 (context as Element).reassemble();
               });
             },
+            // confirmDismiss: (direction) => confirmDismiss(items[index]),
             background: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(

@@ -18,8 +18,6 @@ SatisFatura satisFaturaNew = SatisFatura(
     durum: true,
     id: 1);
 
-List<SatisFatura> satisFaturaList = [];
-
 SatinAlmaFatura satinAlmaFaturaNew = SatinAlmaFatura(
     cariHesapId: 1,
     kod: "Deneme-0001",

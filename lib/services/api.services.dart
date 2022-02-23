@@ -39,6 +39,22 @@ class APIServices {
     return res.statusCode;
   }
 
+  static Future deleteUrunBilgileri(UrunBilgileri entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    // for (var entity in entities) {
+    var url = Uri.parse(urunBilgileriDeleteUrl);
+    var myEntity = entity.toJsonWithId();
+    var deleteBody = json.encode(myEntity);
+    var res = await http.delete(url, headers: header, body: deleteBody);
+    print("Ürün Bilgisi Silindi: ${res.statusCode}");
+
+    // }
+    return res.statusCode;
+  }
+
   static Future postUrunBilgileriSatinAlma(
       UrunBilgileriSatinAlma entity) async {
     Map<String, String> header = {
@@ -67,6 +83,19 @@ class APIServices {
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
     print("Satış Fatura result kod: ${res.statusCode}");
+    return res.statusCode;
+  }
+
+  static Future updateSatisFatura(SatisFatura entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json-patch+json',
+      'Accept': '*/*'
+    };
+    var url = Uri.parse(satisFaturaUpdateUrl);
+    var myEntity = entity.toJson();
+    var updateBody = json.encode(myEntity);
+    var res = await http.patch(url, headers: header, body: updateBody);
+    print("Satış Fatura Update: ${res.statusCode}");
     return res.statusCode;
   }
 

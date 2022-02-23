@@ -10,6 +10,7 @@ String mainUrl = 'http://$host/api/';
 
 String satisFaturaAddUrl = '${mainUrl}SatisFatura';
 Uri satisFaturaGetUrl = Uri.parse('${mainUrl}SatisFatura/getall');
+String satisFaturaUpdateUrl = '${mainUrl}SatisFatura/updatesatisfatura';
 
 String satinAlmaFaturaAddUrl = '${mainUrl}SatinAlmaFatura';
 Uri satinAlmaFaturaGetUrl = Uri.http(host!, 'SatinAlmaFatura/getall');
@@ -41,6 +42,7 @@ Uri kasaGetUrl = Uri.parse('${mainUrl}Kasa/getall');
 String nakitAddUrl = '${mainUrl}Nakit';
 
 String urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
+String urunBilgileriDeleteUrl = '${mainUrl}UrunBilgileri';
 Uri urunBilgileriGetUrl = Uri.http(host!, 'UrunBilgileri/getall');
 
 String urunBilgileriGetBySatisFaturaIdUrl(id) {

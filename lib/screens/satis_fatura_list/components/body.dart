@@ -12,6 +12,7 @@ import 'package:stoktakip_app/screens/cart_satis_fatura_duzenle/cart_screen.dart
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
+import 'package:stoktakip_app/widget/refresh_widget.dart';
 
 import 'list_card.dart';
 
@@ -26,7 +27,12 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  Future<List> _getSatisFaturas() async {
+  final keyRefresh = GlobalKey<RefreshIndicatorState>();
+  List<SatisFatura> satisFaturaList = [];
+
+  Future<List> getSatisFaturas() async {
+    keyRefresh.currentState?.show();
+    await Future.delayed(const Duration(milliseconds: 500));
     await APIServices.fetchSatisFatura().then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
@@ -40,100 +46,41 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> initStateAsync() async {
-    await _getSatisFaturas();
+    await getSatisFaturas();
   }
 
   @override
   void initState() {
-    initStateAsync();
+    getSatisFaturas();
+    // initStateAsync();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.builder(
-            itemCount: satisFaturaList.length,
-            itemBuilder: (context, index) {
-              String firma = satisFaturaList[index].firmaUnvani!;
-
-              Future<List> _getUrunBilgileri() async {
-                print(satisFaturaList[index].id);
-                await APIServices.fetchUrunBilgileriBySatisFaturaId(
-                        satisFaturaList[index].id)
-                    .then((response) {
-                  setState(() {
-                    dynamic list = json.decode(response.body);
-                    // List data = list['data'];
-                    List data = list;
-                    urunBilgileriGetIdList = data
-                        .map((model) => UrunBilgileri.fromJson(model))
-                        .toList();
-                  });
-                });
-                return urunBilgileriGetIdList;
-              }
-
-              return Padding(
-                key: UniqueKey(),
-                padding: EdgeInsets.symmetric(
-                    vertical: getProportionateScreenWidth(10)),
-                child: ListTile(
-                    leading: ListCard(
-                      cart: satisFaturaList[index],
-                    ),
-                    trailing: PopupMenuButton(
-                      itemBuilder: (context) {
-                        return [
-                          const PopupMenuItem(
-                            value: 'SatisRaporu',
-                            child: Text("Satış Raporu"),
-                          ),
-                          const PopupMenuItem(
-                            value: 'Duzenle',
-                            child: Text("Düzenle"),
-                          ),
-                        ];
-                      },
-                      onSelected: (String value) async {
-                        await _getUrunBilgileri();
-                        actionPopUpItemSelected(value, urunBilgileriGetIdList,
-                            satisFaturaList[index]);
-                      },
-                    )),
-                // child: ListCard(
-                //   cart: satisFaturaList[index],
-
-                // child: Dismissible(
-                //   key: Key(satisFaturaList[index].id.toString()),
-                //   direction: DismissDirection.endToStart,
-                //   onDismissed: (direction) {
-                //     setState(() {
-                //       satisFaturaList.removeAt(index);
-                //       (context as Element).reassemble();
-                //     });
-                //   },
-                //   background: Container(
-                //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                //     decoration: BoxDecoration(
-                //       color: const Color(0xFFFFE6E6),
-                //       borderRadius: BorderRadius.circular(15),
-                //     ),
-                //     child: Row(
-                //       children: const [
-                //         Spacer(),
-                //         Icon(Icons.restore_from_trash),
-                //         // SvgPicture.asset("assets/icons/Trash.svg"),
-                //       ],
-                //     ),
-                //   ),
-                //   child: ListCard(
-                //     cart: satisFaturaList[index],
-                //   ),
-                // ),
-              );
-            }));
+    // return Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+    //   child: buildList(),
+    // );
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          children: const [
+            Text(
+              "Satış Faturaları",
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: getSatisFaturas,
+          ),
+        ],
+      ),
+      body: buildList(),
+    );
   }
 
   void actionPopUpItemSelected(String value,
@@ -157,10 +104,78 @@ class _BodyState extends State<Body> {
           oncekiTutar: satisFatura.toplamTutar!,
           cariHesapAdi: satisFatura.firmaUnvani,
           cariHesapId: satisFatura.cariHesapId,
-          satisFaturaId: satisFatura.id);
-      print("${satisFaturaDuzenle.oncekiTutar}");
+          satisFaturaId: satisFatura.id,
+          satisFaturaKod: satisFatura.kod,
+          satisFaturaAciklama: satisFatura.aciklama);
+      urunBilgileriDeleteList = [];
       faturaDurum = true;
       Navigator.pushNamed(context, UrunBilgileriDuzenleAdd.routeName);
     } else {}
+  }
+
+  Widget buildList() => satisFaturaList.isEmpty
+      ? const Center(child: CircularProgressIndicator())
+      : RefreshWidget(
+          keyRefresh: keyRefresh,
+          onRefresh: getSatisFaturas,
+          child: ListView.builder(
+              shrinkWrap: true,
+              primary: false,
+              // padding: const EdgeInsets.all(16),
+              itemCount: satisFaturaList.length,
+              itemBuilder: (context, index) {
+                return buildItem(context, index);
+              }),
+        );
+
+  Widget buildItem(BuildContext context, int index) {
+    String firma = satisFaturaList[index].firmaUnvani!;
+
+    Future<List> _getUrunBilgileri() async {
+      print(satisFaturaList[index].id);
+      await APIServices.fetchUrunBilgileriBySatisFaturaId(
+              satisFaturaList[index].id)
+          .then(
+        (response) {
+          setState(() {
+            dynamic list = json.decode(response.body);
+            // List data = list['data'];
+            List data = list;
+            urunBilgileriGetIdList =
+                data.map((model) => UrunBilgileri.fromJson(model)).toList();
+          });
+        },
+      );
+      return urunBilgileriGetIdList;
+    }
+
+    return Padding(
+      key: UniqueKey(),
+      padding: EdgeInsets.symmetric(vertical: getProportionateScreenWidth(10)),
+      child: ListTile(
+        leading: ListCard(
+          cart: satisFaturaList[index],
+        ),
+        trailing: PopupMenuButton(
+          itemBuilder: (context) {
+            return [
+              const PopupMenuItem(
+                value: 'SatisRaporu',
+                child: Text("Satış Raporu"),
+              ),
+              const PopupMenuItem(
+                value: 'Duzenle',
+                child: Text("Düzenle"),
+              ),
+            ];
+          },
+          onSelected: (String value) async {
+            await _getUrunBilgileri();
+            actionPopUpItemSelected(
+                value, urunBilgileriGetIdList, satisFaturaList[index]);
+          },
+        ),
+      ),
+    );
   }
 }

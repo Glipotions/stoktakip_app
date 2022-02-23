@@ -21,31 +21,30 @@ class ListScreenSatisFatura extends StatefulWidget {
 class _ListScreenSatisFaturaState extends State<ListScreenSatisFatura> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context),
-      body: const Body(),
-      // bottomNavigationBar: CheckoutCard(),
-    );
+    return const Body();
+    // return Scaffold(
+    //   appBar: buildAppBar(context),
+    //   body: const Body(),
+    //   // bottomNavigationBar: CheckoutCard(),
+    // );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Column(
-        children: const [
-          Text(
-            "Satış Faturaları",
-            style: TextStyle(color: Colors.black),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.pushNamed(context, SettingsPage.routeName);
-          },
-        ),
-      ],
-    );
-  }
+  // AppBar buildAppBar(BuildContext context) {
+  //   return AppBar(
+  //     title: Column(
+  //       children: const [
+  //         Text(
+  //           "Satış Faturaları",
+  //           style: TextStyle(color: Colors.black),
+  //         ),
+  //       ],
+  //     ),
+  //     actions: [
+  //       IconButton(
+  //         icon: const Icon(Icons.refresh),
+  //         onPressed: getSatisFaturas,
+  //       ),
+  //     ],
+  //   );
+  // }
 }

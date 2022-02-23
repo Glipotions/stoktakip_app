@@ -4,12 +4,16 @@ class SatisFaturaDuzenle {
   String? cariHesapAdi;
   int? cariHesapId;
   int? satisFaturaId;
+  String? satisFaturaKod;
+  String? satisFaturaAciklama;
   SatisFaturaDuzenle({
     required this.oncekiTutar,
     this.sonTutar,
     this.cariHesapAdi,
     this.cariHesapId,
     this.satisFaturaId,
+    this.satisFaturaKod,
+    this.satisFaturaAciklama,
   });
 }
 

@@ -374,8 +374,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                         //TEMİZLİK KISMI
                         urunBilgileriList.clear();
                         faturaAciklama = null;
-                        cariHesapSingle =
-                            CariHesap(firma: null, bakiye: 0, id: -1);
+                        cariHesapSingle = CariHesap(
+                            firma: null, bakiye: 0, id: cariHesapSingle.id);
 
                         satisFaturaNew = SatisFatura(
                             cariHesapId: 1,

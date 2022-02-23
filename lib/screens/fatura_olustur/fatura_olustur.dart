@@ -235,9 +235,12 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                               borderRadius: BorderRadius.circular(15)),
                         ),
                         onPressed: () {
+                          //searchController.text.isEmpty
                           if (searchController.text.isEmpty) {
                           } else {
                             faturaDurum = true;
+                            // searchController.clear();
+                            // dropDownMenu = null;
                             Navigator.pushNamed(
                                 context, UrunBilgileriAdd.routeName);
                           }
@@ -260,6 +263,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                           if (dropDownMenu == null) {
                           } else {
                             faturaDurum = false;
+                            searchController.clear();
+                            dropDownMenu = null;
                             aciklamaController.clear();
                             Navigator.pushNamed(
                                 context, UrunBilgileriAdd.routeName);
