@@ -16,7 +16,7 @@ class SatisFatura {
   DateTime tarih;
   int kdvSekli;
   double? kdvHaricTutar;
-  double? faturaKdvOrani;
+  int? faturaKdvOrani;
   double? iskontoTutari;
   double? kdvTutari;
   double? toplamTutar;
@@ -70,9 +70,7 @@ class SatisFatura {
         iskontoTutari: json["iskontoTutari"] != null
             ? json["iskontoTutari"].toDouble()
             : json["iskontoTutari"],
-        faturaKdvOrani: json["faturaKdvOrani"] != null
-            ? json["faturaKdvOrani"].toDouble()
-            : json["faturaKdvOrani"],
+        faturaKdvOrani: json["faturaKdvOrani"],
         kdvTutari: json["kdvTutari"] != null
             ? json["kdvTutari"].toDouble()
             : json["kdvTutari"],

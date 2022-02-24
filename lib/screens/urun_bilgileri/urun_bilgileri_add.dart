@@ -6,6 +6,7 @@ import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
+import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun.dart';
 import 'package:stoktakip_app/model/urun_barkod_bilgileri.dart';
@@ -78,99 +79,107 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Sepete Ürün Ekle",
-          style: kMetinStili,
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-                height: 150.0,
-                width: 30.0,
-                child: GestureDetector(
-                  onTap: () {
-                    faturaDurum!
-                        ? Navigator.pushNamed(
-                            context, CartScreenSatisFatura.routeName)
-                        : Navigator.pushNamed(
-                            context, CartScreenSatinAlmaFatura.routeName);
-                  },
-                  child: Stack(
-                    children: <Widget>[
-                      const IconButton(
-                        icon: Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
+    return WillPopScope(
+      onWillPop: () async {
+        bool? result =
+            await onBackPressedCancelFatura(context, "Fatura bilgileriniz");
+        result ??= false;
+        return result;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Sepete Ürün Ekle",
+            style: kMetinStili,
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                  height: 150.0,
+                  width: 30.0,
+                  child: GestureDetector(
+                    onTap: () {
+                      faturaDurum!
+                          ? Navigator.pushNamed(
+                              context, CartScreenSatisFatura.routeName)
+                          : Navigator.pushNamed(
+                              context, CartScreenSatinAlmaFatura.routeName);
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        const IconButton(
+                          icon: Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          onPressed: null,
                         ),
-                        onPressed: null,
-                      ),
-                      urunBilgileriList.isEmpty
-                          ? Container()
-                          : Positioned(
-                              child: Stack(
-                              children: <Widget>[
-                                Icon(Icons.shopping_cart_outlined,
-                                    size: getProportionateScreenHeight(30),
-                                    color: Colors.red[600]),
-                                Positioned(
-                                    top: -3.0,
-                                    right: -3.0,
-                                    child: Center(
-                                      child: Text(
-                                        urunBilgileriList.length.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )),
-                              ],
-                            )),
-                    ],
-                  ),
-                )),
-          )
-        ],
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(20.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // buildIdBuild(),
-              buildBarcode(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              buildUrunKodu(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              buildUrunAdi(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              buildBirimFiyati(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              Row(
-                children: <Widget>[
-                  Expanded(child: buildPakettekiAdetSayisi()),
-                  Expanded(child: buildPaketSayisi()),
-                ],
-              ),
-              // buildPaketSayisi(),
-              // SizedBox(height: getProportionateScreenHeight(5)),
-              // buildPaketSayisi(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              buildAdet(),
-              // buildKdvHaricToplamTutar(),
-              SizedBox(height: getProportionateScreenHeight(10)),
-              buildAddButton(),
-              // buildSaveButton()
-            ],
+                        urunBilgileriList.isEmpty
+                            ? Container()
+                            : Positioned(
+                                child: Stack(
+                                children: <Widget>[
+                                  Icon(Icons.shopping_cart_outlined,
+                                      size: getProportionateScreenHeight(30),
+                                      color: Colors.red[600]),
+                                  Positioned(
+                                      top: -3.0,
+                                      right: -3.0,
+                                      child: Center(
+                                        child: Text(
+                                          urunBilgileriList.length.toString(),
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                ],
+                              )),
+                      ],
+                    ),
+                  )),
+            )
+          ],
+        ),
+        body: Container(
+          margin: const EdgeInsets.all(20.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                // buildIdBuild(),
+                buildBarcode(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                buildUrunKodu(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                buildUrunAdi(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                buildBirimFiyati(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: buildPakettekiAdetSayisi()),
+                    Expanded(child: buildPaketSayisi()),
+                  ],
+                ),
+                // buildPaketSayisi(),
+                // SizedBox(height: getProportionateScreenHeight(5)),
+                // buildPaketSayisi(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                buildAdet(),
+                // buildKdvHaricToplamTutar(),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                buildAddButton(),
+                // buildSaveButton()
+              ],
+            ),
           ),
         ),
+        bottomNavigationBar: CheckoutCard(),
       ),
-      bottomNavigationBar: CheckoutCard(),
     );
   }
 

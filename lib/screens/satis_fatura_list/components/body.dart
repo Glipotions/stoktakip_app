@@ -8,7 +8,6 @@ import 'package:stoktakip_app/model/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/screens/cart_satis_fatura_duzenle/cart_screen.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/size_config.dart';
@@ -100,13 +99,18 @@ class _BodyState extends State<Body> {
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.
     } else if (value == 'Duzenle') {
+      // await getSatisFaturas();
       satisFaturaDuzenle = SatisFaturaDuzenle(
           oncekiTutar: satisFatura.toplamTutar!,
           cariHesapAdi: satisFatura.firmaUnvani,
           cariHesapId: satisFatura.cariHesapId,
           satisFaturaId: satisFatura.id,
           satisFaturaKod: satisFatura.kod,
-          satisFaturaAciklama: satisFatura.aciklama);
+          satisFaturaAciklama: satisFatura.aciklama,
+          satisFaturaOdemeTipi: satisFatura.odemeTipi,
+          satisFaturaKdvSekli: satisFatura.kdvSekli,
+          satisFaturaIskontoOrani: satisFatura.iskontoOrani,
+          satisFaturaKdvOrani: satisFatura.faturaKdvOrani);
       urunBilgileriDeleteList = [];
       faturaDurum = true;
       Navigator.pushNamed(context, UrunBilgileriDuzenleAdd.routeName);
@@ -170,6 +174,8 @@ class _BodyState extends State<Body> {
             ];
           },
           onSelected: (String value) async {
+            await getSatisFaturas();
+
             await _getUrunBilgileri();
             actionPopUpItemSelected(
                 value, urunBilgileriGetIdList, satisFaturaList[index]);

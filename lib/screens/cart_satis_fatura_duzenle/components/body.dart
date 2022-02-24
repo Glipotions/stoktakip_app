@@ -5,16 +5,25 @@ import 'package:stoktakip_app/size_config.dart';
 import 'cart_card.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  const Body({Key? key, this.onReassemble, this.child}) : super(key: key);
 
   // final UrunBilgileri urunBilgileriGetIdList;
   // const Body(this._urunBilgileri);
-
+  final VoidCallback? onReassemble;
+  final Widget? child;
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (widget.onReassemble != null) {
+      widget.onReassemble!();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +42,7 @@ class _BodyState extends State<Body> {
                 urunBilgileriDeleteList.add(urunBilgileriGetIdList[index]);
                 urunBilgileriGetIdList.removeAt(index);
                 // urunBilgileriGetIdList[index].delete = true;
-                (context as Element).reassemble();
+                reassemble();
               });
             },
             // confirmDismiss: (direction) => confirmDismiss(items[index]),

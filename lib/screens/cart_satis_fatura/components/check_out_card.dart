@@ -290,7 +290,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                             kdvHesapla(urunBilgileriList, _iskontoOrani);
 
                         satisFaturaNew.faturaKdvOrani =
-                            isCheckedKdv ? kdvOrani.toDouble() : 0;
+                            isCheckedKdv ? kdvOrani.toInt() : 0;
                         faturaAciklama != null
                             ? satisFaturaNew.aciklama = faturaAciklama
                             : satinAlmaFaturaNew.aciklama;

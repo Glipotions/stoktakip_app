@@ -1,13 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/services/api.services.dart';
-import 'package:stoktakip_app/size_config.dart';
 
 class ListCard extends StatelessWidget {
   ListCard({Key? key, required this.cart}) : super(key: key);
@@ -27,6 +22,7 @@ class ListCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
+          // DateFormat.yMMMd('tr').format(cart.tarih),
           cart.tarih.toIso8601String(),
           style: kFontStili(14),
           maxLines: 2,

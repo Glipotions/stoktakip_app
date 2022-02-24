@@ -6,6 +6,10 @@ class SatisFaturaDuzenle {
   int? satisFaturaId;
   String? satisFaturaKod;
   String? satisFaturaAciklama;
+  int? satisFaturaOdemeTipi;
+  int? satisFaturaKdvSekli;
+  int? satisFaturaKdvOrani;
+  double? satisFaturaIskontoOrani;
   SatisFaturaDuzenle({
     required this.oncekiTutar,
     this.sonTutar,
@@ -14,6 +18,10 @@ class SatisFaturaDuzenle {
     this.satisFaturaId,
     this.satisFaturaKod,
     this.satisFaturaAciklama,
+    this.satisFaturaOdemeTipi,
+    this.satisFaturaKdvOrani,
+    this.satisFaturaIskontoOrani,
+    this.satisFaturaKdvSekli,
   });
 }
 
