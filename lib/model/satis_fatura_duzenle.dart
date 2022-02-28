@@ -8,7 +8,7 @@ class SatisFaturaDuzenle {
   String? satisFaturaAciklama;
   int? satisFaturaOdemeTipi;
   int? satisFaturaKdvSekli;
-  int? satisFaturaKdvOrani;
+  double? satisFaturaKdvOrani;
   double? satisFaturaIskontoOrani;
   SatisFaturaDuzenle({
     required this.oncekiTutar,

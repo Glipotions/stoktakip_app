@@ -16,7 +16,7 @@ class SatisFatura {
   DateTime tarih;
   int kdvSekli;
   double? kdvHaricTutar;
-  int? faturaKdvOrani;
+  double? faturaKdvOrani;
   double? iskontoTutari;
   double? kdvTutari;
   double? toplamTutar;
@@ -70,7 +70,9 @@ class SatisFatura {
         iskontoTutari: json["iskontoTutari"] != null
             ? json["iskontoTutari"].toDouble()
             : json["iskontoTutari"],
-        faturaKdvOrani: json["faturaKdvOrani"],
+        faturaKdvOrani: json["faturaKdvOrani"] != null
+            ? json["faturaKdvOrani"].toDouble()
+            : json["faturaKdvOrani"],
         kdvTutari: json["kdvTutari"] != null
             ? json["kdvTutari"].toDouble()
             : json["kdvTutari"],
@@ -98,7 +100,7 @@ class SatisFatura {
         "dovizKuru": dovizKuru,
         "tarih": tarih.toIso8601String(),
         "kdvSekli": kdvSekli,
-        "faturaKdvOrani": faturaKdvOrani,
+        "faturaKdvOrani": faturaKdvOrani!.toDouble(),
         "kdvHaricTutar": kdvHaricTutar,
         "iskontoTutari": iskontoTutari,
         "kdvTutari": kdvTutari,

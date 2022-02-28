@@ -79,7 +79,7 @@ class _SwitchCardState extends State<SwitchCard> {
   @override
   Widget build(BuildContext context) {
     int? _kasaId = Provider.of<KasaData>(context).kasaId;
-    int _value = Provider.of<KdvData>(context).kdv;
+    double _value = Provider.of<KdvData>(context).kdv;
 
     String _kasaAdi = Provider.of<KasaData>(context).kasaAdi!;
     double _currentSliderValue = _value.toDouble();
@@ -118,7 +118,7 @@ class _SwitchCardState extends State<SwitchCard> {
                     setState(() {
                       _currentSliderValue = value;
                       Provider.of<KdvData>(context, listen: false)
-                          .kdvSec(value.toInt());
+                          .kdvSec(value.toDouble());
                     });
                   },
                 ),

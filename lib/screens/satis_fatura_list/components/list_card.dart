@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/cari_hesap.dart';
 import 'package:stoktakip_app/model/satis_fatura.dart';
+import 'package:stoktakip_app/size_config.dart';
 
 class ListCard extends StatelessWidget {
   ListCard({Key? key, required this.cart}) : super(key: key);
@@ -27,10 +29,20 @@ class ListCard extends StatelessWidget {
           style: kFontStili(14),
           maxLines: 2,
         ),
-        Text(
-          "${cart.firmaUnvani} - ${cart.aciklama}",
-          style: const TextStyle(color: Colors.black, fontSize: 16),
-          maxLines: 2,
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.only(right: getProportionateScreenWidth(30)),
+            child: Text(
+              "${cart.firmaUnvani} - ${cart.aciklama}",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              overflow: TextOverflow.ellipsis,
+              // softWrap: false,
+              maxLines: 1,
+            ),
+          ),
         ),
         const SizedBox(height: 5),
         Text.rich(

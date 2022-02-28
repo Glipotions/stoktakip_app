@@ -17,7 +17,7 @@ class SatinAlmaFatura {
   DateTime tarih;
   int kdvSekli;
   double? kdvHaricTutar;
-  int? faturaKdvOrani;
+  double? faturaKdvOrani;
   double? iskontoTutari;
   double? kdvTutari;
   double? toplamTutar;

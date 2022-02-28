@@ -174,7 +174,7 @@ class _BodyState extends State<Body> {
             ];
           },
           onSelected: (String value) async {
-            await getSatisFaturas();
+            // await getSatisFaturas();
 
             await _getUrunBilgileri();
             actionPopUpItemSelected(

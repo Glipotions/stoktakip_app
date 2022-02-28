@@ -36,6 +36,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       const SnackBar(content: Text("Ürün Başarıyla Eklendi."));
   final snackBarKontrol = const SnackBar(content: Text("Ürün Bulunamadı."));
 
+  String? lastInputValue;
+
   var formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
       kdvHaricTutarController = TextEditingController(),
@@ -363,6 +365,13 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       // decoration: BoxDecorationSettings(),
       child: TextFormField(
         // initialValue: '1',
+        onChanged: (value) {
+          if (value == lastInputValue) {
+            getPaketAdetleriToplami();
+            lastInputValue = value;
+          }
+        },
+
         onEditingComplete: () {
           getPaketAdetleriToplami();
         },
@@ -560,9 +569,11 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
 
   getPaketAdetleriToplami() {
     setState(() {
-      adetController.text = (int.parse(paketIciAdetController.text) *
-              int.parse(paketSayisiController.text))
-          .toString();
+      paketSayisiController.text != ""
+          ? adetController.text = (int.parse(paketIciAdetController.text) *
+                  int.parse(paketSayisiController.text))
+              .toString()
+          : adetController.text = "0";
     });
   }
 

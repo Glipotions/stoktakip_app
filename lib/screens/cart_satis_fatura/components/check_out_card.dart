@@ -71,7 +71,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   @override
   Widget build(BuildContext context) {
-    int kdvOrani = Provider.of<KdvData>(context).kdv;
+    double kdvOrani = Provider.of<KdvData>(context).kdv;
     int? kasaId = Provider.of<KasaData>(context).kasaId;
     _iskontoController.text = "0";
     return Container(
@@ -290,7 +290,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                             kdvHesapla(urunBilgileriList, _iskontoOrani);
 
                         satisFaturaNew.faturaKdvOrani =
-                            isCheckedKdv ? kdvOrani.toInt() : 0;
+                            isCheckedKdv ? kdvOrani.toDouble() : 0;
                         faturaAciklama != null
                             ? satisFaturaNew.aciklama = faturaAciklama
                             : satinAlmaFaturaNew.aciklama;

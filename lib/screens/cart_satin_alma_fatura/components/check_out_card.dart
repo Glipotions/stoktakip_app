@@ -42,7 +42,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
     //   void hesapla() {}
     // });
 
-    int kdvOrani = Provider.of<KdvData>(context).kdv;
+    double kdvOrani = Provider.of<KdvData>(context).kdv;
     return Container(
       key: formKey,
       padding: EdgeInsets.symmetric(

@@ -43,6 +43,7 @@ class CartCard extends StatelessWidget {
             ),
             Text(
               cart.urunAdi!,
+              // overflow: TextOverflow.clip,
               style: const TextStyle(color: Colors.black, fontSize: 16),
               maxLines: 2,
             ),

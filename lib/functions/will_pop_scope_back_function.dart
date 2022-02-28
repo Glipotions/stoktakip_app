@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<bool?> onBackPressedCancelFatura(BuildContext context, String detay) {
+Future<bool?> onBackPressed(BuildContext context, String detay) {
   return showDialog<bool>(
     context: context,
     builder: (c) => AlertDialog(
       title: const Text('Uyarı'),
-      content: Text(
-          'Çıkış yaparsanız $detay iptal edilecektir.\nÇıkmak istediğinize emin misiniz?'),
+      content: Text(detay),
       actions: [
         FlatButton(
           child: const Text('Evet'),
@@ -21,3 +20,20 @@ Future<bool?> onBackPressedCancelFatura(BuildContext context, String detay) {
     ),
   );
 }
+
+Future onBackPressedCancelFatura(BuildContext context, String detay) async {
+  return await onBackPressed(context,
+      'Çıkış yaparsanız $detay iptal edilecektir!\nÇıkmak istediğinize emin misiniz?');
+}
+
+Future onBackPressedCancelApp(BuildContext context) async {
+  return await onBackPressed(context,
+      'Programdan Çıkış Yapmak Üzeresiniz!\nÇıkmak istediğinize emin misiniz?');
+}
+
+// onWillPop: () async {
+//         bool? result =
+//             await onBackPressedCancelFatura(context, "Fatura düzenlemesi");
+//         result ??= false;
+//         return result;
+//       },
