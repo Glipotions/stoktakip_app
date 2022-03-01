@@ -1,6 +1,4 @@
-import 'entity.dart';
-
-class UrunBilgileriSatinAlma implements FaturaBilgileriEntity {
+class UrunBilgileriSatinAlma {
   int urunId;
   int satinAlmaFaturaId;
   int miktar;

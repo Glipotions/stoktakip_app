@@ -4,9 +4,9 @@ import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../../size_config.dart';
@@ -208,7 +208,6 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           ? satinAlmaFaturaNew.kdvSekli = 1
                           : satinAlmaFaturaNew.kdvSekli = 2;
                       await APIServices.postSatinAlmaFatura(satinAlmaFaturaNew);
-                      print('SatisFatura Eklendi');
 
                       cariHesapSingle.bakiye = cariHesapSingle.bakiye! -
                           totalTutarwithKdvSatinAlma(
@@ -218,7 +217,6 @@ class _CheckoutCardState extends State<CheckoutCard> {
                           totalTutarwithKdvSatinAlma(
                               urunBilgileriSatinAlmaList, _iskontoOrani),
                           "Odeme");
-                      print('Cari Hesap Bakiye Güncellendi.');
 
                       for (var urun in urunBilgileriSatinAlmaList) {
                         await APIServices.updateUrunStokById(

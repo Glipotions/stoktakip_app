@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 
 import '../../../size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
+  const CheckoutCard({Key? key}) : super(key: key);
+
   // const CheckoutCard({
   //   Key? key,
   // }) : super(key: key);
@@ -77,6 +79,5 @@ class _CheckoutCardState extends State<CheckoutCard> {
         style: TextStyle(fontSize: 16, color: renk),
       ),
     );
-    ;
   }
 }

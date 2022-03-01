@@ -3,14 +3,14 @@
 import 'dart:convert';
 
 import 'package:stoktakip_app/const/api_const.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/nakit.dart';
-import 'package:stoktakip_app/model/satin_alma_fatura.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
+import 'package:stoktakip_app/model/nakit/nakit.dart';
+import 'package:stoktakip_app/model/satin_alma/satin_alma_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:http/http.dart' as http;
-import 'package:stoktakip_app/model/urun.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/urun/urun.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 
 class APIServices {
   List<UrunBilgileri> fetchUrunBilgileri(String responseBody) {
@@ -165,7 +165,7 @@ class APIServices {
   }
 
   static Future updateKasa(int id, double bakiye) async {
-    String urlString = kasaUpdateBakiyeUrl(id, bakiye);
+    // String urlString = kasaUpdateBakiyeUrl(id, bakiye);
     var url = Uri.parse(kasaUpdateBakiyeUrl(id, bakiye));
     var res = await http.patch(url);
     print("Kasa Bakiye Update: ${res.statusCode}");
@@ -221,7 +221,7 @@ class APIServices {
     // Map<String, String> header = {
     //   'Content-type': 'application/json',
     //   'Accept': 'application/json'
-    // };
+    //;
     var url =
         Uri.parse('$updateCariHesapBakiyeById$id&tutar=$tutar&durum=$durum');
     // return await http.put(url, headers: header);

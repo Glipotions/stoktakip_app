@@ -7,11 +7,11 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/urun.dart';
-import 'package:stoktakip_app/model/urun_barkod_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/urun/urun.dart';
+import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/components/check_out_card.dart';
@@ -180,7 +180,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             ),
           ),
         ),
-        bottomNavigationBar: CheckoutCard(),
+        bottomNavigationBar: const CheckoutCard(),
       ),
     );
   }

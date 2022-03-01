@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/routes.dart';
-import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/login/host_page.dart';
 import 'package:stoktakip_app/theme.dart';
 

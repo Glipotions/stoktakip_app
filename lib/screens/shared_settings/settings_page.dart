@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,14 +9,16 @@ import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/model/kasa.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
+import 'package:stoktakip_app/model/kasa/kasa.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../size_config.dart';
 
 class SettingsPage extends StatelessWidget {
   static String routeName = "/settings-page";
+
+  const SettingsPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +26,13 @@ class SettingsPage extends StatelessWidget {
           title: const Text('Ayarlar'),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SwitchCard());
+        body: const SwitchCard());
   }
 }
 
 class SwitchCard extends StatefulWidget {
+  const SwitchCard({Key? key}) : super(key: key);
+
   @override
   State<SwitchCard> createState() => _SwitchCardState();
 }

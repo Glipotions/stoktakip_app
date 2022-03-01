@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 // import 'package:shop_app/models/Cart.dart';
 

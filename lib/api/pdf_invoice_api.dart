@@ -5,9 +5,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
-import 'package:stoktakip_app/model/invoice.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/supplier.dart';
+import 'package:stoktakip_app/model/other/invoice.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/other/supplier.dart';
 import 'package:intl/date_symbol_data_local.dart';
 // import 'package:google_fonts/google_fonts.dart';
 

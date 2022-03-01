@@ -1,8 +1,5 @@
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-
-import 'customer.dart';
-import 'supplier.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 
 class Invoice {
   final InvoiceInfo info;

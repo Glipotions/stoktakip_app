@@ -7,7 +7,7 @@ import 'package:searchfield/searchfield.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import '../../size_config.dart';
@@ -136,7 +136,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.2),
                           blurRadius: 10,
-                          offset: Offset(0, 10),
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),

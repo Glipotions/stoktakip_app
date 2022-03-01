@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 import 'cart_card.dart';

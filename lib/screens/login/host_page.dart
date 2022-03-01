@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -6,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoktakip_app/change_notifier_model/ip_host_data.dart';
 import 'package:stoktakip_app/const/api_const.dart';
-import 'package:stoktakip_app/model/ip_host.dart';
+import 'package:stoktakip_app/model/shared_preferences_models/ip_host.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 
 class HostPage extends StatefulWidget {
@@ -66,7 +68,7 @@ class _HostPageState extends State<HostPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text("Giriş Sayfası"),
+        title: const Text("Giriş Sayfası"),
       ),
       body: Center(
         child: Padding(
@@ -111,7 +113,8 @@ class _HostPageState extends State<HostPage> {
             // const SizedBox(
             //   height: 10,
             // ),
-            field(_ipHostController, Icon(Icons.import_export), "Ip:Host Gir"),
+            field(_ipHostController, const Icon(Icons.import_export),
+                "Ip:Host Gir"),
             const SizedBox(
               height: 10,
             ),
@@ -144,10 +147,11 @@ class _HostPageState extends State<HostPage> {
                   width: 24.0,
                   child: Theme(
                     data: ThemeData(
-                        unselectedWidgetColor: Color(0xff00C8E8) // Your color
+                        unselectedWidgetColor:
+                            const Color(0xff00C8E8) // Your color
                         ),
                     child: Checkbox(
-                        activeColor: Color(0xff00C8E8),
+                        activeColor: const Color(0xff00C8E8),
                         value: _isChecked,
                         onChanged: _handleRememberme),
                   )),
@@ -278,7 +282,6 @@ class _HostPageState extends State<HostPage> {
   }
 
   void _handleRememberme(bool? value) {
-    print("Handle Rember Me");
     _isChecked = value!;
     SharedPreferences.getInstance().then(
       (prefs) {
@@ -343,7 +346,7 @@ class LogoutPage extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => HostPage()),
+                    MaterialPageRoute(builder: (context) => const HostPage()),
                     (route) => false);
               },
               child: const Icon(Icons.logout))

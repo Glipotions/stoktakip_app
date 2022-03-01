@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class ListCard extends StatelessWidget {

@@ -8,11 +8,11 @@ Future<bool?> onBackPressed(BuildContext context, String detay) {
       title: const Text('Uyarı'),
       content: Text(detay),
       actions: [
-        FlatButton(
+        TextButton(
           child: const Text('Evet'),
           onPressed: () => Navigator.pop(c, true),
         ),
-        FlatButton(
+        TextButton(
           child: const Text('Hayır'),
           onPressed: () => Navigator.pop(c, false),
         ),

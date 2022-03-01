@@ -6,17 +6,18 @@ import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/total_calculate.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 import '../../../size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
+  const CheckoutCard({Key? key}) : super(key: key);
+
   // const CheckoutCard({
   //   Key? key,
   // }) : super(key: key);
@@ -143,7 +144,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                   // child: buildIskonto(),
 
                   child: SliderTheme(
-                    data: SliderThemeData(trackHeight: 10),
+                    data: const SliderThemeData(trackHeight: 10),
                     child: Slider(
                       value: _currentSliderValue,
                       min: 0,
@@ -302,7 +303,6 @@ class _CheckoutCardState extends State<CheckoutCard>
                             : satisFaturaNew.kdvSekli = 2;
                         var resultSatisFaturaAdd =
                             await APIServices.postSatisFatura(satisFaturaNew);
-                        print('SatisFatura Eklendi');
 
                         cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
                             totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
@@ -312,7 +312,6 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 totalTutarwithKdv(
                                     urunBilgileriList, _iskontoOrani),
                                 "Borc");
-                        print('Cari Hesap Bakiye Güncellendi.');
 
                         for (var urun in urunBilgileriList) {
                           await APIServices.updateUrunStokById(

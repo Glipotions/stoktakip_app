@@ -1,7 +1,7 @@
-import 'package:stoktakip_app/model/kasa.dart';
-import 'package:stoktakip_app/model/nakit.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/satin_alma_fatura.dart';
+import 'package:stoktakip_app/model/kasa/kasa.dart';
+import 'package:stoktakip_app/model/nakit/nakit.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import '../model/satin_alma/satin_alma_fatura.dart';
 
 bool? faturaDurum;
 

@@ -3,7 +3,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
-import 'package:stoktakip_app/model/cari_hesap.dart';
+import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 
 class AddCariHesap extends StatefulWidget {

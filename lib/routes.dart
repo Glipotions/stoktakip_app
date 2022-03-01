@@ -22,6 +22,6 @@ final Map<String, WidgetBuilder> routes = {
   UrunBilgileriDuzenleAdd.routeName: (context) => UrunBilgileriDuzenleAdd(),
   FaturaOlustur.routeName: (context) => const FaturaOlustur(),
 
-  SettingsPage.routeName: (context) => SettingsPage(),
+  SettingsPage.routeName: (context) => const SettingsPage(),
   // ProfileScreen.routeName: (context) => ProfileScreen(),
 };

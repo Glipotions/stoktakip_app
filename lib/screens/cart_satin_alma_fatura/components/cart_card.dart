@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/model/urun.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/urun/urun.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CartCard extends StatelessWidget {

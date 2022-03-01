@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +9,13 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
-import 'package:stoktakip_app/model/satis_fatura.dart';
-import 'package:stoktakip_app/model/satis_fatura_duzenle.dart';
-import 'package:stoktakip_app/model/urun.dart';
-import 'package:stoktakip_app/model/urun_barkod_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/urun_bilgileri_satin_alma.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
+import 'package:stoktakip_app/model/urun/urun.dart';
+import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
+import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
+import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
-import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura_duzenle/cart_screen.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';

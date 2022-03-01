@@ -4,7 +4,7 @@
 
 // import 'package:flutter/material.dart';
 // import 'package:stoktakip_app/functions/const_entities.dart';
-// import 'package:stoktakip_app/model/satis_fatura.dart';
+// import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 // import 'package:stoktakip_app/services/api.services.dart';
 // import 'package:syncfusion_flutter_pdf/pdf.dart';
 
