@@ -43,6 +43,7 @@ String nakitAddUrl = '${mainUrl}Nakit';
 
 String urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
 String urunBilgileriDeleteUrl = '${mainUrl}UrunBilgileri';
+String urunBilgileriUpdateUrl = '${mainUrl}UrunBilgileri/update';
 Uri urunBilgileriGetUrl = Uri.http(host!, 'UrunBilgileri/getall');
 
 String urunBilgileriGetBySatisFaturaIdUrl(id) {
@@ -65,3 +66,8 @@ String updateUrunById = '${mainUrl}Urun/updateurunbyid?id=';
 
 String updateCariHesapBakiyeById =
     '${mainUrl}CariHesap/updatecaribakiyebyid?id=';
+
+Uri fetchAlinanSiparisUrl = Uri.parse('${mainUrl}AlinanSiparis/getall');
+
+Uri fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
+    Uri.http(host!, 'AlinanSiparisBilgileri/getallbyalinansiparisid?id=');

@@ -12,6 +12,10 @@ import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
+import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 
 import '../../../size_config.dart';
 
@@ -123,19 +127,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                         isCheckedIskonto = value!;
                         if (value == false) {
                           _iskontoOrani = 0;
-                          for (var item in urunBilgileriGetIdList) {
-                            item.tutar = item.kdvHaricTutar + item.kdvTutari;
-                          }
                         } else {
-                          _iskontoOrani = _currentSliderValue; //değişecek
-                          for (var item in urunBilgileriGetIdList) {
-                            item.tutar = item.kdvHaricTutar +
-                                item.kdvTutari -
-                                (((item.kdvHaricTutar + item.kdvTutari) *
-                                        _currentSliderValue) /
-                                    100);
-                            // item.kdvHaricTutar=
-                          }
+                          _iskontoOrani = _currentSliderValue;
                         }
                       });
                     },
@@ -190,29 +183,10 @@ class _CheckoutCardState extends State<CheckoutCard>
                       if (value == false) {
                         for (var item in urunBilgileriGetIdList) {
                           item.kdvOrani = 0;
-                          item.kdvTutari = 0;
-                          item.tutar = _iskontoOrani == 0
-                              ? item.kdvHaricTutar + item.kdvOrani
-                              : item.kdvHaricTutar +
-                                  item.kdvTutari -
-                                  (((item.kdvHaricTutar + item.kdvTutari) *
-                                          _currentSliderValue) /
-                                      100);
-                          // item.kdvHaricTutar=
                         }
                       } else {
                         for (var item in urunBilgileriGetIdList) {
                           item.kdvOrani = kdvOrani.toDouble();
-                          double iskontoUygulanmis = item.kdvHaricTutar -
-                              (item.kdvHaricTutar * _iskontoOrani / 100);
-                          item.kdvTutari = iskontoUygulanmis * kdvOrani / 100;
-                          item.tutar = item.tutar = _iskontoOrani == 0
-                              ? item.kdvHaricTutar + item.kdvOrani
-                              : item.kdvHaricTutar +
-                                  item.kdvTutari -
-                                  (((item.kdvHaricTutar + item.kdvTutari) *
-                                          _currentSliderValue) /
-                                      100);
                         }
                       }
                     });
@@ -291,26 +265,48 @@ class _CheckoutCardState extends State<CheckoutCard>
                       // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
                       if (_firstPress) {
                         _firstPress = false;
+
+                        if (isCheckedIskonto) {
+                          for (var item in urunBilgileriGetIdList) {
+                            item.iskontoOrani = _iskontoOrani;
+                            double iskontoTutari = item.kdvHaricTutar -
+                                (item.kdvHaricTutar * (_iskontoOrani / 100));
+                            item.kdvTutari =
+                                (iskontoTutari * item.kdvOrani / 100);
+                            item.tutar = iskontoTutari + item.kdvTutari;
+                            item.update = true;
+                          }
+                        } else if (isCheckedKdv) {
+                          for (var item in urunBilgileriGetIdList) {
+                            item.kdvTutari =
+                                item.kdvHaricTutar * item.kdvOrani / 100;
+                            item.tutar = item.kdvHaricTutar + item.kdvTutari;
+                            item.update = true;
+                          }
+                        }
+
                         satisFaturaAyarlari(kdvOrani);
 
                         var resultSatisFaturaAdd =
-                            await APIServices.updateSatisFatura(satisFaturaNew);
+                            await SatisFaturaApiService.updateSatisFatura(
+                                satisFaturaNew);
 
                         double sonrakiTutar = totalTutarwithKdv(
                             urunBilgileriGetIdList, _iskontoOrani);
                         var resultCarihesapUpdateSatis =
-                            await APIServices.updateCariBakiyeById(
+                            await CariHesapApiService.updateCariBakiyeById(
                                 satisFaturaDuzenle.cariHesapId!,
                                 sonrakiTutar - satisFaturaDuzenle.oncekiTutar,
                                 "Borc");
 
                         for (var urun in urunBilgileriGetIdList) {
                           if (urun.insert == true) {
-                            await APIServices.updateUrunStokById(
+                            await UrunApiService.updateUrunStokById(
                                 urun.urunId, urun.miktar, true);
 
-                            await APIServices.postUrunBilgileri(urun);
-                          }
+                            await UrunBilgileriApiService.postUrunBilgileri(
+                                urun);
+                          } else if (urun.update == true) {}
                         }
 
                         urunBilgileriSil();
@@ -377,6 +373,9 @@ class _CheckoutCardState extends State<CheckoutCard>
   }
 
   Text buildTextRich(String _text, Color renk) {
+    setState(() {
+      _text;
+    });
     return Text.rich(
       TextSpan(
         text: _text,
@@ -436,7 +435,7 @@ class _CheckoutCardState extends State<CheckoutCard>
   void urunBilgileriSil() async {
     for (var urunDelete in urunBilgileriDeleteList) {
       urunDelete.dovizTuru = 1;
-      await APIServices.deleteUrunBilgileri(urunDelete);
+      await UrunBilgileriApiService.deleteUrunBilgileri(urunDelete);
     }
     urunBilgileriDeleteList = [];
   }
