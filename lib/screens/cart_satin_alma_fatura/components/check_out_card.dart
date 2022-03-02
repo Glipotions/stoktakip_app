@@ -8,6 +8,10 @@ import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
+import 'package:stoktakip_app/services/api_services/satin_alma_fatura_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_bilgileri_satin_alma_api_service.dart';
 
 import '../../../size_config.dart';
 
@@ -133,17 +137,17 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       if (value == false) {
                         for (var item in urunBilgileriSatinAlmaList) {
                           item.kdvOrani = 0;
-                          item.kdvTutari = 0;
-                          item.tutar = item.kdvHaricTutar + item.kdvOrani;
+                          // item.kdvTutari = 0;
+                          // item.tutar = item.kdvHaricTutar + item.kdvOrani;
                           // item.kdvHaricTutar=
                         }
                       } else {
                         for (var item in urunBilgileriSatinAlmaList) {
                           item.kdvOrani = kdvOrani.round();
-                          double iskontoUygulanmis = item.kdvHaricTutar -
-                              (item.kdvHaricTutar * _iskontoOrani / 100);
-                          item.kdvTutari = iskontoUygulanmis * kdvOrani / 100;
-                          item.tutar = item.kdvHaricTutar + item.kdvOrani;
+                          // double iskontoUygulanmis = item.kdvHaricTutar -
+                          //     (item.kdvHaricTutar * _iskontoOrani / 100);
+                          // item.kdvTutari = iskontoUygulanmis * kdvOrani / 100;
+                          // item.tutar = item.kdvHaricTutar + item.kdvOrani;
                         }
                       }
                     });
@@ -184,6 +188,23 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   child: DefaultButton(
                     text: "Alışverişi Tamamla",
                     press: () async {
+                      if (isCheckedIskonto) {
+                        for (var item in urunBilgileriSatinAlmaList) {
+                          // item.iskontoOrani = _iskontoOrani;
+                          double iskontoTutari = item.kdvHaricTutar -
+                              (item.kdvHaricTutar * (_iskontoOrani / 100));
+                          item.kdvTutari =
+                              (iskontoTutari * item.kdvOrani / 100);
+                          item.tutar = iskontoTutari + item.kdvTutari;
+                        }
+                      } else if (isCheckedKdv) {
+                        for (var item in urunBilgileriSatinAlmaList) {
+                          item.kdvTutari =
+                              item.kdvHaricTutar * item.kdvOrani / 100;
+                          item.tutar = item.kdvHaricTutar + item.kdvTutari;
+                        }
+                      }
+
                       satinAlmaFaturaNew.cariHesapId = cariHesapSingle.id!;
                       satinAlmaFaturaNew.id =
                           urunBilgileriSatinAlmaList.first.satinAlmaFaturaId;
@@ -207,22 +228,24 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       isCheckedKdv
                           ? satinAlmaFaturaNew.kdvSekli = 1
                           : satinAlmaFaturaNew.kdvSekli = 2;
-                      await APIServices.postSatinAlmaFatura(satinAlmaFaturaNew);
+                      await SatinAlmaFaturaApiService.postSatinAlmaFatura(
+                          satinAlmaFaturaNew);
 
                       cariHesapSingle.bakiye = cariHesapSingle.bakiye! -
                           totalTutarwithKdvSatinAlma(
                               urunBilgileriSatinAlmaList, _iskontoOrani);
-                      await APIServices.updateCariBakiyeById(
+                      await CariHesapApiService.updateCariBakiyeById(
                           cariHesapSingle.id!,
                           totalTutarwithKdvSatinAlma(
                               urunBilgileriSatinAlmaList, _iskontoOrani),
                           "Odeme");
 
                       for (var urun in urunBilgileriSatinAlmaList) {
-                        await APIServices.updateUrunStokById(
+                        await UrunApiService.updateUrunStokById(
                             urun.urunId, urun.miktar, false);
 
-                        await APIServices.postUrunBilgileriSatinAlma(urun);
+                        await UrunBilgileriSatinAlmaApiService
+                            .postUrunBilgileriSatinAlma(urun);
                       }
 
                       urunBilgileriSatinAlmaList.clear();

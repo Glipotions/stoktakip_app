@@ -17,6 +17,8 @@ import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/components/check_out_card.dart';
 import 'package:stoktakip_app/services/api.services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class UrunBilgileriAdd extends StatefulWidget {
@@ -502,7 +504,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           formKey.currentState!.save(); //elimizdeki student oluştu
           // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
           for (int i = 0; i < urunBilgileriList.length; i++) {
-            APIServices.postUrunBilgileri(urunBilgileriList[i]);
+            UrunBilgileriApiService.postUrunBilgileri(urunBilgileriList[i]);
           }
         },
       ),
@@ -517,7 +519,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Future getUrunIdByBarcode() async {
-    await APIServices.fetchUrunIdByBarcode(barkodController.text)
+    await UrunApiService.fetchUrunIdByBarcode(barkodController.text)
         .then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
@@ -534,7 +536,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Future getUrunById() async {
-    APIServices.fetchUrunById(_urunId).then((response) {
+    UrunApiService.fetchUrunById(_urunId).then((response) {
       setState(() {
         dynamic list = json.decode(response.body!);
         List data = list;
@@ -551,7 +553,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   Future getUrunByCode() async {
-    await APIServices.fetchUrunByCode(urunKoduController.text).then((response) {
+    await UrunApiService.fetchUrunByCode(urunKoduController.text)
+        .then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;

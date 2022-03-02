@@ -12,6 +12,7 @@ import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/kasa/kasa.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/kasa_api_service.dart';
 
 import '../../size_config.dart';
 
@@ -43,7 +44,7 @@ class _SwitchCardState extends State<SwitchCard> {
   var kasaList = <Kasa>[];
 
   Future<List> _getKasas() async {
-    await APIServices.fetchKasa().then((response) {
+    await KasaApiService.fetchKasa().then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;
@@ -54,7 +55,7 @@ class _SwitchCardState extends State<SwitchCard> {
   }
 
   Future getKasaById() async {
-    await APIServices.fetchKasaById(kasaEntity.id).then((response) {
+    await KasaApiService.fetchKasaById(kasaEntity.id).then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;

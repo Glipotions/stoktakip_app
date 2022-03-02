@@ -67,9 +67,9 @@ class AlinanSiparis {
         iskontoTutari: json["iskontoTutari"] != null
             ? json["iskontoTutari"].toDouble()
             : json["iskontoTutari"],
-        siparisKdvOrani: json["siparisKdvOrani"] != null
-            ? json["siparisKdvOrani"].toDouble()
-            : json["siparisKdvOrani"],
+        siparisKdvOrani: json["faturaKdvOrani"] != null
+            ? json["faturaKdvOrani"].toDouble()
+            : json["faturaKdvOrani"],
         kdvTutari: json["kdvTutari"] != null
             ? json["kdvTutari"].toDouble()
             : json["kdvTutari"],
@@ -96,7 +96,7 @@ class AlinanSiparis {
         "dovizKuru": dovizKuru,
         "tarih": tarih.toIso8601String(),
         "kdvSekli": kdvSekli,
-        "siparisKdvOrani": siparisKdvOrani!.toDouble(),
+        "faturaKdvOrani": siparisKdvOrani!.toDouble(),
         "kdvHaricTutar": kdvHaricTutar,
         "iskontoTutari": iskontoTutari,
         "kdvTutari": kdvTutari,

@@ -10,6 +10,7 @@ import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
 import '../../size_config.dart';
 import '../urun_bilgileri/urun_bilgileri_add.dart';
 
@@ -33,7 +34,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
   final formKey = GlobalKey<FormState>();
 
   Future<List> _getCariHesaps() async {
-    await APIServices.fetchCariHesap().then((response) {
+    await CariHesapApiService.fetchCariHesap().then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         // List data = list['data'];
@@ -47,7 +48,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
   }
 
   Future getCariHesapById(int id) async {
-    await APIServices.fetchCariHesapById(id).then((response) {
+    await CariHesapApiService.fetchCariHesapById(id).then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;

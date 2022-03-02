@@ -17,8 +17,9 @@ import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura_duzenle/cart_screen.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 import 'components/check_out_card.dart';
@@ -78,11 +79,15 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
   var urunBarkodBilgileri = <UrunBarkodBilgileri>[];
   var urun = <Urun>[];
   int? _urunId, _miktar, _tutar, _faturaId = buildId();
-  double? _birimFiyat, _kdvHaricTutar, _kdvTutari;
+  double? _birimFiyat, _kdvHaricTutar, _kdvTutari, _kdvOrani;
+
   // int kdvHaricTutar = _miktar * _birimFiyat;
 
   @override
   Widget build(BuildContext context) {
+    _kdvOrani = satisFaturaDuzenle.satisFaturaKdvOrani != 0
+        ? satisFaturaDuzenle.satisFaturaKdvOrani!
+        : 0;
     return WillPopScope(
       onWillPop: () async {
         bool? result =
@@ -438,7 +443,7 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
             _birimFiyat = double.parse(birimFiyatController.text);
             _miktar = int.parse(adetController.text);
             _kdvHaricTutar = _miktar! * _birimFiyat!;
-            _kdvTutari = _miktar! * 0 / 100;
+            _kdvTutari = _miktar! * _kdvOrani! / 100;
 
             if (faturaDurum!) {
               UrunBilgileri urunBilgileri = UrunBilgileri(
@@ -449,9 +454,9 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
                 kdvHaricTutar: _kdvHaricTutar!,
                 miktar: _miktar!,
                 dovizliBirimFiyat: 0,
-                kdvOrani: 0,
+                kdvOrani: _kdvOrani!,
                 tutar: _kdvHaricTutar! + _kdvTutari!,
-                kdvTutari: 0,
+                kdvTutari: _kdvTutari!,
                 urunAdi: urunAdiController.text,
                 urunKodu: urunKoduController.text,
                 insert: true,
@@ -500,7 +505,8 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
           formKey.currentState!.save(); //elimizdeki student oluştu
           // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
           for (int i = 0; i < urunBilgileriGetIdList.length; i++) {
-            APIServices.postUrunBilgileri(urunBilgileriGetIdList[i]);
+            UrunBilgileriApiService.postUrunBilgileri(
+                urunBilgileriGetIdList[i]);
           }
         },
       ),
@@ -515,7 +521,7 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
   }
 
   Future getUrunIdByBarcode() async {
-    await APIServices.fetchUrunIdByBarcode(barkodController.text)
+    await UrunApiService.fetchUrunIdByBarcode(barkodController.text)
         .then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
@@ -532,7 +538,7 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
   }
 
   Future getUrunById() async {
-    APIServices.fetchUrunById(_urunId).then((response) {
+    UrunApiService.fetchUrunById(_urunId).then((response) {
       setState(() {
         dynamic list = json.decode(response.body!);
         List data = list;
@@ -549,7 +555,8 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
   }
 
   Future getUrunByCode() async {
-    await APIServices.fetchUrunByCode(urunKoduController.text).then((response) {
+    await UrunApiService.fetchUrunByCode(urunKoduController.text)
+        .then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         List data = list;

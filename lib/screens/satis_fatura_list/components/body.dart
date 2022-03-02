@@ -10,6 +10,8 @@ import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 import 'package:stoktakip_app/widget/refresh_widget.dart';
 
@@ -32,7 +34,7 @@ class _BodyState extends State<Body> {
   Future<List> getSatisFaturas() async {
     keyRefresh.currentState?.show();
     await Future.delayed(const Duration(milliseconds: 500));
-    await APIServices.fetchSatisFatura().then((response) {
+    await SatisFaturaApiService.fetchSatisFatura().then((response) {
       setState(() {
         dynamic list = json.decode(response.body);
         // List data = list['data'];
@@ -137,7 +139,7 @@ class _BodyState extends State<Body> {
 
     Future<List> _getUrunBilgileri() async {
       print(satisFaturaList[index].id);
-      await APIServices.fetchUrunBilgileriBySatisFaturaId(
+      await UrunBilgileriApiService.fetchUrunBilgileriBySatisFaturaId(
               satisFaturaList[index].id)
           .then(
         (response) {

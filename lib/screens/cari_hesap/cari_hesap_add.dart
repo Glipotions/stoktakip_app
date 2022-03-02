@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/services/api.services.dart';
+import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
 
 class AddCariHesap extends StatefulWidget {
   const AddCariHesap({Key? key}) : super(key: key);
@@ -127,7 +128,7 @@ class _AddCariHesapState extends State<AddCariHesap> {
                           aciklama: aciklamaController.text,
                           sehir: sehirController.text,
                           durum: true);
-                      var tes = APIServices.postCariHesap(student);
+                      var tes = CariHesapApiService.postCariHesap(student);
                       print(tes);
                     }
                   },
@@ -151,7 +152,7 @@ class _AddCariHesapState extends State<AddCariHesap> {
                         telefon2: '484787999',
                         vergiDairesi: 'dentis',
                         vergiNo: 'r9');
-                    var tes = APIServices.postCariHesap(cariHesap);
+                    var tes = CariHesapApiService.postCariHesap(cariHesap);
                     print(tes);
                     print(_id);
                   }
