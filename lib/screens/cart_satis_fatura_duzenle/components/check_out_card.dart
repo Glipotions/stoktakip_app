@@ -220,6 +220,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                         satisFaturaNew.odemeTipi = 0;
                       } else {
                         if (kasaId! > 0) {
+                          isCheckedNakit = false;
                           satisFaturaNew.odemeTipi = 1;
                         } else {
                           Navigator.pushNamed(context, SettingsPage.routeName);
@@ -274,6 +275,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                             item.kdvTutari =
                                 (iskontoTutari * item.kdvOrani / 100);
                             item.tutar = iskontoTutari + item.kdvTutari;
+
+                            item.dovizTuru = 1;
                             item.update = true;
                           }
                         } else if (isCheckedKdv) {
@@ -281,6 +284,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                             item.kdvTutari =
                                 item.kdvHaricTutar * item.kdvOrani / 100;
                             item.tutar = item.kdvHaricTutar + item.kdvTutari;
+
+                            item.dovizTuru = 1;
                             item.update = true;
                           }
                         }
@@ -306,7 +311,10 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                             await UrunBilgileriApiService.postUrunBilgileri(
                                 urun);
-                          } else if (urun.update == true) {}
+                          } else if (urun.update == true) {
+                            await UrunBilgileriApiService.updateUrunBilgileri(
+                                urun);
+                          }
                         }
 
                         urunBilgileriSil();

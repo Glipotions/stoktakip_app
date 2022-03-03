@@ -97,7 +97,3 @@ class HazirlananSiparisBilgileri {
         "dovizTuru": dovizTuru,
       };
 }
-
-List<HazirlananSiparisBilgileri> alinanSiparisBilgileriList = [];
-List<HazirlananSiparisBilgileri> alinanSiparisBilgileriGetIdList = [];
-List<HazirlananSiparisBilgileri> alinanSiparisBilgileriDeleteList = [];

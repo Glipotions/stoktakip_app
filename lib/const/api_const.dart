@@ -3,7 +3,7 @@
 // const host = '10.0.2.2:5001';
 // const host = '192.168.1.129:8082';
 String? host;
-
+//85.96.3.83
 // const host = '188.59.6.69:8082';
 const http = 'http://';
 String mainUrl = 'http://$host/api/';
@@ -43,7 +43,7 @@ String nakitAddUrl = '${mainUrl}Nakit';
 
 String urunBilgileriAddUrl = '${mainUrl}UrunBilgileri';
 String urunBilgileriDeleteUrl = '${mainUrl}UrunBilgileri';
-String urunBilgileriUpdateUrl = '${mainUrl}UrunBilgileri/update';
+String urunBilgileriUpdateUrl = '${mainUrl}UrunBilgileri/update?';
 Uri urunBilgileriGetUrl = Uri.http(host!, 'UrunBilgileri/getall');
 
 String urunBilgileriGetBySatisFaturaIdUrl(id) {
@@ -69,5 +69,5 @@ String updateCariHesapBakiyeById =
 
 Uri fetchAlinanSiparisUrl = Uri.parse('${mainUrl}AlinanSiparis/getall');
 
-Uri fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
-    Uri.http(host!, 'AlinanSiparisBilgileri/getallbyalinansiparisid?id=');
+String fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
+    '${mainUrl}AlinanSiparisBilgileri/getallbyalinansiparisid?id=';

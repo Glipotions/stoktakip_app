@@ -5,6 +5,9 @@ TextStyle kFontStili(double? a) {
       color: Colors.black87, fontSize: a, fontWeight: FontWeight.bold);
 }
 
+TextStyle kBaslikStili = const TextStyle(
+    color: Colors.black45, fontSize: 25, fontWeight: FontWeight.bold);
+
 TextStyle kMetinStili = const TextStyle(
     color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold);
 

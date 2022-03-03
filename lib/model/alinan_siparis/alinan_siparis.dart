@@ -8,12 +8,12 @@ String satisFaturaToJson(List<AlinanSiparis> data) =>
 
 class AlinanSiparis {
   String? kod;
-  int cariHesapId;
+  int? cariHesapId;
   int? ozelKod1Id;
-  int dovizTuru;
-  double dovizKuru;
-  DateTime tarih;
-  int kdvSekli;
+  int? dovizTuru;
+  double? dovizKuru;
+  DateTime? tarih;
+  int? kdvSekli;
   double? kdvHaricTutar;
   double? siparisKdvOrani;
   double? iskontoTutari;
@@ -22,36 +22,34 @@ class AlinanSiparis {
   double? dovizTutar;
   double? iskontoOrani;
   String? aciklama;
-  int odemeTipi;
   bool? durum;
-  int id;
+  int? id;
   String? firmaUnvani;
   double? bakiye;
   String? tutarYazi;
+  String? siparisTanimi;
 
-  AlinanSiparis({
-    this.kod,
-    required this.cariHesapId,
-    this.ozelKod1Id,
-    required this.dovizTuru,
-    required this.dovizKuru,
-    required this.tarih,
-    required this.kdvSekli,
-    this.siparisKdvOrani,
-    this.kdvHaricTutar,
-    this.iskontoTutari,
-    this.kdvTutari,
-    this.toplamTutar,
-    this.dovizTutar,
-    this.iskontoOrani,
-    this.aciklama,
-    required this.odemeTipi,
-    this.durum,
-    required this.id,
-    this.firmaUnvani,
-    this.bakiye,
-    this.tutarYazi,
-  });
+  AlinanSiparis(
+      {this.kod,
+      this.cariHesapId,
+      this.ozelKod1Id,
+      this.dovizTuru,
+      this.dovizKuru,
+      this.tarih,
+      this.kdvSekli,
+      this.siparisKdvOrani,
+      this.kdvHaricTutar,
+      this.iskontoTutari,
+      this.kdvTutari,
+      this.toplamTutar,
+      this.dovizTutar,
+      this.iskontoOrani,
+      this.aciklama,
+      required this.id,
+      this.firmaUnvani,
+      this.bakiye,
+      this.tutarYazi,
+      this.siparisTanimi});
 
   factory AlinanSiparis.fromJson(Map<String, dynamic> json) => AlinanSiparis(
         kod: json["kod"],
@@ -79,13 +77,12 @@ class AlinanSiparis {
         iskontoOrani: json["iskontoOrani"] != null
             ? json["iskontoOrani"].toDouble()
             : json["iskontoOrani"],
-        odemeTipi: json["odemeTipi"],
-        durum: json["durum"],
         id: json["id"],
         firmaUnvani: json["firmaUnvani"],
         bakiye:
             json["bakiye"] != null ? json["bakiye"].toDouble() : json["bakiye"],
         tutarYazi: json["tutarYazi"],
+        siparisTanimi: json["siparisTanimi"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -94,7 +91,7 @@ class AlinanSiparis {
         "ozelKod1Id": ozelKod1Id,
         "dovizTuru": dovizTuru,
         "dovizKuru": dovizKuru,
-        "tarih": tarih.toIso8601String(),
+        "tarih": tarih!.toIso8601String(),
         "kdvSekli": kdvSekli,
         "siparisKdvOrani": siparisKdvOrani!.toDouble(),
         "kdvHaricTutar": kdvHaricTutar,
@@ -104,11 +101,11 @@ class AlinanSiparis {
         "dovizTutar": dovizTutar,
         "iskontoOrani": iskontoOrani,
         "aciklama": aciklama,
-        "odemeTipi": odemeTipi,
         "durum": durum,
         "id": id,
         "firmaUnvani": firmaUnvani,
         "bakiye": bakiye,
         "tutarYazi": tutarYazi,
+        "siparisTanimi": siparisTanimi,
       };
 }

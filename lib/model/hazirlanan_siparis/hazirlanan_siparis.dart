@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-List<AlinanSiparis> satisFaturaFromJson(String str) => List<AlinanSiparis>.from(
-    json.decode(str).map((x) => AlinanSiparis.fromJson(x)));
+List<HazirlananSiparis> satisFaturaFromJson(String str) =>
+    List<HazirlananSiparis>.from(
+        json.decode(str).map((x) => HazirlananSiparis.fromJson(x)));
 
-String satisFaturaToJson(List<AlinanSiparis> data) =>
+String satisFaturaToJson(List<HazirlananSiparis> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class AlinanSiparis {
+class HazirlananSiparis {
   String? kod;
   int cariHesapId;
   int? ozelKod1Id;
@@ -29,7 +30,7 @@ class AlinanSiparis {
   double? bakiye;
   String? tutarYazi;
 
-  AlinanSiparis({
+  HazirlananSiparis({
     this.kod,
     required this.cariHesapId,
     this.ozelKod1Id,
@@ -53,7 +54,8 @@ class AlinanSiparis {
     this.tutarYazi,
   });
 
-  factory AlinanSiparis.fromJson(Map<String, dynamic> json) => AlinanSiparis(
+  factory HazirlananSiparis.fromJson(Map<String, dynamic> json) =>
+      HazirlananSiparis(
         kod: json["kod"],
         cariHesapId: json["cariHesapId"],
         ozelKod1Id: json["ozelKod1Id"],

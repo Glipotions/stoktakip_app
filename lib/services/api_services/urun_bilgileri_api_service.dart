@@ -52,13 +52,12 @@ class UrunBilgileriApiService {
       'Accept': 'application/json'
     };
     // for (var entity in entities) {
-    var url = Uri.parse(urunBilgileriDeleteUrl);
+    var url = Uri.parse(urunBilgileriUpdateUrl);
     var myEntity = entity.toJsonWithId();
-    var deleteBody = json.encode(myEntity);
-    var res = await http.delete(url, headers: header, body: deleteBody);
-    print("Ürün Bilgisi Silindi: ${res.statusCode}");
+    var updateBody = json.encode(myEntity);
+    var res = await http.patch(url, headers: header, body: updateBody);
+    print("Ürün Bilgisi Güncellendi: ${res.statusCode}");
 
-    // }
     return res.statusCode;
   }
 }

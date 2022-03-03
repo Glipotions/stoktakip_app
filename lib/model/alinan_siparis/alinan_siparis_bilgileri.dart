@@ -1,11 +1,13 @@
 class AlinanSiparisBilgileri {
   int? id;
   int urunId;
+
   int alinanSiparisId;
   int miktar;
   double birimFiyat;
   double dovizliBirimFiyat;
   double kdvHaricTutar;
+
   double kdvOrani;
   double kdvTutari;
   double tutar;
@@ -97,7 +99,3 @@ class AlinanSiparisBilgileri {
         "dovizTuru": dovizTuru,
       };
 }
-
-List<AlinanSiparisBilgileri> alinanSiparisBilgileriList = [];
-List<AlinanSiparisBilgileri> alinanSiparisBilgileriGetIdList = [];
-List<AlinanSiparisBilgileri> alinanSiparisBilgileriDeleteList = [];

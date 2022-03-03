@@ -10,6 +10,7 @@ import 'package:stoktakip_app/change_notifier_model/ip_host_data.dart';
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/shared_preferences_models/ip_host.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
+import 'package:stoktakip_app/screens/home/home_view.dart';
 
 class HostPage extends StatefulWidget {
   static String routeName = "/hostpage";
@@ -134,7 +135,8 @@ class _HostPageState extends State<HostPage> {
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (context) => LogoutPage()));
                   host = _ipHostController.text;
-                  Navigator.pushNamed(context, FaturaOlustur.routeName);
+                  Navigator.pushNamed(context, HomeViewPage.routeName);
+                  // Navigator.pushNamed(context, FaturaOlustur.routeName);
                 },
                 child: const Text("Giriş",
                     style: TextStyle(
