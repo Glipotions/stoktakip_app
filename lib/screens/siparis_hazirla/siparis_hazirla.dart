@@ -10,12 +10,12 @@ import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_list/list_screen_hazirlanan_siparis.dart';
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
-import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
 import '../../size_config.dart';
-import '../urun_bilgileri/urun_bilgileri_add.dart';
 
 class SiparisHazirla extends StatefulWidget {
   static String routeName = "/siparis";
@@ -32,7 +32,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
 
   Object? dropDownMenu;
   String? _selectedItem;
-  int? _selectedItemId;
+  // int? _selectedItemId;
   var searchController = TextEditingController();
   var aciklamaController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -154,11 +154,21 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       onTap: (value) async {
                         setState(() {
                           _selectedItem = value!;
-                          alinanSiparisSingle.id = alinanSiparisler
+                          var alinanSiparisEntity = alinanSiparisler
                               .where(
                                   (element) => element.siparisTanimi == value)
-                              .single
-                              .id;
+                              .single;
+                          alinanSiparisSingle.id = alinanSiparisEntity.id;
+                          alinanSiparisSingle.siparisTanimi = value;
+                          // alinanSiparisSingle.cariHesapId =
+                          //     alinanSiparisEntity.cariHesapId;
+
+                          hazirlananSiparisSingle = HazirlananSiparis(
+                            aciklama: alinanSiparisEntity.aciklama,
+                            alinanSiparisId: alinanSiparisEntity.id,
+                            durum: true,
+                          );
+
                           dropDownMenu = 1;
                         });
                         print(alinanSiparisSingle.id);
@@ -231,11 +241,11 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),
-                          child: const Text("Satış Faturaları Listesi"),
+                          child: const Text("Hazırlanan Siparişler Listesi"),
                           onPressed: () {
                             aciklamaController.clear();
                             Navigator.pushNamed(
-                                context, ListScreenSatisFatura.routeName);
+                                context, ListScreenHazirlananSiparis.routeName);
                           }),
                     ),
                   ),

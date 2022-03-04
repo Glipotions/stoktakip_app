@@ -1,7 +1,7 @@
 class HazirlananSiparisBilgileri {
   int? id;
   int urunId;
-  int alinanSiparisId;
+  int hazirlananSiparisId;
   int miktar;
   double birimFiyat;
   double dovizliBirimFiyat;
@@ -21,7 +21,7 @@ class HazirlananSiparisBilgileri {
   HazirlananSiparisBilgileri({
     this.id,
     required this.urunId,
-    required this.alinanSiparisId,
+    required this.hazirlananSiparisId,
     required this.miktar,
     required this.birimFiyat,
     required this.dovizliBirimFiyat,
@@ -42,7 +42,7 @@ class HazirlananSiparisBilgileri {
       HazirlananSiparisBilgileri(
           id: json['id'],
           urunId: json['urunId'],
-          alinanSiparisId: json['satisFaturaId'],
+          hazirlananSiparisId: json['hazirlananSiparisId'],
           miktar: json['miktar'],
           birimFiyat: json['birimFiyat'],
           dovizliBirimFiyat: json['dovizliBirimFiyat'],
@@ -60,7 +60,7 @@ class HazirlananSiparisBilgileri {
   Map<String, dynamic> toJson() => {
         // 'id': id,
         'urunId': urunId,
-        'satisFaturaId': alinanSiparisId,
+        'hazirlananSiparisId': hazirlananSiparisId,
         'miktar': miktar,
         'birimFiyat': birimFiyat,
         'dovizliBirimFiyat': dovizliBirimFiyat,
@@ -80,7 +80,7 @@ class HazirlananSiparisBilgileri {
   Map<String, dynamic> toJsonWithId() => {
         'id': id,
         'urunId': urunId,
-        'satisFaturaId': alinanSiparisId,
+        'hazirlananSiparisId': hazirlananSiparisId,
         'miktar': miktar,
         'birimFiyat': birimFiyat,
         'dovizliBirimFiyat': dovizliBirimFiyat,

@@ -7,17 +7,14 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun/urun.dart';
 import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
-import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
-import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
-import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
-import 'package:stoktakip_app/screens/urun_bilgileri/components/check_out_card.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/cart_hazirlanan_siparis/cart_screen.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/components/check_out_card.dart';
 import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class HazirlananSiparisBilgileriAdd extends StatefulWidget {
@@ -74,7 +71,7 @@ class _HazirlananSiparisBilgileriAddState
     super.initState();
   }
 
-  // List<UrunBilgileri> urunBilgileriList = [];
+  // List<UrunBilgileri> hazirlananSiparisBilgileriList = [];
   var urunBarkodBilgileri = <UrunBarkodBilgileri>[];
   var urun = <Urun>[];
   int? _urunId, _miktar, _tutar, _faturaId = buildId();
@@ -89,6 +86,9 @@ class _HazirlananSiparisBilgileriAddState
         bool? result = await onBackPressedCancelFatura(
             context, "Hazırlanan Sipariş Bilgileri");
         result ??= false;
+        if (result) {
+          hazirlananSiparisBilgileriList.clear();
+        }
         return result;
       },
       child: Scaffold(
@@ -105,11 +105,8 @@ class _HazirlananSiparisBilgileriAddState
                   width: 30.0,
                   child: GestureDetector(
                     onTap: () {
-                      faturaDurum!
-                          ? Navigator.pushNamed(
-                              context, CartScreenSatisFatura.routeName)
-                          : Navigator.pushNamed(
-                              context, CartScreenSatinAlmaFatura.routeName);
+                      Navigator.pushNamed(
+                          context, CartScreenHazirlananSiparis.routeName);
                     },
                     child: Stack(
                       children: <Widget>[
@@ -120,7 +117,7 @@ class _HazirlananSiparisBilgileriAddState
                           ),
                           onPressed: null,
                         ),
-                        urunBilgileriList.isEmpty
+                        hazirlananSiparisBilgileriList.isEmpty
                             ? Container()
                             : Positioned(
                                 child: Stack(
@@ -133,7 +130,8 @@ class _HazirlananSiparisBilgileriAddState
                                       right: -3.0,
                                       child: Center(
                                         child: Text(
-                                          urunBilgileriList.length.toString(),
+                                          hazirlananSiparisBilgileriList.length
+                                              .toString(),
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 15.0,
@@ -448,67 +446,36 @@ class _HazirlananSiparisBilgileriAddState
               _kdvHaricTutar = _miktar! * _birimFiyat!;
               _kdvTutari = _miktar! * 0 / 100;
 
-              if (faturaDurum!) {
-                UrunBilgileri urunBilgileri = UrunBilgileri(
-                    urunId: _urunId!,
-                    // satisFaturaId: 1,
-                    satisFaturaId: _faturaId!,
-                    birimFiyat: _birimFiyat!,
-                    kdvHaricTutar: _kdvHaricTutar!,
-                    miktar: _miktar!,
-                    dovizliBirimFiyat: 0,
-                    kdvOrani: 0,
-                    tutar: _kdvHaricTutar! + _kdvTutari!,
-                    kdvTutari: 0,
-                    urunAdi: urunAdiController.text,
-                    urunKodu: urunKoduController.text);
-                urunBilgileriList.add(urunBilgileri);
-              } else if (!faturaDurum!) {
-                UrunBilgileriSatinAlma urunBilgileriSatinAlma =
-                    UrunBilgileriSatinAlma(
-                        urunId: _urunId!,
-                        satinAlmaFaturaId: _faturaId!,
-                        birimFiyat: _birimFiyat!,
-                        kdvHaricTutar: _kdvHaricTutar!,
-                        miktar: _miktar!,
-                        dovizliBirimFiyat: 0,
-                        kdvOrani: 0,
-                        tutar: _kdvHaricTutar! + _kdvTutari!,
-                        kdvTutari: 0,
-                        urunAdi: urunAdiController.text,
-                        urunKodu: urunKoduController.text);
-                urunBilgileriSatinAlmaList.add(urunBilgileriSatinAlma);
-              }
+              HazirlananSiparisBilgileri hazirlananSiparisBilgileri =
+                  HazirlananSiparisBilgileri(
+                urunId: _urunId!,
+                hazirlananSiparisId: _faturaId!,
+                miktar: _miktar!,
+                birimFiyat: _birimFiyat!,
+                dovizliBirimFiyat: 0,
+                kdvHaricTutar: _kdvHaricTutar!,
+                kdvOrani: 0,
+                kdvTutari: 0,
+                tutar: _kdvHaricTutar!,
+                urunAdi: urunAdiController.text,
+                urunKodu: urunKoduController.text,
+              );
+              hazirlananSiparisBilgileriList.add(hazirlananSiparisBilgileri);
+
               ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
               (context as Element).reassemble();
+
+              adetController.clear();
+              urunAdiController.clear();
+              urunKoduController.clear();
+              barkodController.clear();
+              birimFiyatController.clear();
+              paketIciAdetController.clear();
+              paketSayisiController.clear();
             }
             print("Fatura ID: $_faturaId");
-
-            adetController.clear();
-            urunAdiController.clear();
-            urunKoduController.clear();
-            barkodController.clear();
-            birimFiyatController.clear();
-            paketIciAdetController.clear();
-            paketSayisiController.clear();
           },
         ),
-      ),
-    );
-  }
-
-  Widget buildSaveButton() {
-    return Expanded(
-      child: ElevatedButton(
-        child: const Text("Kaydet"),
-        onPressed: () {
-          // urunBilgileri.id = buildId();
-          formKey.currentState!.save(); //elimizdeki student oluştu
-          // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
-          for (int i = 0; i < urunBilgileriList.length; i++) {
-            UrunBilgileriApiService.postUrunBilgileri(urunBilgileriList[i]);
-          }
-        },
       ),
     );
   }

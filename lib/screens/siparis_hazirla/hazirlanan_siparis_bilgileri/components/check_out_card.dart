@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/functions/total_calculate.dart';
-import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
-import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
@@ -44,11 +41,11 @@ class _CheckoutCardState extends State<CheckoutCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Column(children: [
                   buildTextRich(
-                      "Sepetteki Ürün Sayısı: ${faturaDurum! ? urunBilgileriList.length : urunBilgileriSatinAlmaList.length}",
+                      "Sepetteki Ürün Sayısı: ${hazirlananSiparisBilgileriList.length}",
                       Colors.black87),
                 ]),
                 // Column(

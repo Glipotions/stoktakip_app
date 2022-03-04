@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/text_const.dart';
-import 'package:stoktakip_app/size_config.dart';
 
 class MyContainerColumn extends StatelessWidget {
   final String? yazi;

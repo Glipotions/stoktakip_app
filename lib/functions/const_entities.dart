@@ -1,5 +1,6 @@
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/kasa/kasa.dart';
 import 'package:stoktakip_app/model/nakit/nakit.dart';
@@ -49,7 +50,7 @@ Nakit nakitEntity = Nakit(
 
 Kasa kasaEntity = Kasa(bakiye: 0, id: 0, kasaAdi: "-");
 
-String? faturaAciklama;
+String? faturaAciklama, siparisAciklama;
 
 AlinanSiparis alinanSiparisSingle = AlinanSiparis(id: -1);
 List<AlinanSiparis> alinanSiparisList = [];
@@ -57,6 +58,7 @@ List<AlinanSiparisBilgileri> alinanSiparisBilgileriList = [];
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriGetIdList = [];
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriDeleteList = [];
 
+HazirlananSiparis hazirlananSiparisSingle = HazirlananSiparis();
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriGetIdList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriDeleteList = [];
