@@ -16,8 +16,8 @@ import 'package:intl/date_symbol_data_local.dart';
 //   return pw.Font.ttf(fontBold);
 // }
 
-class PdfInvoiceApi {
-  static Future<File> generate(Invoice invoice) async {
+class PdfInvoiceSatisFaturaApi {
+  static Future<File> generate(InvoiceSatisFatura invoice) async {
     final pdf = pw.Document();
 // pdf.document.fonts.
     final fontBold = await rootBundle.load("assets/fonts/muli/Muli-Bold.ttf");
@@ -45,7 +45,8 @@ class PdfInvoiceApi {
     return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
   }
 
-  static Widget buildHeader(Invoice invoice, Font fontBold, Font fontItalic) =>
+  static Widget buildHeader(
+          InvoiceSatisFatura invoice, Font fontBold, Font fontItalic) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,8 +61,8 @@ class PdfInvoiceApi {
           ),
         ],
       );
-  static Widget buildFooter(
-      Invoice invoice, Font fontBold, Font fontItalic, Font fontBoldRoboto) {
+  static Widget buildFooter(InvoiceSatisFatura invoice, Font fontBold,
+      Font fontItalic, Font fontBoldRoboto) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,7 +157,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildTitle(Invoice invoice) => Column(
+  static Widget buildTitle(InvoiceSatisFatura invoice) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -169,7 +170,8 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildInvoice(Invoice invoice, Font fontBold, Font fontItalic) {
+  static Widget buildInvoice(
+      InvoiceSatisFatura invoice, Font fontBold, Font fontItalic) {
     final headers = [
       'Ürün Kodu',
       'Ürün',
@@ -213,7 +215,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTotal(Invoice invoice, Font fontBold) {
+  static Widget buildTotal(InvoiceSatisFatura invoice, Font fontBold) {
     final netTotal = invoice.items
         .map((item) => (item.birimFiyat) * item.miktar)
         .reduce((item1, item2) => item1 + item2);

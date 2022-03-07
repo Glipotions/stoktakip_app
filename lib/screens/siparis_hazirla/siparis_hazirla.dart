@@ -166,6 +166,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                           hazirlananSiparisSingle = HazirlananSiparis(
                             aciklama: alinanSiparisEntity.aciklama,
                             alinanSiparisId: alinanSiparisEntity.id,
+                            siparisAdi: alinanSiparisEntity.siparisTanimi,
                             durum: true,
                           );
 
@@ -220,9 +221,9 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                             //searchController.text.isEmpty
                             if (dropDownMenu == null) {
                             } else {
-                              faturaDurum = true;
+                              hazirlananSiparisDurum = true;
                               searchController.clear();
-                              aciklamaController.clear();
+                              // aciklamaController.clear();
                               dropDownMenu = null;
                               Navigator.pushNamed(context,
                                   HazirlananSiparisBilgileriAdd.routeName);

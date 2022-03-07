@@ -6,6 +6,8 @@
 
 // String urunToJson(List<Urun> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+import 'dart:typed_data';
+
 class Urun {
   Urun({
     required this.kod,
@@ -19,6 +21,7 @@ class Urun {
     this.aciklama,
     // required this.durum,
     required this.id,
+    this.resim,
   });
 
   String kod;
@@ -32,6 +35,7 @@ class Urun {
   String? aciklama;
   // bool durum = true;
   int id;
+  ByteData? resim;
 
   factory Urun.fromJson(Map<String, dynamic> json) => Urun(
         kod: json["kod"],
@@ -45,6 +49,7 @@ class Urun {
         aciklama: json["aciklama"],
         // durum: json["durum"],
         id: json["id"],
+        // resim: json["resim"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -59,5 +64,6 @@ class Urun {
         "aciklama": aciklama,
         // "durum": durum,
         "id": id,
+        // "resim": resim,
       };
 }

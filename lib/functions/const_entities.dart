@@ -7,7 +7,7 @@ import 'package:stoktakip_app/model/nakit/nakit.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import '../model/satin_alma/satin_alma_fatura.dart';
 
-bool? faturaDurum;
+bool? faturaDurum, hazirlananSiparisDurum;
 
 SatisFatura satisFaturaNew = SatisFatura(
     cariHesapId: 1,
@@ -59,6 +59,7 @@ List<AlinanSiparisBilgileri> alinanSiparisBilgileriGetIdList = [];
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriDeleteList = [];
 
 HazirlananSiparis hazirlananSiparisSingle = HazirlananSiparis();
+HazirlananSiparis hazirlananSiparisEdit = HazirlananSiparis();
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriGetIdList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriDeleteList = [];

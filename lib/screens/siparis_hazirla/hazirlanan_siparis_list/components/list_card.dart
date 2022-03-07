@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
-import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class ListCard extends StatelessWidget {
@@ -25,7 +23,7 @@ class ListCard extends StatelessWidget {
       children: [
         Text(
           // DateFormat.yMMMd('tr').format(cart.tarih),
-          cart.tarih!.toIso8601String(),
+          cart.tarih!.toString(),
           style: kFontStili(14),
           maxLines: 2,
         ),

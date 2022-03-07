@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 class AlinanSiparisBilgileri {
   int? id;
   int urunId;
@@ -20,6 +22,8 @@ class AlinanSiparisBilgileri {
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
 
+  // ByteData? resim;
+
   AlinanSiparisBilgileri({
     this.id,
     required this.urunId,
@@ -38,26 +42,29 @@ class AlinanSiparisBilgileri {
     this.delete,
     this.iskontoOrani,
     this.dovizTuru,
+    // this.resim,
   });
 
   factory AlinanSiparisBilgileri.fromJson(Map<String, dynamic> json) =>
       AlinanSiparisBilgileri(
-          id: json['id'],
-          urunId: json['urunId'],
-          alinanSiparisId: json['alinanSiparisId'],
-          miktar: json['miktar'],
-          birimFiyat: json['birimFiyat'],
-          dovizliBirimFiyat: json['dovizliBirimFiyat'],
-          kdvHaricTutar: json['kdvHaricTutar'],
-          kdvOrani: json['kdvOrani'],
-          kdvTutari: json['kdvTutari'],
-          tutar: json['tutar'],
-          urunAdi: json['urunAdi'],
-          urunKodu: json['urunKodu'],
-          insert: json['insert'],
-          update: json['update'],
-          delete: json['delete'],
-          iskontoOrani: json['iskontoOrani']);
+        id: json['id'],
+        urunId: json['urunId'],
+        alinanSiparisId: json['alinanSiparisId'],
+        miktar: json['miktar'],
+        birimFiyat: json['birimFiyat'],
+        dovizliBirimFiyat: json['dovizliBirimFiyat'],
+        kdvHaricTutar: json['kdvHaricTutar'],
+        kdvOrani: json['kdvOrani'],
+        kdvTutari: json['kdvTutari'],
+        tutar: json['tutar'],
+        urunAdi: json['urunAdi'],
+        urunKodu: json['urunKodu'],
+        insert: json['insert'],
+        update: json['update'],
+        delete: json['delete'],
+        iskontoOrani: json['iskontoOrani'],
+        // resim: json['resim'],
+      );
 
   Map<String, dynamic> toJson() => {
         // 'id': id,
@@ -77,6 +84,7 @@ class AlinanSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        // "resim": resim,
       };
 
   Map<String, dynamic> toJsonWithId() => {
@@ -97,5 +105,6 @@ class AlinanSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        // "resim": resim,
       };
 }

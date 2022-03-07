@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
-import 'package:stoktakip_app/api/pdf_invoice_api.dart';
+import 'package:stoktakip_app/api/pdf_invoice_satisfatura_api.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/other/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
@@ -88,7 +87,7 @@ class _BodyState extends State<Body> {
       List<UrunBilgileri> urunBilgileriListesi, SatisFatura satisFatura) async {
     if (value == 'SatisRaporu') {
       // satisFaturaNew = satisFatura;
-      final invoice = Invoice(
+      final invoice = InvoiceSatisFatura(
           satisFatura: satisFatura,
           info: InvoiceInfo(
             description: 'Açıklama',
@@ -96,7 +95,7 @@ class _BodyState extends State<Body> {
           ),
           items: urunBilgileriListesi);
 
-      final pdfFile = await PdfInvoiceApi.generate(invoice);
+      final pdfFile = await PdfInvoiceSatisFaturaApi.generate(invoice);
 
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.

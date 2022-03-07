@@ -27,14 +27,15 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
       title: Column(
         children: [
           Text(
-            "Sepet -(${alinanSiparisSingle.siparisTanimi})",
+            "Sepet -(${hazirlananSiparisDurum == true ? hazirlananSiparisSingle.siparisAdi : hazirlananSiparisEdit.siparisAdi})",
             style: const TextStyle(color: Colors.black),
           ),
           RichText(
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "${hazirlananSiparisBilgileriList.length} ürün",
+                  text:
+                      "${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length} ürün",
                   style: Theme.of(context).textTheme.caption,
                 ),
                 TextSpan(

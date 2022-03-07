@@ -77,3 +77,8 @@ Uri fetchHazirlananSiparisUrl = Uri.parse('${mainUrl}HazirlananSiparis/getall');
 
 String hazirlananSiparisBilgileriAddUrl =
     '${mainUrl}HazirlananSiparisBilgileri';
+String hazirlananSiparisBilgileriDeleteUrl =
+    '${mainUrl}HazirlananSiparisBilgileri/delete';
+String hazirlananSiparisBilgileriGetByHazirlananSiparisIdUrl(id) {
+  return '${mainUrl}HazirlananSiparisBilgileri/getallbyhazirlanansiparisid?id=$id';
+}

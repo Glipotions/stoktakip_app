@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
-import 'package:stoktakip_app/api/pdf_invoice_api.dart';
+import 'package:stoktakip_app/api/pdf_invoice_satisfatura_api.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/other/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
@@ -40,7 +40,7 @@ class _PdfPageState extends State<PdfPage> {
                     final date = DateTime.now();
                     final dueDate = date.add(const Duration(days: 7));
 
-                    final invoice = Invoice(
+                    final invoice = InvoiceSatisFatura(
                         satisFatura: satisFaturaNew,
                         info: InvoiceInfo(
                           description: 'My description...',
@@ -48,7 +48,8 @@ class _PdfPageState extends State<PdfPage> {
                         ),
                         items: urunBilgileriList);
 
-                    final pdfFile = await PdfInvoiceApi.generate(invoice);
+                    final pdfFile =
+                        await PdfInvoiceSatisFaturaApi.generate(invoice);
 
                     PdfApi.openFile(pdfFile);
                   },

@@ -1,7 +1,9 @@
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 
-class Invoice {
+class InvoiceSatisFatura {
   final InvoiceInfo info;
   // final UrunBilgileri urunBilgileri;
   // final Supplier supplier;
@@ -11,12 +13,29 @@ class Invoice {
   // final List<InvoiceItem> items;
   final List<UrunBilgileri> items;
 
-  const Invoice({
+  const InvoiceSatisFatura({
     required this.info,
     // required this.urunBilgileri,
     // required this.supplier,
     // required this.customer,
     required this.satisFatura,
+    required this.items,
+  });
+}
+
+class InvoiceHazirlananSiparis {
+  final InvoiceInfo info;
+  // final UrunBilgileri urunBilgileri;
+  // final Supplier supplier;
+  // final Customer customer;
+  final HazirlananSiparis hazirlananSiparis;
+
+  // final List<InvoiceItem> items;
+  final List<HazirlananSiparisBilgileri> items;
+
+  const InvoiceHazirlananSiparis({
+    required this.info,
+    required this.hazirlananSiparis,
     required this.items,
   });
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,7 @@ class _HazirlananSiparisBilgileriAddState
   final snackBarKontrol = const SnackBar(content: Text("Ürün Bulunamadı."));
 
   String? lastInputValue;
+  ByteData? resimData;
 
   var formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
@@ -117,7 +119,8 @@ class _HazirlananSiparisBilgileriAddState
                           ),
                           onPressed: null,
                         ),
-                        hazirlananSiparisBilgileriList.isEmpty
+                        hazirlananSiparisBilgileriList.isEmpty &&
+                                hazirlananSiparisBilgileriGetIdList.isEmpty
                             ? Container()
                             : Positioned(
                                 child: Stack(
@@ -130,8 +133,13 @@ class _HazirlananSiparisBilgileriAddState
                                       right: -3.0,
                                       child: Center(
                                         child: Text(
-                                          hazirlananSiparisBilgileriList.length
-                                              .toString(),
+                                          {
+                                            hazirlananSiparisDurum == true
+                                                ? hazirlananSiparisBilgileriList
+                                                    .length
+                                                : hazirlananSiparisBilgileriGetIdList
+                                                    .length
+                                          }.toString(),
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 15.0,
@@ -327,16 +335,9 @@ class _HazirlananSiparisBilgileriAddState
     return SizedBox(
       key: UniqueKey(),
       height: 40,
-      // decoration: BoxDecorationSettings(),
       child: TextFormField(
-        // initialValue: '1',
         controller: paketIciAdetController,
-        // focusNode: _adetFocus,
         keyboardType: TextInputType.number,
-        // readOnly: true,
-        // inputFormatters: [
-        //   FilteringTextInputFormatter.deny(','),
-        // ],
         decoration: const InputDecoration(
           labelText: "Paket İçi Adet",
           // labelStyle: kMetinStili,
@@ -379,8 +380,6 @@ class _HazirlananSiparisBilgileriAddState
         ],
         decoration: const InputDecoration(
           labelText: "Paket Sayısı",
-          // labelStyle: kMetinStili,
-          // icon: Icon(Icons.pages_sharp),
         ),
         style: kMetinStili,
         validator: (val) {
@@ -449,7 +448,7 @@ class _HazirlananSiparisBilgileriAddState
               HazirlananSiparisBilgileri hazirlananSiparisBilgileri =
                   HazirlananSiparisBilgileri(
                 urunId: _urunId!,
-                hazirlananSiparisId: _faturaId!,
+                // hazirlananSiparisId: _faturaId!,
                 miktar: _miktar!,
                 birimFiyat: _birimFiyat!,
                 dovizliBirimFiyat: 0,
@@ -459,8 +458,20 @@ class _HazirlananSiparisBilgileriAddState
                 tutar: _kdvHaricTutar!,
                 urunAdi: urunAdiController.text,
                 urunKodu: urunKoduController.text,
+                // resim: resimData,
+                insert: true,
               );
-              hazirlananSiparisBilgileriList.add(hazirlananSiparisBilgileri);
+
+              hazirlananSiparisDurum == true
+                  ? hazirlananSiparisBilgileri.hazirlananSiparisId = _faturaId!
+                  : hazirlananSiparisBilgileri.hazirlananSiparisId =
+                      hazirlananSiparisEdit.id;
+              // Yeni veya Düzenleme işlemlerine göre ekleme satırı
+              hazirlananSiparisDurum == true
+                  ? hazirlananSiparisBilgileriList
+                      .add(hazirlananSiparisBilgileri)
+                  : hazirlananSiparisBilgileriGetIdList
+                      .add(hazirlananSiparisBilgileri);
 
               ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
               (context as Element).reassemble();
@@ -516,6 +527,7 @@ class _HazirlananSiparisBilgileriAddState
           birimFiyatController.text = element.fiyat.toString();
           urunKoduController.text = element.urunKodu;
           paketIciAdetController.text = element.paketIciAdet.toString();
+          resimData = element.resim;
         }
       });
     });
@@ -534,6 +546,7 @@ class _HazirlananSiparisBilgileriAddState
           birimFiyatController.text = element.fiyat.toString();
           paketIciAdetController.text = element.paketIciAdet.toString();
           _urunId = element.id;
+          resimData = element.resim;
         }
       });
     });
@@ -582,7 +595,7 @@ class _HazirlananSiparisBilgileriAddState
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Ürün Adeti Uyuşmadı'),
+              title: const Text('Ürün '),
               content: Text(
                   'Olması gereken miktar ${check.miktar} \n${fark > 0 ? 'Eksik Miktar: $fark' : 'Artan Miktar: ${fark * -1}'} \nYine de Değişiklik Yapmadan Ürünü Eklemek İster misiniz?'),
               actions: <Widget>[

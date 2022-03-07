@@ -16,17 +16,27 @@ class _BodyState extends State<Body> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView.builder(
-        itemCount: hazirlananSiparisBilgileriList.length,
+        itemCount: hazirlananSiparisDurum == true
+            ? hazirlananSiparisBilgileriList.length
+            : hazirlananSiparisBilgileriGetIdList.length,
         itemBuilder: (context, index) => Padding(
           key: UniqueKey(),
           padding:
               EdgeInsets.symmetric(vertical: getProportionateScreenWidth(10)),
           child: Dismissible(
-            key: Key(hazirlananSiparisBilgileriList[index].urunId.toString()),
+            key: Key(hazirlananSiparisDurum == true
+                ? hazirlananSiparisBilgileriList[index].urunId.toString()
+                : hazirlananSiparisBilgileriGetIdList[index].urunId.toString()),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               setState(() {
-                hazirlananSiparisBilgileriList.removeAt(index);
+                if (hazirlananSiparisDurum!) {
+                  hazirlananSiparisBilgileriList.removeAt(index);
+                } else {
+                  hazirlananSiparisBilgileriDeleteList
+                      .add(hazirlananSiparisBilgileriGetIdList[index]);
+                  hazirlananSiparisBilgileriGetIdList.removeAt(index);
+                }
                 (context as Element).reassemble();
               });
             },
@@ -45,7 +55,9 @@ class _BodyState extends State<Body> {
               ),
             ),
             child: CartCard(
-              cart: hazirlananSiparisBilgileriList[index],
+              cart: hazirlananSiparisDurum == true
+                  ? hazirlananSiparisBilgileriList[index]
+                  : hazirlananSiparisBilgileriGetIdList[index],
             ),
           ),
         ),

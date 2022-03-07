@@ -1,7 +1,9 @@
+import 'dart:typed_data';
+
 class HazirlananSiparisBilgileri {
   int? id;
   int urunId;
-  int hazirlananSiparisId;
+  int? hazirlananSiparisId;
   int miktar;
   double birimFiyat;
   double dovizliBirimFiyat;
@@ -17,11 +19,12 @@ class HazirlananSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
+  Uint8List? resim;
 
   HazirlananSiparisBilgileri({
     this.id,
     required this.urunId,
-    required this.hazirlananSiparisId,
+    this.hazirlananSiparisId,
     required this.miktar,
     required this.birimFiyat,
     required this.dovizliBirimFiyat,
@@ -36,26 +39,29 @@ class HazirlananSiparisBilgileri {
     this.delete,
     this.iskontoOrani,
     this.dovizTuru,
+    this.resim,
   });
 
   factory HazirlananSiparisBilgileri.fromJson(Map<String, dynamic> json) =>
       HazirlananSiparisBilgileri(
-          id: json['id'],
-          urunId: json['urunId'],
-          hazirlananSiparisId: json['hazirlananSiparisId'],
-          miktar: json['miktar'],
-          birimFiyat: json['birimFiyat'],
-          dovizliBirimFiyat: json['dovizliBirimFiyat'],
-          kdvHaricTutar: json['kdvHaricTutar'],
-          kdvOrani: json['kdvOrani'],
-          kdvTutari: json['kdvTutari'],
-          tutar: json['tutar'],
-          urunAdi: json['urunAdi'],
-          urunKodu: json['urunKodu'],
-          insert: json['insert'],
-          update: json['update'],
-          delete: json['delete'],
-          iskontoOrani: json['iskontoOrani']);
+        id: json['id'],
+        urunId: json['urunId'],
+        hazirlananSiparisId: json['hazirlananSiparisId'],
+        miktar: json['miktar'],
+        birimFiyat: json['birimFiyat'],
+        dovizliBirimFiyat: json['dovizliBirimFiyat'],
+        kdvHaricTutar: json['kdvHaricTutar'],
+        kdvOrani: json['kdvOrani'],
+        kdvTutari: json['kdvTutari'],
+        tutar: json['tutar'],
+        urunAdi: json['urunAdi'],
+        urunKodu: json['urunKodu'],
+        insert: json['insert'],
+        update: json['update'],
+        delete: json['delete'],
+        iskontoOrani: json['iskontoOrani'],
+        resim: json['resim'],
+      );
 
   Map<String, dynamic> toJson() => {
         // 'id': id,
@@ -75,6 +81,7 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        "resim": resim,
       };
 
   Map<String, dynamic> toJsonWithId() => {
@@ -95,5 +102,6 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        "resim": resim,
       };
 }

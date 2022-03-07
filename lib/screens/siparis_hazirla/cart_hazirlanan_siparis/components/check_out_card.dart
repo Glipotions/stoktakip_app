@@ -23,7 +23,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   late AnimationController controller;
 
-  bool _firstPress = true;
+  bool _firstPress = true, returnDurum = false;
   @override
   void initState() {
     controller = AnimationController(
@@ -80,74 +80,151 @@ class _CheckoutCardState extends State<CheckoutCard>
               children: [
                 SizedBox(
                   width: getProportionateScreenWidth(190),
-                  child: DefaultButton(
-                    text: "Alışverişi Tamamla",
-                    press: () async {
-                      // formKey.currentState!.save(); //elimizdeki student oluştu
+                  child: hazirlananSiparisDurum == true
+                      ? DefaultButton(
+                          text: "Alışverişi Tamamla",
+                          press: () async {
+                            // formKey.currentState!.save(); //elimizdeki student oluştu
 
-                      if (_firstPress) {
-                        _firstPress = false;
+                            if (_firstPress) {
+                              _firstPress = false;
+                              int toplam = 0;
+                              returnDurum = false;
+                              List<String> eksikUrunler = [];
+                              for (var item in alinanSiparisBilgileriList) {
+                                var durum = hazirlananSiparisBilgileriList.any(
+                                    (element) => element.urunId == item.urunId);
+                                if (!durum) {
+                                  toplam += 1;
+                                  eksikUrunler.add(item.urunKodu.toString());
+                                }
+                              }
+                              await checkEksikOlanUrun(
+                                  context, toplam, eksikUrunler);
+                              if (returnDurum == false) {
+                                hazirlananSiparisSingle.kod = "X";
+                                hazirlananSiparisSingle.id =
+                                    hazirlananSiparisBilgileriList
+                                        .first.hazirlananSiparisId;
+                                // hazirlananSiparisSingle.alinanSiparisId =
+                                //     alinanSiparisSingle.id;
+                                hazirlananSiparisSingle.tarih = DateTime.now();
+                                siparisAciklama != null
+                                    ? hazirlananSiparisSingle.aciklama =
+                                        siparisAciklama
+                                    : satinAlmaFaturaNew.aciklama;
 
-                        hazirlananSiparisSingle.kod = "X";
-                        hazirlananSiparisSingle.id =
-                            hazirlananSiparisBilgileriList
-                                .first.hazirlananSiparisId;
-                        // hazirlananSiparisSingle.alinanSiparisId =
-                        //     alinanSiparisSingle.id;
-                        hazirlananSiparisSingle.tarih = DateTime.now();
-                        siparisAciklama != null
-                            ? hazirlananSiparisSingle.aciklama = siparisAciklama
-                            : satinAlmaFaturaNew.aciklama;
+                                // hazirlananSiparisSingle.dovizTutar = 0;
+                                // hazirlananSiparisSingle.iskontoOrani = 0;
+                                // hazirlananSiparisSingle.iskontoTutari = 0;
+                                // hazirlananSiparisSingle.kdvHaricTutar = 0;
+                                // hazirlananSiparisSingle.toplamTutar = 0;
+                                // hazirlananSiparisSingle.kdvTutari = 0;
+                                // hazirlananSiparisSingle.siparisKdvOrani = 0;
 
-                        // hazirlananSiparisSingle.dovizTutar = 0;
-                        // hazirlananSiparisSingle.iskontoOrani = 0;
-                        // hazirlananSiparisSingle.iskontoTutari = 0;
-                        // hazirlananSiparisSingle.kdvHaricTutar = 0;
-                        // hazirlananSiparisSingle.toplamTutar = 0;
-                        // hazirlananSiparisSingle.kdvTutari = 0;
-                        // hazirlananSiparisSingle.siparisKdvOrani = 0;
+                                var resultSatisFaturaAdd =
+                                    await HazirlananSiparisApiService
+                                        .postHazirlananSiparis(
+                                            hazirlananSiparisSingle);
 
-                        var resultSatisFaturaAdd =
-                            await HazirlananSiparisApiService
-                                .postHazirlananSiparis(hazirlananSiparisSingle);
+                                for (var urun
+                                    in hazirlananSiparisBilgileriList) {
+                                  // await UrunApiService.updateUrunStokById(
+                                  //     urun.urunId, urun.miktar, true);
 
-                        for (var urun in hazirlananSiparisBilgileriList) {
-                          // await UrunApiService.updateUrunStokById(
-                          //     urun.urunId, urun.miktar, true);
+                                  await HazirlananSiparisApiService
+                                      .postHazirlananSiparisBilgileri(urun);
+                                }
 
-                          await HazirlananSiparisApiService
-                              .postHazirlananSiparisBilgileri(urun);
-                        }
+                                // var resultCariHesapHareketleriSatisAdd =
+                                //     await CariHesapApiService.postCariHesapHareketleri(
+                                //         cariHesapSingle.id!,
+                                //         hazirlananSiparisSingle.id,
+                                //         "Satis");
+                                //TEMİZLİK KISMI
+                                hazirlananSiparisBilgileriList.clear();
+                                faturaAciklama = null;
+                                cariHesapSingle = CariHesap(
+                                    firma: null,
+                                    bakiye: 0,
+                                    id: cariHesapSingle.id);
 
-                        // var resultCariHesapHareketleriSatisAdd =
-                        //     await CariHesapApiService.postCariHesapHareketleri(
-                        //         cariHesapSingle.id!,
-                        //         hazirlananSiparisSingle.id,
-                        //         "Satis");
-                        //TEMİZLİK KISMI
-                        hazirlananSiparisBilgileriList.clear();
-                        faturaAciklama = null;
-                        cariHesapSingle = CariHesap(
-                            firma: null, bakiye: 0, id: cariHesapSingle.id);
+                                hazirlananSiparisSingle = HazirlananSiparis();
 
-                        hazirlananSiparisSingle = HazirlananSiparis();
+                                Navigator.of(context).pop(true);
+                                Navigator.of(context).pop(true);
 
-                        Navigator.of(context).pop(true);
-                        Navigator.of(context).pop(true);
+                                if (resultSatisFaturaAdd != 200) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBarSatisFaturaEkle);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Birden Fazla Tıklamalar Dikkate Alınmadı!')));
+                            }
+                          },
+                        )
+                      : DefaultButton(
+                          text: "Düzenle",
+                          press: () async {
+                            // formKey.currentState!.save(); //elimizdeki student oluştu
 
-                        if (resultSatisFaturaAdd != 200) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBarSatisFaturaEkle);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                'Birden Fazla Tıklamalar Dikkate Alınmadı!')));
-                      }
-                    },
-                  ),
+                            if (_firstPress) {
+                              _firstPress = false;
+
+                              int toplam = 0;
+                              returnDurum = false;
+                              List<String> eksikUrunler = [];
+                              for (var item in alinanSiparisBilgileriList) {
+                                var durum = hazirlananSiparisBilgileriGetIdList
+                                    .any((element) =>
+                                        element.urunId == item.urunId);
+                                if (!durum) {
+                                  toplam += 1;
+                                  eksikUrunler.add(item.urunKodu.toString());
+                                }
+                              }
+                              await checkEksikOlanUrun(
+                                  context, toplam, eksikUrunler);
+                              if (!returnDurum) {
+                                for (var urun
+                                    in hazirlananSiparisBilgileriGetIdList) {
+                                  if (urun.insert == true) {
+                                    await HazirlananSiparisApiService
+                                        .postHazirlananSiparisBilgileri(urun);
+                                  }
+                                }
+                                hazirlananSiparisBilgileriSil();
+
+                                //TEMİZLİK KISMI
+                                hazirlananSiparisBilgileriGetIdList.clear();
+                                hazirlananSiparisSingle = HazirlananSiparis();
+
+                                Navigator.of(context).pop(true);
+                                Navigator.of(context).pop(true);
+
+                                // if (resultSatisFaturaAdd != 200) {
+                                //   ScaffoldMessenger.of(context)
+                                //       .showSnackBar(snackBarSatisFaturaEkle);
+                                // } else {
+                                //   ScaffoldMessenger.of(context)
+                                //       .showSnackBar(snackBar);
+                                // }
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Birden Fazla Tıklamalar Dikkate Alınmadı!')));
+                            }
+                          },
+                        ),
                 ),
               ],
             ),
@@ -169,10 +246,60 @@ class _CheckoutCardState extends State<CheckoutCard>
   String toplamMiktar() {
     int toplam = 0;
     setState(() {
-      for (var item in hazirlananSiparisBilgileriList) {
-        toplam += item.miktar;
+      if (hazirlananSiparisDurum!) {
+        for (var item in hazirlananSiparisBilgileriList) {
+          toplam += item.miktar;
+        }
+      } else {
+        for (var item in hazirlananSiparisBilgileriGetIdList) {
+          toplam += item.miktar;
+        }
       }
     });
     return toplam.toString();
+  }
+
+  void hazirlananSiparisBilgileriSil() async {
+    for (var urunDelete in hazirlananSiparisBilgileriDeleteList) {
+      urunDelete.dovizTuru = 1;
+      await HazirlananSiparisApiService.deleteHazirlananSiparisBilgileri(
+          urunDelete);
+    }
+    hazirlananSiparisBilgileriDeleteList = [];
+  }
+
+  checkEksikOlanUrun(
+    BuildContext context,
+    int toplam,
+    List<String> urunler,
+  ) async {
+    if (toplam > 0) {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Girilmeyen Ürün Var!'),
+              content: Text(
+                  'Girilmeyen Urunler $urunler \nYine de Değişiklik Yapmadan Siparişi Tamamlamak İster misiniz?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    _firstPress = true;
+                    returnDurum = true;
+                    Navigator.pop(context, 'Hayır');
+                  },
+                  child: const Text('Hayır'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'Evet');
+                    returnDurum = false;
+                  },
+                  child: const Text('Evet'),
+                ),
+              ],
+            );
+          });
+    }
   }
 }

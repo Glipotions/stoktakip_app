@@ -2,16 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/api/pdf_api.dart';
-import 'package:stoktakip_app/api/pdf_invoice_api.dart';
+import 'package:stoktakip_app/api/pdf_invoice_hazirlanansiparis_api.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
+import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/other/invoice.dart';
-import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
-import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
+import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
-import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 import 'package:stoktakip_app/widget/refresh_widget.dart';
@@ -45,6 +46,23 @@ class _BodyState extends State<Body> {
       });
     });
     return hazirlananSiparisList;
+  }
+
+  Future getAlinanSiparisBilgileriById(int id) async {
+    await AlinanSiparisApiService.fetchAlinanSiparisBilgileriById(id)
+        .then((response) {
+      setState(() {
+        if (response.body.isNotEmpty) {
+          dynamic list = json.decode(response.body);
+          List data = list;
+          // List data = list['data'];
+          alinanSiparisBilgileriList = data
+              .map((model) => AlinanSiparisBilgileri.fromJson(model))
+              .cast<AlinanSiparisBilgileri>()
+              .toList();
+        }
+      });
+    });
   }
 
   Future<void> initStateAsync() async {
@@ -85,38 +103,30 @@ class _BodyState extends State<Body> {
     );
   }
 
-  void actionPopUpItemSelected(String value,
-      List<UrunBilgileri> urunBilgileriListesi, SatisFatura satisFatura) async {
-    if (value == 'SatisRaporu') {
+  void actionPopUpItemSelected(
+      String value,
+      List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileri,
+      HazirlananSiparis hazirlananSiparis) async {
+    if (value == 'Rapor') {
       // satisFaturaNew = satisFatura;
-      final invoice = Invoice(
-          satisFatura: satisFatura,
+      final invoice = InvoiceHazirlananSiparis(
+          hazirlananSiparis: hazirlananSiparis,
           info: InvoiceInfo(
             description: 'Açıklama',
             number: '${DateTime.now().year}-9999',
           ),
-          items: urunBilgileriListesi);
+          items: hazirlananSiparisBilgileri);
 
-      final pdfFile = await PdfInvoiceApi.generate(invoice);
+      final pdfFile = await PdfInvoiceHazirlananSiparisApi.generate(invoice);
 
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.
     } else if (value == 'Duzenle') {
-      // await getSatisFaturas();
-      satisFaturaDuzenle = SatisFaturaDuzenle(
-          oncekiTutar: satisFatura.toplamTutar!,
-          cariHesapAdi: satisFatura.firmaUnvani,
-          cariHesapId: satisFatura.cariHesapId,
-          satisFaturaId: satisFatura.id,
-          satisFaturaKod: satisFatura.kod,
-          satisFaturaAciklama: satisFatura.aciklama,
-          satisFaturaOdemeTipi: satisFatura.odemeTipi,
-          satisFaturaKdvSekli: satisFatura.kdvSekli,
-          satisFaturaIskontoOrani: satisFatura.iskontoOrani,
-          satisFaturaKdvOrani: satisFatura.faturaKdvOrani);
-      urunBilgileriDeleteList = [];
-      faturaDurum = true;
-      Navigator.pushNamed(context, UrunBilgileriDuzenleAdd.routeName);
+      await getAlinanSiparisBilgileriById(hazirlananSiparis.alinanSiparisId!);
+      hazirlananSiparisEdit = hazirlananSiparis;
+      hazirlananSiparisBilgileriDeleteList = [];
+      hazirlananSiparisDurum = false;
+      Navigator.pushNamed(context, HazirlananSiparisBilgileriAdd.routeName);
     } else {}
   }
 
@@ -138,18 +148,20 @@ class _BodyState extends State<Body> {
   Widget buildItem(BuildContext context, int index) {
     String firma = hazirlananSiparisList[index].siparisAdi!;
 
-    Future<List> _getUrunBilgileri() async {
+    Future<List> _getHazirlananSiparisBilgileri() async {
       print(hazirlananSiparisList[index].id);
-      await UrunBilgileriApiService.fetchUrunBilgileriBySatisFaturaId(
-              hazirlananSiparisList[index].id)
+      await HazirlananSiparisApiService
+              .fetchHazirlananSiparisBilgileriByHazirlananSiparisId(
+                  hazirlananSiparisList[index].id)
           .then(
         (response) {
           setState(() {
             dynamic list = json.decode(response.body);
             // List data = list['data'];
             List data = list;
-            urunBilgileriGetIdList =
-                data.map((model) => UrunBilgileri.fromJson(model)).toList();
+            hazirlananSiparisBilgileriGetIdList = data
+                .map((model) => HazirlananSiparisBilgileri.fromJson(model))
+                .toList();
           });
         },
       );
@@ -167,8 +179,8 @@ class _BodyState extends State<Body> {
           itemBuilder: (context) {
             return [
               const PopupMenuItem(
-                value: 'SatisRaporu',
-                child: Text("Satış Raporu"),
+                value: 'Rapor',
+                child: Text("Rapor"),
               ),
               const PopupMenuItem(
                 value: 'Duzenle',
@@ -179,9 +191,9 @@ class _BodyState extends State<Body> {
           onSelected: (String value) async {
             // await getSatisFaturas();
 
-            await _getUrunBilgileri();
-            // actionPopUpItemSelected(
-            //     value, urunBilgileriGetIdList, hazirlananSiparisList[index]);
+            await _getHazirlananSiparisBilgileri();
+            actionPopUpItemSelected(value, hazirlananSiparisBilgileriGetIdList,
+                hazirlananSiparisList[index]);
           },
         ),
       ),

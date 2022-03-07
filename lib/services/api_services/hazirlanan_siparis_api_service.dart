@@ -38,4 +38,28 @@ class HazirlananSiparisApiService {
     print("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
     return res.statusCode;
   }
+
+  static Future fetchHazirlananSiparisBilgileriByHazirlananSiparisId(id) async {
+    // Uri idUrl = Uri.parse('$urunBilgileriGetBySatisFaturaIdUrl$id');
+    Uri idUrl =
+        Uri.parse(hazirlananSiparisBilgileriGetByHazirlananSiparisIdUrl(id));
+    return await http.get(idUrl);
+  }
+
+  static Future deleteHazirlananSiparisBilgileri(
+      HazirlananSiparisBilgileri entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    // for (var entity in entities) {
+    var url = Uri.parse(hazirlananSiparisBilgileriDeleteUrl);
+    var myEntity = entity.toJsonWithId();
+    var deleteBody = json.encode(myEntity);
+    var res = await http.delete(url, headers: header, body: deleteBody);
+    print("Ürün Bilgisi Silindi: ${res.statusCode}");
+
+    // }
+    return res.statusCode;
+  }
 }

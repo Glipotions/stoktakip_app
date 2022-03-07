@@ -45,7 +45,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
               children: [
                 Column(children: [
                   buildTextRich(
-                      "Sepetteki Ürün Sayısı: ${hazirlananSiparisBilgileriList.length}",
+                      "Sepetteki Ürün Sayısı: ${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length}",
                       Colors.black87),
                 ]),
                 // Column(
