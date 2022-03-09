@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/text_const.dart';
@@ -561,22 +563,27 @@ class _HazirlananSiparisBilgileriAddState
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Ürün Siparişte Yok'),
-              content: const Text('Yine de Eklemek İster misiniz?'),
+              title: const Text(
+                'ÜRÜN SİPARİŞTE YOK',
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+              content: const Text('YİNE DE EKLEMEK İSTER MİSİNİZ?',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'Hayır');
+                    Navigator.pop(context, 'HAYIR');
                     checkUrunItBeAdded = false;
                   },
-                  child: const Text('Hayır'),
+                  child: const Text('HAYIR'),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'Evet');
+                    Navigator.pop(context, 'EVET');
                     checkUrunItBeAdded = true;
                   },
-                  child: const Text('Evet'),
+                  child: const Text('EVET'),
                 ),
               ],
             );
@@ -595,23 +602,29 @@ class _HazirlananSiparisBilgileriAddState
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Ürün '),
+              title: const Text(
+                'ÜRÜN ADEDİ UYUŞMUYOR!',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.orange),
+              ),
               content: Text(
-                  'Olması gereken miktar ${check.miktar} \n${fark > 0 ? 'Eksik Miktar: $fark' : 'Artan Miktar: ${fark * -1}'} \nYine de Değişiklik Yapmadan Ürünü Eklemek İster misiniz?'),
+                'OLMASI GEREKEN MİKTAR: ${check.miktar} \n${fark > 0 ? 'EKSİK MİKTAR: $fark' : 'ARTAN MİKTAR: ${fark * -1}'} \n\nYİNE DE DEĞİŞİKLİK YAPMADAN EKLEMEK İSTER MİSİNİZ?',
+                style: TextStyle(color: fark > 0 ? Colors.purple : Colors.red),
+              ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'Hayır');
+                    Navigator.pop(context, 'HAYIR');
                     checkUrunItBeAdded = false;
                   },
-                  child: const Text('Hayır'),
+                  child: const Text('HAYIR'),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'Evet');
+                    Navigator.pop(context, 'EVET');
                     checkUrunItBeAdded = true;
                   },
-                  child: const Text('Evet'),
+                  child: const Text('EVET'),
                 ),
               ],
             );

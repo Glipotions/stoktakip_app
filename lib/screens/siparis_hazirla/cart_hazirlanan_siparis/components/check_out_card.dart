@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
+import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
+import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
@@ -99,6 +101,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   eksikUrunler.add(item.urunKodu.toString());
                                 }
                               }
+
                               await checkEksikOlanUrun(
                                   context, toplam, eksikUrunler);
                               if (returnDurum == false) {
@@ -136,6 +139,19 @@ class _CheckoutCardState extends State<CheckoutCard>
                                       .postHazirlananSiparisBilgileri(urun);
                                 }
 
+                                for (var item
+                                    in hazirlananSiparisBilgileriList) {
+                                  var entity = alinanSiparisBilgileriList
+                                      .singleWhere((element) =>
+                                          element.urunId == item.urunId);
+                                  int kalan = entity.kalanMiktar == null
+                                      ? entity.miktar - item.miktar
+                                      : entity.kalanMiktar! - item.miktar;
+                                  entity.kalanMiktar = kalan >= 0 ? kalan : 0;
+                                  entity.dovizTuru = 1;
+                                  await AlinanSiparisApiService
+                                      .updateAlinanSiparisBilgileri(entity);
+                                }
                                 // var resultCariHesapHareketleriSatisAdd =
                                 //     await CariHesapApiService.postCariHesapHareketleri(
                                 //         cariHesapSingle.id!,
@@ -278,9 +294,9 @@ class _CheckoutCardState extends State<CheckoutCard>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Girilmeyen Ürün Var!'),
+              title: const Text('GİRİLMEYEN ÜRÜNLER VAR!'),
               content: Text(
-                  'Girilmeyen Urunler $urunler \nYine de Değişiklik Yapmadan Siparişi Tamamlamak İster misiniz?'),
+                  'GİRİLMEYEN ÜRÜNLER: $urunler \n\nYİNE DE DEĞİŞİKLİK YAPMADAN SİPARİŞİ TAMAMLAMAK İSTER MİSİNİZ?'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {

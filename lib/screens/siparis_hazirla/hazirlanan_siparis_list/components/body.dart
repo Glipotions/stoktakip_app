@@ -78,10 +78,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    // return Padding(
-    //   padding: const EdgeInsets.symmetric(horizontal: 20),
-    //   child: buildList(),
-    // );
     return Scaffold(
       appBar: AppBar(
         title: Column(

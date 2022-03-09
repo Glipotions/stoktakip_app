@@ -49,12 +49,14 @@ class AlinanSiparis {
       this.firmaUnvani,
       this.bakiye,
       this.tutarYazi,
-      this.siparisTanimi});
+      this.siparisTanimi,
+      this.durum});
 
   factory AlinanSiparis.fromJson(Map<String, dynamic> json) => AlinanSiparis(
         kod: json["kod"],
         cariHesapId: json["cariHesapId"],
         ozelKod1Id: json["ozelKod1Id"],
+        durum: json["durum"],
         dovizTuru: json["dovizTuru"],
         dovizKuru: json["dovizKuru"].toDouble(),
         tarih: DateTime.parse(json["tarih"]),

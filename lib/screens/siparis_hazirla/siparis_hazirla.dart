@@ -14,6 +14,7 @@ import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_list/list_screen_hazirlanan_siparis.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import '../../size_config.dart';
 
@@ -43,11 +44,14 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
         dynamic list = json.decode(response.body);
         // List data = list['data'];
         List data = list;
-        alinanSiparisler =
-            data.map((model) => AlinanSiparis.fromJson(model)).toList();
-        _suggestions = data
-            .map((model) => AlinanSiparis.fromJson(model).siparisTanimi!)
+        alinanSiparisler = data
+            .map((model) => AlinanSiparis.fromJson(model))
+            .where((element) => element.durum == true)
             .toList();
+        // _suggestions = data
+        //     .map((model) => AlinanSiparis.fromJson(model).siparisTanimi!)
+        //     .toList();
+        _suggestions = alinanSiparisler.map((e) => e.siparisTanimi!).toList();
       });
     });
     return alinanSiparisler;
@@ -238,6 +242,29 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            primary: Colors.lightBlue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          child: const Text("Seçilen Siparişi Gör"),
+                          onPressed: () {
+                            if (dropDownMenu == null) {
+                            } else {
+                              // searchController.clear();
+                              // dropDownMenu = null;
+                              Navigator.pushNamed(context,
+                                  ListSiparisiGoruntuleTable.routeName);
+                            }
+                          }),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: getProportionateScreenHeight(90),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
                             primary: Colors.cyan,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
@@ -271,7 +298,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                     : Column(
                         children: [
                           Text(
-                            "Seçili Sipariş: ${_selectedItem!}}",
+                            "Seçili Sipariş: ${_selectedItem!}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey.shade800,

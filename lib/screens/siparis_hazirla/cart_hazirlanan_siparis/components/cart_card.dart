@@ -25,8 +25,10 @@ class CartCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: Image.memory(cart.resim!).image),
+                // image: DecorationImage(
+                //     fit: BoxFit.cover,
+                //      image: Image.memory(cart.resim!).image
+                //      ),
                 color: const Color(0xFFF5F6F9),
                 borderRadius: BorderRadius.circular(15),
               ),

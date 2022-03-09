@@ -9,6 +9,7 @@ import 'package:stoktakip_app/screens/siparis_hazirla/cart_hazirlanan_siparis/ca
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_list/list_screen_hazirlanan_siparis.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/siparis_hazirla.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/urun_bilgileri_add.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 
@@ -38,6 +39,8 @@ final Map<String, WidgetBuilder> routes = {
   ListScreenSatisFatura.routeName: (context) => const ListScreenSatisFatura(),
   ListScreenHazirlananSiparis.routeName: (context) =>
       const ListScreenHazirlananSiparis(),
+  ListSiparisiGoruntuleTable.routeName: (context) =>
+      const ListSiparisiGoruntuleTable(),
 
   SettingsPage.routeName: (context) => const SettingsPage(),
   // ProfileScreen.routeName: (context) => ProfileScreen(),
