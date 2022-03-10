@@ -220,9 +220,9 @@ class _CheckoutCardState extends State<CheckoutCard>
                         satisFaturaNew.odemeTipi = 0;
                       } else {
                         if (kasaId! > 0) {
-                          isCheckedNakit = false;
                           satisFaturaNew.odemeTipi = 1;
                         } else {
+                          isCheckedNakit = false;
                           Navigator.pushNamed(context, SettingsPage.routeName);
                         }
                       }
@@ -443,6 +443,8 @@ class _CheckoutCardState extends State<CheckoutCard>
   void urunBilgileriSil() async {
     for (var urunDelete in urunBilgileriDeleteList) {
       urunDelete.dovizTuru = 1;
+      await UrunApiService.updateUrunStokById(
+          urunDelete.urunId, urunDelete.miktar, false);
       await UrunBilgileriApiService.deleteUrunBilgileri(urunDelete);
     }
     urunBilgileriDeleteList = [];

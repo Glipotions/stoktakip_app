@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
-import 'package:stoktakip_app/widget/refresh_widget.dart';
-
-// import 'list_card.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
-
-  // final UrunBilgileri satisFaturaList;
-  // const Body(this._urunBilgileri);
-
   @override
   _BodyState createState() => _BodyState();
 }
@@ -35,12 +28,6 @@ class _BodyState extends State<Body> {
             ),
           ],
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.refresh),
-        //     onPressed: getHazirlananSiparisler,
-        //   ),
-        // ],
       ),
       body: buildList(),
     );

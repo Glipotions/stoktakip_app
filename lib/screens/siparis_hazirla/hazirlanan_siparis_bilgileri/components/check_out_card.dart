@@ -41,25 +41,15 @@ class _CheckoutCardState extends State<CheckoutCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(children: [
-                  buildTextRich(
-                      "Sepetteki Ürün Sayısı: ${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length}",
-                      Colors.black87),
+                  SingleChildScrollView(
+                    child: buildTextRich(
+                        "Sepetteki Ürün Sayısı: ${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length}",
+                        Colors.black87),
+                  ),
                 ]),
-                // Column(
-                //   children: [
-                //     buildTextRich("Toplam: ", Colors.black87),
-                //     faturaDurum!
-                //         ? buildTextRich(
-                //             "   ${totalTutarHesapla(urunBilgileriList).toStringAsFixed(2)}₺",
-                //             Colors.black)
-                //         : buildTextRich(
-                //             "   ${totalTutarHesaplaSatinAlma(urunBilgileriSatinAlmaList).toStringAsFixed(2)}₺",
-                //             Colors.black)
-                //   ],
-                // ),
               ],
             ),
           ],
@@ -74,6 +64,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
         text: _text,
         style: TextStyle(fontSize: 16, color: renk),
       ),
+      maxLines: 2,
     );
   }
 }

@@ -19,7 +19,7 @@ class HazirlananSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
-  Uint8List? resim;
+  // Uint8List? resim;
 
   HazirlananSiparisBilgileri({
     this.id,
@@ -39,7 +39,7 @@ class HazirlananSiparisBilgileri {
     this.delete,
     this.iskontoOrani,
     this.dovizTuru,
-    this.resim,
+    // this.resim,
   });
 
   factory HazirlananSiparisBilgileri.fromJson(Map<String, dynamic> json) =>
@@ -60,7 +60,7 @@ class HazirlananSiparisBilgileri {
         update: json['update'],
         delete: json['delete'],
         iskontoOrani: json['iskontoOrani'],
-        resim: json['resim'],
+        // resim: json['resim'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,7 +81,7 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "resim": resim,
+        // "resim": resim,
       };
 
   Map<String, dynamic> toJsonWithId() => {
@@ -102,6 +102,6 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "resim": resim,
+        // "resim": resim,
       };
 }

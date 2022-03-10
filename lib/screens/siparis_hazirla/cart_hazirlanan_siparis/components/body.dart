@@ -31,12 +31,27 @@ class _BodyState extends State<Body> {
             onDismissed: (direction) {
               setState(() {
                 if (hazirlananSiparisDurum!) {
+                  var entity = alinanSiparisBilgileriList.singleWhere(
+                      (element) =>
+                          element.urunId ==
+                          hazirlananSiparisBilgileriList[index].urunId);
+                  entity.kalanMiktar = entity.kalanMiktar! +
+                      hazirlananSiparisBilgileriList[index].miktar;
+
                   hazirlananSiparisBilgileriList.removeAt(index);
                 } else {
+                  var entity = alinanSiparisBilgileriList.singleWhere(
+                      (element) =>
+                          element.urunId ==
+                          hazirlananSiparisBilgileriGetIdList[index].urunId);
+                  entity.kalanMiktar = entity.kalanMiktar! +
+                      hazirlananSiparisBilgileriGetIdList[index].miktar;
+
                   hazirlananSiparisBilgileriDeleteList
                       .add(hazirlananSiparisBilgileriGetIdList[index]);
                   hazirlananSiparisBilgileriGetIdList.removeAt(index);
                 }
+
                 (context as Element).reassemble();
               });
             },

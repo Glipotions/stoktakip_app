@@ -20,6 +20,7 @@ import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgile
 import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
+// ignore: must_be_immutable
 class HazirlananSiparisBilgileriAdd extends StatefulWidget {
   static String routeName = "/hazirlanan-siparis-bilgileri-add";
 
@@ -156,33 +157,36 @@ class _HazirlananSiparisBilgileriAddState
             )
           ],
         ),
-        body: Container(
-          margin: const EdgeInsets.all(20.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                // buildIdBuild(),
-                buildBarcode(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildUrunKodu(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildUrunAdi(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                // buildBirimFiyati(),
-                // SizedBox(height: getProportionateScreenHeight(10)),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: buildPakettekiAdetSayisi()),
-                    Expanded(child: buildPaketSayisi()),
-                  ],
-                ),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildAdet(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildAddButton(),
-              ],
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(2),
+          child: Container(
+            margin: const EdgeInsets.all(20.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  // buildIdBuild(),
+                  buildBarcode(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildUrunKodu(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildUrunAdi(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  // buildBirimFiyati(),
+                  // SizedBox(height: getProportionateScreenHeight(10)),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: buildPakettekiAdetSayisi()),
+                      Expanded(child: buildPaketSayisi()),
+                    ],
+                  ),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildAdet(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildAddButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -365,10 +369,8 @@ class _HazirlananSiparisBilgileriAddState
       child: TextFormField(
         // initialValue: '1',
         onChanged: (value) {
-          if (value == lastInputValue) {
-            getPaketAdetleriToplami();
-            lastInputValue = value;
-          }
+          // if (value == lastInputValue) {
+          getPaketAdetleriToplami();
         },
 
         onEditingComplete: () {
@@ -568,23 +570,23 @@ class _HazirlananSiparisBilgileriAddState
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
-              content: const Text('YİNE DE EKLEMEK İSTER MİSİNİZ?',
+              content: const Text('ÜRÜNÜ EKLEYEMEZSİNİZ!',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'HAYIR');
+                    Navigator.pop(context, 'İPTAL');
                     checkUrunItBeAdded = false;
                   },
-                  child: const Text('HAYIR'),
+                  child: const Text('İPTAL'),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, 'EVET');
-                    checkUrunItBeAdded = true;
-                  },
-                  child: const Text('EVET'),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.pop(context, 'EVET');
+                //     checkUrunItBeAdded = true;
+                //   },
+                //   child: const Text('EVET'),
+                // ),
               ],
             );
           });
@@ -596,8 +598,20 @@ class _HazirlananSiparisBilgileriAddState
   checkMiktarlarArasiFark(BuildContext context, int id) async {
     var check = alinanSiparisBilgileriList
         .singleWhere((element) => element.urunId == id);
-    int fark = check.miktar - int.parse(adetController.text);
-    if (check.miktar.toString() != adetController.text) {
+    int olmasiGerekenMiktar =
+        check.kalanMiktar == null ? check.miktar : check.kalanMiktar!;
+    //check.miktar - (check.miktar-check.kalanMiktar!);
+    int fark = check.kalanMiktar == null
+        ? check.miktar - int.parse(adetController.text)
+        : check.kalanMiktar! - int.parse(adetController.text);
+    kalanMiktarDegistir() {
+      check.kalanMiktar = fark;
+      // check.kalanMiktar = check.kalanMiktar == null
+      //     ? check.miktar - int.parse(adetController.text)
+      //     : check.kalanMiktar! - int.parse(adetController.text);
+    }
+
+    if (fark != 0) {
       await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -608,7 +622,7 @@ class _HazirlananSiparisBilgileriAddState
                     fontWeight: FontWeight.bold, color: Colors.orange),
               ),
               content: Text(
-                'OLMASI GEREKEN MİKTAR: ${check.miktar} \n${fark > 0 ? 'EKSİK MİKTAR: $fark' : 'ARTAN MİKTAR: ${fark * -1}'} \n\nYİNE DE DEĞİŞİKLİK YAPMADAN EKLEMEK İSTER MİSİNİZ?',
+                'OLMASI GEREKEN MİKTAR: $olmasiGerekenMiktar \n${fark > 0 ? 'EKSİK MİKTAR: $fark' : 'ARTAN MİKTAR: ${fark * -1}'} \n\nYİNE DE DEĞİŞİKLİK YAPMADAN EKLEMEK İSTER MİSİNİZ?',
                 style: TextStyle(color: fark > 0 ? Colors.purple : Colors.red),
               ),
               actions: <Widget>[
@@ -623,23 +637,24 @@ class _HazirlananSiparisBilgileriAddState
                   onPressed: () {
                     Navigator.pop(context, 'EVET');
                     checkUrunItBeAdded = true;
+                    kalanMiktarDegistir();
                   },
                   child: const Text('EVET'),
                 ),
               ],
             );
           });
+    } else {
+      kalanMiktarDegistir();
     }
   }
 
   getPaketAdetleriToplami() {
-    setState(() {
-      paketSayisiController.text != ""
-          ? adetController.text = (int.parse(paketIciAdetController.text) *
-                  int.parse(paketSayisiController.text))
-              .toString()
-          : adetController.text = "0";
-    });
+    paketSayisiController.text != ""
+        ? adetController.text = (int.parse(paketIciAdetController.text) *
+                int.parse(paketSayisiController.text))
+            .toString()
+        : adetController.text = "0";
   }
 
   BoxDecoration boxDecorationSettings() {

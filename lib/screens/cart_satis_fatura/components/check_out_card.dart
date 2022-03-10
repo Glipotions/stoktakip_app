@@ -206,6 +206,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                         if (kasaId! > 0) {
                           satisFaturaNew.odemeTipi = 1;
                         } else {
+                          isCheckedNakit = false;
                           Navigator.pushNamed(context, SettingsPage.routeName);
                         }
                       }
@@ -387,10 +388,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                         Navigator.of(context).pop(true);
                         // Navigator.pop(context);
                         Navigator.of(context).pop(true);
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const FaturaOlustur()));
+
                         if (resultCariHesapHareketleriSatisAdd != 200 ||
                             resultCarihesapUpdateSatis != 200 ||
                             resultSatisFaturaAdd != 200) {

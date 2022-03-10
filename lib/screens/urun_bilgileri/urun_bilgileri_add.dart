@@ -40,7 +40,8 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
 
   String? lastInputValue;
 
-  var formKey = GlobalKey<FormState>();
+  // final formKey = GlobalKey<FormState>();
+  static GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
       kdvHaricTutarController = TextEditingController(),
       urunKoduController = TextEditingController(),
@@ -70,7 +71,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
 
   @override
   void initState() {
-    formKey;
+    _formKey;
     super.initState();
   }
 
@@ -88,6 +89,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         bool? result =
             await onBackPressedCancelFatura(context, "Fatura bilgileriniz");
         result ??= false;
+        if (result) urunBilgileriList.clear();
         return result;
       },
       child: Scaffold(
@@ -147,38 +149,41 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             )
           ],
         ),
-        body: Container(
-          margin: const EdgeInsets.all(20.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                // buildIdBuild(),
-                buildBarcode(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildUrunKodu(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildUrunAdi(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildBirimFiyati(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: buildPakettekiAdetSayisi()),
-                    Expanded(child: buildPaketSayisi()),
-                  ],
-                ),
-                // buildPaketSayisi(),
-                // SizedBox(height: getProportionateScreenHeight(5)),
-                // buildPaketSayisi(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildAdet(),
-                // buildKdvHaricToplamTutar(),
-                SizedBox(height: getProportionateScreenHeight(10)),
-                buildAddButton(),
-                // buildSaveButton()
-              ],
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(2),
+          child: Container(
+            margin: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  // buildIdBuild(),
+                  buildBarcode(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildUrunKodu(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildUrunAdi(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildBirimFiyati(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: buildPakettekiAdetSayisi()),
+                      Expanded(child: buildPaketSayisi()),
+                    ],
+                  ),
+                  // buildPaketSayisi(),
+                  // SizedBox(height: getProportionateScreenHeight(5)),
+                  // buildPaketSayisi(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildAdet(),
+                  // buildKdvHaricToplamTutar(),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  buildAddButton(),
+                  // buildSaveButton()
+                ],
+              ),
             ),
           ),
         ),
@@ -368,10 +373,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       child: TextFormField(
         // initialValue: '1',
         onChanged: (value) {
-          if (value == lastInputValue) {
-            getPaketAdetleriToplami();
-            lastInputValue = value;
-          }
+          getPaketAdetleriToplami();
         },
 
         onEditingComplete: () {
@@ -408,7 +410,6 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
       child: TextFormField(
         // initialValue: '1',
         controller: adetController,
-        // focusNode: _adetFocus,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.deny(','),
@@ -439,7 +440,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         child: DefaultButton(
           text: "Ekle",
           press: () {
-            formKey.currentState!.save();
+            _formKey.currentState!.save();
 
             _birimFiyat = double.parse(birimFiyatController.text);
             _miktar = int.parse(adetController.text);
@@ -501,7 +502,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
         child: const Text("Kaydet"),
         onPressed: () {
           // urunBilgileri.id = buildId();
-          formKey.currentState!.save(); //elimizdeki student oluştu
+          _formKey.currentState!.save(); //elimizdeki student oluştu
           // widget.satisFaturas!.add(satisFatura); //ekleme işlemini yapar.
           for (int i = 0; i < urunBilgileriList.length; i++) {
             UrunBilgileriApiService.postUrunBilgileri(urunBilgileriList[i]);
@@ -571,13 +572,18 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   }
 
   getPaketAdetleriToplami() {
-    setState(() {
-      paketSayisiController.text != ""
-          ? adetController.text = (int.parse(paketIciAdetController.text) *
-                  int.parse(paketSayisiController.text))
-              .toString()
-          : adetController.text = "0";
-    });
+    paketSayisiController.text != ""
+        ? adetController.text = (int.parse(paketIciAdetController.text) *
+                int.parse(paketSayisiController.text))
+            .toString()
+        : adetController.text = "0";
+    // setState(() {
+    //   paketSayisiController.text != ""
+    //       ? adetController.text = (int.parse(paketIciAdetController.text) *
+    //               int.parse(paketSayisiController.text))
+    //           .toString()
+    //       : adetController.text = "0";
+    // });
   }
 
   BoxDecoration boxDecorationSettings() {

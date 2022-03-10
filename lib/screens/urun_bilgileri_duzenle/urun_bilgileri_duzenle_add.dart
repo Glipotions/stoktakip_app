@@ -373,6 +373,9 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
       // decoration: BoxDecorationSettings(),
       child: TextFormField(
         // initialValue: '1',
+        onChanged: (value) {
+          getPaketAdetleriToplami();
+        },
         onEditingComplete: () {
           getPaketAdetleriToplami();
         },
@@ -573,11 +576,11 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
   }
 
   getPaketAdetleriToplami() {
-    setState(() {
-      adetController.text = (int.parse(paketIciAdetController.text) *
-              int.parse(paketSayisiController.text))
-          .toString();
-    });
+    paketSayisiController.text != ""
+        ? adetController.text = (int.parse(paketIciAdetController.text) *
+                int.parse(paketSayisiController.text))
+            .toString()
+        : adetController.text = "0";
   }
 
   BoxDecoration boxDecorationSettings() {

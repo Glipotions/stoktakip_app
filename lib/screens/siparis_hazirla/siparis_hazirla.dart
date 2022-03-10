@@ -1,17 +1,12 @@
 // ignore_for_file: avoid_print, unnecessary_null_comparison
 
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:searchfield/searchfield.dart';
-import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
-import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
-import 'package:stoktakip_app/screens/satis_fatura_list/list_screen_satis_fatura.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_list/list_screen_hazirlanan_siparis.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
@@ -298,7 +293,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                     : Column(
                         children: [
                           Text(
-                            "Seçili Sipariş: ${_selectedItem!}",
+                            "Seçili Sipariş: \n${_selectedItem!}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey.shade800,

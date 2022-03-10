@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
+import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
@@ -132,8 +132,8 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                                 for (var urun
                                     in hazirlananSiparisBilgileriList) {
-                                  // await UrunApiService.updateUrunStokById(
-                                  //     urun.urunId, urun.miktar, true);
+                                  await UrunApiService.updateUrunStokById(
+                                      urun.urunId, urun.miktar, true);
 
                                   await HazirlananSiparisApiService
                                       .postHazirlananSiparisBilgileri(urun);
@@ -144,10 +144,10 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   var entity = alinanSiparisBilgileriList
                                       .singleWhere((element) =>
                                           element.urunId == item.urunId);
-                                  int kalan = entity.kalanMiktar == null
-                                      ? entity.miktar - item.miktar
-                                      : entity.kalanMiktar! - item.miktar;
-                                  entity.kalanMiktar = kalan >= 0 ? kalan : 0;
+                                  // int kalan = entity.kalanMiktar == null
+                                  //     ? entity.miktar - item.miktar
+                                  //     : entity.kalanMiktar! - item.miktar;
+                                  // entity.kalanMiktar = kalan >= 0 ? kalan : 0;
                                   entity.dovizTuru = 1;
                                   await AlinanSiparisApiService
                                       .updateAlinanSiparisBilgileri(entity);
@@ -214,11 +214,24 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   if (urun.insert == true) {
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparisBilgileri(urun);
+                                    await UrunApiService.updateUrunStokById(
+                                        urun.urunId, urun.miktar, true);
+                                    var entity = alinanSiparisBilgileriList
+                                        .singleWhere((element) =>
+                                            element.urunId == urun.urunId);
+                                    int kalan = entity.kalanMiktar == null
+                                        ? entity.miktar - urun.miktar
+                                        : entity.kalanMiktar! - urun.miktar;
+                                    entity.kalanMiktar = kalan >= 0 ? kalan : 0;
+                                    entity.dovizTuru = 1;
+                                    await AlinanSiparisApiService
+                                        .updateAlinanSiparisBilgileri(entity);
                                   }
                                 }
                                 hazirlananSiparisBilgileriSil();
 
                                 //TEMİZLİK KISMI
+
                                 hazirlananSiparisBilgileriGetIdList.clear();
                                 hazirlananSiparisSingle = HazirlananSiparis();
 
@@ -278,6 +291,17 @@ class _CheckoutCardState extends State<CheckoutCard>
   void hazirlananSiparisBilgileriSil() async {
     for (var urunDelete in hazirlananSiparisBilgileriDeleteList) {
       urunDelete.dovizTuru = 1;
+
+      var entity = alinanSiparisBilgileriList
+          .singleWhere((element) => element.urunId == urunDelete.urunId);
+      int? kalan = entity.kalanMiktar == null
+          ? null
+          : entity.kalanMiktar! + urunDelete.miktar;
+      entity.kalanMiktar = kalan;
+      entity.dovizTuru = 1;
+      await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
+      await UrunApiService.updateUrunStokById(
+          urunDelete.urunId, urunDelete.miktar, false);
       await HazirlananSiparisApiService.deleteHazirlananSiparisBilgileri(
           urunDelete);
     }
