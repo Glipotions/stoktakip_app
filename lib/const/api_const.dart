@@ -81,6 +81,8 @@ String hazirlananSiparisBilgileriAddUrl =
     '${mainUrl}HazirlananSiparisBilgileri';
 String hazirlananSiparisBilgileriDeleteUrl =
     '${mainUrl}HazirlananSiparisBilgileri/delete';
+String hazirlananSiparisBilgileriUpdateUrl =
+    '${mainUrl}HazirlananSiparisBilgileri/update?';
 String hazirlananSiparisBilgileriGetByHazirlananSiparisIdUrl(id) {
   return '${mainUrl}HazirlananSiparisBilgileri/getallbyhazirlanansiparisid?id=$id';
 }

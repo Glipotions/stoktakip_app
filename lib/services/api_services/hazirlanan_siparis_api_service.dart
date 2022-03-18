@@ -62,4 +62,20 @@ class HazirlananSiparisApiService {
     // }
     return res.statusCode;
   }
+
+  static Future updateHazirlananSiparisBilgileri(
+      HazirlananSiparisBilgileri entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    // for (var entity in entities) {
+    var url = Uri.parse(hazirlananSiparisBilgileriUpdateUrl);
+    var myEntity = entity.toJsonWithId();
+    var updateBody = json.encode(myEntity);
+    var res = await http.patch(url, headers: header, body: updateBody);
+    print("Hazırlanan Sipariş Bilgisi Güncellendi: ${res.statusCode}");
+
+    return res.statusCode;
+  }
 }

@@ -19,6 +19,9 @@ class HazirlananSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
+
+  int? ilaveEdilmis;
+
   // Uint8List? resim;
 
   HazirlananSiparisBilgileri({
@@ -39,6 +42,7 @@ class HazirlananSiparisBilgileri {
     this.delete,
     this.iskontoOrani,
     this.dovizTuru,
+    this.ilaveEdilmis,
     // this.resim,
   });
 

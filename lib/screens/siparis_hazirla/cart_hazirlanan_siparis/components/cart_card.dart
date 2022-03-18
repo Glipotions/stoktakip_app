@@ -11,7 +11,6 @@ class CartCard extends StatelessWidget {
   // final UrunBilgileri cart;
 
   HazirlananSiparisBilgileri cart;
-
   var urun = <Urun>[];
 
   @override
@@ -19,16 +18,12 @@ class CartCard extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 88,
+          width: 49,
           child: AspectRatio(
             aspectRatio: 0.88,
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                // image: DecorationImage(
-                //     fit: BoxFit.cover,
-                //      image: Image.memory(cart.resim!).image
-                //      ),
                 color: const Color(0xFFF5F6F9),
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -54,12 +49,20 @@ class CartCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text.rich(
               TextSpan(
-                text: "₺${cart.birimFiyat}",
+                text: "Toplam Adet: ",
                 style: const TextStyle(
                     fontWeight: FontWeight.w600, color: kPrimaryColor),
                 children: [
                   TextSpan(
-                      text: " x${cart.miktar}",
+                      text: " ${cart.miktar}  | ",
+                      style: Theme.of(context).textTheme.bodyText1),
+                  const TextSpan(
+                    text: " İlave Edilmiş: ",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600, color: kPrimaryColor),
+                  ),
+                  TextSpan(
+                      text: " ${cart.ilaveEdilmis ?? 0}",
                       style: Theme.of(context).textTheme.bodyText1),
                 ],
               ),

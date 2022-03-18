@@ -449,34 +449,53 @@ class _HazirlananSiparisBilgileriAddState
               _kdvHaricTutar = _miktar! * _birimFiyat!;
               _kdvTutari = _miktar! * 0 / 100;
 
-              HazirlananSiparisBilgileri hazirlananSiparisBilgileri =
-                  HazirlananSiparisBilgileri(
-                urunId: _urunId!,
-                // hazirlananSiparisId: _faturaId!,
-                miktar: _miktar!,
-                birimFiyat: _birimFiyat!,
-                dovizliBirimFiyat: 0,
-                kdvHaricTutar: _kdvHaricTutar!,
-                kdvOrani: 0,
-                kdvTutari: 0,
-                tutar: _kdvHaricTutar!,
-                urunAdi: urunAdiController.text,
-                urunKodu: urunKoduController.text,
-                // resim: resimData,
-                insert: true,
-              );
-
-              hazirlananSiparisDurum == true
-                  ? hazirlananSiparisBilgileri.hazirlananSiparisId = _faturaId!
-                  : hazirlananSiparisBilgileri.hazirlananSiparisId =
-                      hazirlananSiparisEdit.id;
-              // Yeni veya Düzenleme işlemlerine göre ekleme satırı
-              hazirlananSiparisDurum == true
+              var check = hazirlananSiparisDurum == true
                   ? hazirlananSiparisBilgileriList
-                      .add(hazirlananSiparisBilgileri)
+                      .any((element) => element.urunId == _urunId)
                   : hazirlananSiparisBilgileriGetIdList
-                      .add(hazirlananSiparisBilgileri);
+                      .any((element) => element.urunId == _urunId);
+              if (!check) {
+                HazirlananSiparisBilgileri hazirlananSiparisBilgileri =
+                    HazirlananSiparisBilgileri(
+                  urunId: _urunId!,
+                  // hazirlananSiparisId: _faturaId!,
+                  miktar: _miktar!,
+                  birimFiyat: _birimFiyat!,
+                  dovizliBirimFiyat: 0,
+                  dovizTuru: 1,
+                  kdvHaricTutar: _kdvHaricTutar!,
+                  kdvOrani: 0,
+                  kdvTutari: 0,
+                  tutar: _kdvHaricTutar!,
+                  urunAdi: urunAdiController.text,
+                  urunKodu: urunKoduController.text,
+                  // resim: resimData,
+                  insert: true,
+                );
 
+                hazirlananSiparisDurum == true
+                    ? hazirlananSiparisBilgileri.hazirlananSiparisId =
+                        _faturaId!
+                    : hazirlananSiparisBilgileri.hazirlananSiparisId =
+                        hazirlananSiparisEdit.id;
+                // Yeni veya Düzenleme işlemlerine göre ekleme satırı
+                hazirlananSiparisDurum == true
+                    ? hazirlananSiparisBilgileriList
+                        .add(hazirlananSiparisBilgileri)
+                    : hazirlananSiparisBilgileriGetIdList
+                        .add(hazirlananSiparisBilgileri);
+              } else {
+                var entity = hazirlananSiparisDurum == true
+                    ? hazirlananSiparisBilgileriList
+                        .singleWhere((element) => element.urunId == _urunId)
+                    : hazirlananSiparisBilgileriGetIdList
+                        .singleWhere((element) => element.urunId == _urunId);
+                entity.miktar += _miktar!;
+                entity.ilaveEdilmis = entity.ilaveEdilmis != null
+                    ? entity.ilaveEdilmis! + _miktar!
+                    : _miktar;
+                entity.update = true;
+              }
               ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
               (context as Element).reassemble();
 
@@ -557,10 +576,9 @@ class _HazirlananSiparisBilgileriAddState
   }
 
   Future checkUrunOnAlinanSiparis(BuildContext context, int id) async {
-    var check = alinanSiparisBilgileriList
-        .where((element) => element.urunId == id)
-        .length;
-    if (check < 1) {
+    var check =
+        alinanSiparisBilgileriList.any((element) => element.urunId == id);
+    if (!check) {
       await showDialog(
           context: context,
           builder: (BuildContext context) {

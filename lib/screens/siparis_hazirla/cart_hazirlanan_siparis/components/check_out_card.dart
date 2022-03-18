@@ -152,11 +152,6 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   await AlinanSiparisApiService
                                       .updateAlinanSiparisBilgileri(entity);
                                 }
-                                // var resultCariHesapHareketleriSatisAdd =
-                                //     await CariHesapApiService.postCariHesapHareketleri(
-                                //         cariHesapSingle.id!,
-                                //         hazirlananSiparisSingle.id,
-                                //         "Satis");
                                 //TEMİZLİK KISMI
                                 hazirlananSiparisBilgileriList.clear();
                                 faturaAciklama = null;
@@ -219,10 +214,23 @@ class _CheckoutCardState extends State<CheckoutCard>
                                     var entity = alinanSiparisBilgileriList
                                         .singleWhere((element) =>
                                             element.urunId == urun.urunId);
-                                    int kalan = entity.kalanMiktar == null
-                                        ? entity.miktar - urun.miktar
-                                        : entity.kalanMiktar! - urun.miktar;
-                                    entity.kalanMiktar = kalan >= 0 ? kalan : 0;
+                                    // int kalan = entity.kalanMiktar == null
+                                    //     ? entity.miktar - urun.miktar
+                                    //     : entity.kalanMiktar! - urun.miktar;
+                                    // entity.kalanMiktar = kalan >= 0 ? kalan : 0;
+                                    entity.dovizTuru = 1;
+                                    await AlinanSiparisApiService
+                                        .updateAlinanSiparisBilgileri(entity);
+                                  } else if (urun.update!) {
+                                    urun.dovizTuru = 1;
+                                    await HazirlananSiparisApiService
+                                        .updateHazirlananSiparisBilgileri(urun);
+                                    await UrunApiService.updateUrunStokById(
+                                        urun.urunId, urun.ilaveEdilmis!, true);
+                                    var entity = alinanSiparisBilgileriList
+                                        .singleWhere((element) =>
+                                            element.urunId == urun.urunId);
+
                                     entity.dovizTuru = 1;
                                     await AlinanSiparisApiService
                                         .updateAlinanSiparisBilgileri(entity);
@@ -294,10 +302,10 @@ class _CheckoutCardState extends State<CheckoutCard>
 
       var entity = alinanSiparisBilgileriList
           .singleWhere((element) => element.urunId == urunDelete.urunId);
-      int? kalan = entity.kalanMiktar == null
-          ? null
-          : entity.kalanMiktar! + urunDelete.miktar;
-      entity.kalanMiktar = kalan;
+      // int? kalan = entity.kalanMiktar == null
+      //     ? null
+      //     : entity.kalanMiktar! + urunDelete.miktar;
+      // entity.kalanMiktar = kalan;
       entity.dovizTuru = 1;
       await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
       await UrunApiService.updateUrunStokById(

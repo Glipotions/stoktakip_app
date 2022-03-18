@@ -24,7 +24,7 @@ class ListCard extends StatelessWidget {
         Text(
           // DateFormat.yMMMd('tr').format(cart.tarih),
           cart.tarih!.toString(),
-          style: kFontStili(14),
+          style: kFontStili(12),
           maxLines: 2,
         ),
         Flexible(
@@ -34,7 +34,7 @@ class ListCard extends StatelessWidget {
               "${cart.siparisAdi}",
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 14,
               ),
               overflow: TextOverflow.ellipsis,
               // softWrap: false,

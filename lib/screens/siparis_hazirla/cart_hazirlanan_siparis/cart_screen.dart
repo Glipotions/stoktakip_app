@@ -51,14 +51,14 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
           )
         ],
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.pushNamed(context, SettingsPage.routeName);
-          },
-        ),
-      ],
+      // actions: [
+      //   IconButton(
+      //     icon: const Icon(Icons.search),
+      //     onPressed: () {
+      //       // Navigator.pushNamed(context, SettingsPage.routeName);
+      //     },
+      //   ),
+      // ],
     );
   }
 }
