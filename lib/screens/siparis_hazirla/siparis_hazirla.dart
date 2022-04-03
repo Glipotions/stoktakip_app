@@ -32,6 +32,8 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
   var searchController = TextEditingController();
   var aciklamaController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool isSwitched = false;
+  String switcheGoreText = "";
 
   Future<List> _getAlinanSiparisler() async {
     await AlinanSiparisApiService.fetchAlinanSiparis().then((response) {
@@ -110,6 +112,57 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                   SizedBox(
                     height: getProportionateScreenHeight(20),
                   ),
+                  SizedBox(
+                    // height: getProportionateScreenHeight(10),
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow[300],
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const Spacer(
+                            flex: 1,
+                          ),
+                          Expanded(
+                            flex: 8,
+                            child: Text(
+                              switcheGoreText = isSwitched == true
+                                  ? "CARİNİN TÜM SİPARİŞLERİ"
+                                  : "SEÇİLİ SİPARİŞ",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Switch(
+                              value: isSwitched,
+                              onChanged: (value) {
+                                setState(() {
+                                  isSwitched = value;
+                                  print(isSwitched);
+                                });
+                              },
+                              activeTrackColor: Colors.lightGreenAccent,
+                              activeColor: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -150,7 +203,6 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      
                       onTap: (value) async {
                         setState(() {
                           _selectedItem = value!;
