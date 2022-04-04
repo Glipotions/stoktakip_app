@@ -10,10 +10,8 @@ import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgil
 import 'package:stoktakip_app/model/other/invoice.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/hazirlanan_siparis_bilgileri_add.dart';
-import 'package:stoktakip_app/screens/urun_bilgileri_duzenle/urun_bilgileri_duzenle_add.dart';
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 import 'package:stoktakip_app/widget/refresh_widget.dart';
 

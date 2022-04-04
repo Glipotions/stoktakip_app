@@ -71,6 +71,8 @@ Uri fetchAlinanSiparisUrl = Uri.parse('${mainUrl}AlinanSiparis/getall');
 
 String fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
     '${mainUrl}AlinanSiparisBilgileri/getallbyalinansiparisid?id=';
+String fetchAlinanSiparisBilgileriByCariIdUrl =
+    '${mainUrl}AlinanSiparisBilgileri/getallbycari?id=';
 String updateAlinanSiparisBilgileriUrl =
     '${mainUrl}AlinanSiparisBilgileri/update?';
 

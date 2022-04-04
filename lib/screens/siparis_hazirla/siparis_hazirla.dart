@@ -33,7 +33,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
   var aciklamaController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isSwitched = false;
-  String switcheGoreText = "";
+  final keyRefresh = GlobalKey<RefreshIndicatorState>();
 
   Future<List> _getAlinanSiparisler() async {
     await AlinanSiparisApiService.fetchAlinanSiparis().then((response) {
@@ -56,6 +56,23 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
 
   Future getAlinanSiparisBilgileriById(int id) async {
     await AlinanSiparisApiService.fetchAlinanSiparisBilgileriById(id)
+        .then((response) {
+      setState(() {
+        if (response.body.isNotEmpty) {
+          dynamic list = json.decode(response.body);
+          List data = list;
+          // List data = list['data'];
+          alinanSiparisBilgileriList = data
+              .map((model) => AlinanSiparisBilgileri.fromJson(model))
+              .cast<AlinanSiparisBilgileri>()
+              .toList();
+        }
+      });
+    });
+  }
+
+  Future getAlinanSiparisBilgileriByCariId(int id) async {
+    await AlinanSiparisApiService.fetchAlinanSiparisBilgileriByCariId(id)
         .then((response) {
       setState(() {
         if (response.body.isNotEmpty) {
@@ -136,7 +153,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                           Expanded(
                             flex: 8,
                             child: Text(
-                              switcheGoreText = isSwitched == true
+                              isSwitched == true
                                   ? "CARİNİN TÜM SİPARİŞLERİ"
                                   : "SEÇİLİ SİPARİŞ",
                               style: TextStyle(
@@ -149,11 +166,24 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                             flex: 2,
                             child: Switch(
                               value: isSwitched,
-                              onChanged: (value) {
+                              onChanged: (value) async {
                                 setState(() {
                                   isSwitched = value;
-                                  print(isSwitched);
                                 });
+                                alinanSiparisBilgileriList.clear();
+
+                                if (isSwitched && searchController != null) {
+                                  await getAlinanSiparisBilgileriByCariId(
+                                      alinanSiparisSingle.cariHesapId!);
+                                } else if (!isSwitched &&
+                                    searchController != null) {
+                                  await getAlinanSiparisBilgileriById(
+                                      alinanSiparisSingle.id!);
+                                }
+                                if (alinanSiparisBilgileriList.isEmpty) {
+                                  const Center(
+                                      child: CircularProgressIndicator());
+                                }
                               },
                               activeTrackColor: Colors.lightGreenAccent,
                               activeColor: Colors.green,
@@ -211,6 +241,8 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                                   (element) => element.siparisTanimi == value)
                               .single;
                           alinanSiparisSingle.id = alinanSiparisEntity.id;
+                          alinanSiparisSingle.cariHesapId =
+                              alinanSiparisEntity.cariHesapId;
                           alinanSiparisSingle.siparisTanimi = value;
                           // alinanSiparisSingle.cariHesapId =
                           //     alinanSiparisEntity.cariHesapId;
@@ -224,10 +256,21 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
 
                           dropDownMenu = 1;
                         });
-                        print(alinanSiparisSingle.id);
-                        await getAlinanSiparisBilgileriById(
-                            alinanSiparisSingle.id!);
-                        print(alinanSiparisBilgileriList.length);
+                        alinanSiparisBilgileriList.clear();
+                        if (isSwitched && searchController != null) {
+                          await getAlinanSiparisBilgileriByCariId(
+                              alinanSiparisSingle.cariHesapId!);
+                        } else if (!isSwitched && searchController != null) {
+                          await getAlinanSiparisBilgileriById(
+                              alinanSiparisSingle.id!);
+                        }
+                        if (alinanSiparisBilgileriList.isEmpty) {
+                          const Center(child: CircularProgressIndicator());
+                        }
+                        // print(alinanSiparisSingle.id);
+                        // await getAlinanSiparisBilgileriById(
+                        //     alinanSiparisSingle.id!);
+                        // print(alinanSiparisBilgileriList.length);
                       },
                       suggestions: _suggestions,
                     ),
