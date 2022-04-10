@@ -124,7 +124,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 // hazirlananSiparisSingle.toplamTutar = 0;
                                 // hazirlananSiparisSingle.kdvTutari = 0;
                                 // hazirlananSiparisSingle.siparisKdvOrani = 0;
-
+ 
                                 var resultSatisFaturaAdd =
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparis(
