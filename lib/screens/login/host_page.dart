@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stoktakip_app/change_notifier_model/ip_host_data.dart';
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/shared_preferences_models/ip_host.dart';
-import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
 import 'package:stoktakip_app/screens/home/home_view.dart';
 
 class HostPage extends StatefulWidget {
@@ -109,34 +108,17 @@ class _HostPageState extends State<HostPage> {
                 ),
               ),
             ),
-            // field(_hostNameController, Icon(Icons.email_outlined),
-            //     "Host Adı Gir"),
-            // const SizedBox(
-            //   height: 10,
-            // ),
             field(_ipHostController, const Icon(Icons.import_export),
                 "Ip:Host Gir"),
             const SizedBox(
               height: 10,
             ),
-            // SizedBox(
-            //   height: 40,
-            //   child: ButtonTheme(
-            //       child: DefaultButton(
-            //     text: "Giriş",
-            //     press: () {
-            //       host = _ipHostController.text;
-            //       Navigator.pushNamed(context, FaturaOlustur.routeName);
-            //     },
-            //   )),
-            // ),
             GestureDetector(
                 onTap: () {
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (context) => LogoutPage()));
                   host = _ipHostController.text;
                   Navigator.pushNamed(context, HomeViewPage.routeName);
-                  // Navigator.pushNamed(context, FaturaOlustur.routeName);
                 },
                 child: const Text("Giriş",
                     style: TextStyle(
@@ -191,11 +173,6 @@ class _HostPageState extends State<HostPage> {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => LogoutPage()));
-                              // ipHostListe.remove(IpHost(
-                              //     hostAdi: _hostNameAddController.text,
-                              //     ip: _ipHostAddController.text));
                               ipHostListe.removeWhere((item) =>
                                   item.hostAdi == _hostNameAddController.text);
                               _saveIpHostList();

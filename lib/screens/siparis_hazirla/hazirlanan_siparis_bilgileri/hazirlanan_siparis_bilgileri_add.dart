@@ -550,7 +550,7 @@ class _HazirlananSiparisBilgileriAddState
           birimFiyatController.text = element.fiyat.toString();
           urunKoduController.text = element.urunKodu;
           paketIciAdetController.text = element.paketIciAdet.toString();
-          resimData = element.resim;
+          // resimData = element.resim;
         }
       });
     });
@@ -569,7 +569,7 @@ class _HazirlananSiparisBilgileriAddState
           birimFiyatController.text = element.fiyat.toString();
           paketIciAdetController.text = element.paketIciAdet.toString();
           _urunId = element.id;
-          resimData = element.resim;
+          // resimData = element.resim;
         }
       });
     });
@@ -614,8 +614,44 @@ class _HazirlananSiparisBilgileriAddState
   }
 
   checkMiktarlarArasiFark(BuildContext context, int id) async {
+    int howManyProduct = alinanSiparisBilgileriList
+        .where((element) => element.urunId == id)
+        .length;
+
+    if (howManyProduct > 1) {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                'BİRDEN FAZLA SİPARİŞ VAR!',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.orange),
+              ),
+              content: const Text(
+                'BU ÜRÜNDEN BİRDEN FAZLA SİPARİŞ OLDUĞU İÇİN KONTROLÜ SAĞLANAMIYOR!',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'TAMAM');
+                  },
+                  child: const Text('TAMAM'),
+                ),
+              ],
+            );
+          });
+      checkUrunItBeAdded = false;
+      return;
+    }
+
     var check = alinanSiparisBilgileriList
         .singleWhere((element) => element.urunId == id);
+    // : alinanSiparisBilgileriList.singleWhere((element) =>
+    //     element.urunId == id && element.kalanMiktar == null
+    //         ? element.miktar == int.parse(miktarController.text)
+    //         : element.kalanMiktar == int.parse(miktarController.text));
     int olmasiGerekenMiktar =
         check.kalanMiktar == null ? check.miktar : check.kalanMiktar!;
     //check.miktar - (check.miktar-check.kalanMiktar!);
@@ -624,9 +660,6 @@ class _HazirlananSiparisBilgileriAddState
         : check.kalanMiktar! - int.parse(adetController.text);
     kalanMiktarDegistir() {
       check.kalanMiktar = fark;
-      // check.kalanMiktar = check.kalanMiktar == null
-      //     ? check.miktar - int.parse(adetController.text)
-      //     : check.kalanMiktar! - int.parse(adetController.text);
     }
 
     if (fark != 0) {
