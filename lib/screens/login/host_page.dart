@@ -308,6 +308,7 @@ class _HostPageState extends State<HostPage> {
   void _saveIpHostList() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     final String encodedData = IpHost.encode(ipHostListe);
+
     await _pref.setString('ip_host_listesi', encodedData);
   }
 }

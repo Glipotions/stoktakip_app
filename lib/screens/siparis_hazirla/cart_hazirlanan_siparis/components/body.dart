@@ -34,41 +34,20 @@ class _BodyState extends State<Body> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          // SearchWidget(
-          //   text: query,
-          //   hintText: 'Ürün Kodu veya Ürün Adı',
-          //   onChanged: (query) {
-          //     searchProduct(query, cart);
-          //   },
-          // ),
           buildSearch(),
           Expanded(
             child: ListView.builder(
-              // itemCount: hazirlananSiparisDurum == true
-              //     ? hazirlananSiparisBilgileriList.length
-              //     : hazirlananSiparisBilgileriGetIdList.length,
               itemCount: cart.length,
               itemBuilder: (context, index) => Padding(
                 key: UniqueKey(),
                 padding: EdgeInsets.symmetric(
                     vertical: getProportionateScreenWidth(10)),
                 child: Dismissible(
-                  // key: Key(hazirlananSiparisDurum == true
-                  //     ? hazirlananSiparisBilgileriList[index].urunId.toString()
-                  //     : hazirlananSiparisBilgileriGetIdList[index].urunId.toString()),
                   key: Key(cart[index].urunId.toString()),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
                     setState(() {
                       if (hazirlananSiparisDurum!) {
-                        // var entity = alinanSiparisBilgileriList.singleWhere(
-                        //     (element) =>
-                        //         element.urunId ==
-                        //         hazirlananSiparisBilgileriList[index].urunId);
-                        // entity.kalanMiktar = entity.kalanMiktar! +
-                        //     hazirlananSiparisBilgileriList[index].miktar;
-                        // hazirlananSiparisBilgileriList.removeAt(index);
-
                         var entity = alinanSiparisBilgileriList.singleWhere(
                             (element) => element.urunId == cart[index].urunId);
                         entity.kalanMiktar =
@@ -77,18 +56,6 @@ class _BodyState extends State<Body> {
                         hazirlananSiparisBilgileriList.removeWhere(
                             (urun) => urun.urunId == cart[index].urunId);
                       } else {
-                        // var entity = alinanSiparisBilgileriList.singleWhere(
-                        //     (element) =>
-                        //         element.urunId ==
-                        //         hazirlananSiparisBilgileriGetIdList[index]
-                        //             .urunId);
-                        // entity.kalanMiktar = entity.kalanMiktar! +
-                        //     hazirlananSiparisBilgileriGetIdList[index].miktar;
-
-                        // hazirlananSiparisBilgileriDeleteList
-                        //     .add(hazirlananSiparisBilgileriGetIdList[index]);
-                        // hazirlananSiparisBilgileriGetIdList.removeAt(index);
-
                         var entity = alinanSiparisBilgileriList.singleWhere(
                             (element) => element.urunId == cart[index].urunId);
                         entity.kalanMiktar =
@@ -138,9 +105,6 @@ class _BodyState extends State<Body> {
         onChanged: searchProduct,
       );
   void searchProduct(String query) {
-    // List<HazirlananSiparisBilgileri> cart = hazirlananSiparisDurum == true
-    //     ? hazirlananSiparisBilgileriList
-    //     : hazirlananSiparisBilgileriGetIdList;
     final products = constCart.where((urun) {
       final urunLower = urun.urunKodu!.toLowerCase();
       final urunAdiLower = urun.urunAdi!.toLowerCase();
@@ -153,9 +117,6 @@ class _BodyState extends State<Body> {
     setState(() {
       this.query = query;
       cart = products;
-      // if (query == "") {
-      //   cart = constCart;
-      // }
     });
   }
 }

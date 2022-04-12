@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
+import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
@@ -41,8 +42,26 @@ class _CheckoutCardState extends State<CheckoutCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(
+                  // width: getProportionateScreenWidth(120),
+                  height: getProportionateScreenHeight(60),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.lightBlue,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text("Siparişi Gör"),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, ListSiparisiGoruntuleTable.routeName);
+                        }),
+                  ),
+                ),
                 Column(children: [
                   SingleChildScrollView(
                     child: buildTextRich(

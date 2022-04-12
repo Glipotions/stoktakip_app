@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
+import 'package:stoktakip_app/widget/search_widget.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final keyRefresh = GlobalKey<RefreshIndicatorState>();
+  String query = '';
+  List<AlinanSiparisBilgileri> cart = alinanSiparisBilgileriList;
 
   @override
   void initState() {
@@ -33,22 +36,29 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget buildList() => alinanSiparisBilgileriList.isEmpty
-      ? const Center(child: CircularProgressIndicator())
-      : SingleChildScrollView(
-          child: DataTable(
-            columns: const [
-              DataColumn(label: Text('Kod')),
-              DataColumn(label: Text('Miktar')),
-              DataColumn(label: Text('Kalan Miktar')),
-              // DataColumn(label: Text('Kod')),
-            ],
-            rows: getRows(alinanSiparisBilgileriList),
-          ),
-        );
+  Widget buildList() => SingleChildScrollView(
+        child: Column(
+          children: [
+            buildSearch(),
+            alinanSiparisBilgileriList.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(label: Text('Kod')),
+                        DataColumn(label: Text('Miktar')),
+                        DataColumn(label: Text('Kalan Miktar')),
+                        // DataColumn(label: Text('Kod')),
+                      ],
+                      rows: getRows(alinanSiparisBilgileriList),
+                    ),
+                  ),
+          ],
+        ),
+      );
 
   List<DataRow> getRows(List<AlinanSiparisBilgileri> alinanSiparisBilgileri) =>
-      alinanSiparisBilgileri.map((AlinanSiparisBilgileri alinanSiparisBilgisi) {
+      cart.map((AlinanSiparisBilgileri alinanSiparisBilgisi) {
         final cells = [
           alinanSiparisBilgisi.urunKodu,
           alinanSiparisBilgisi.miktar,
@@ -60,4 +70,25 @@ class _BodyState extends State<Body> {
 
   List<DataCell> getCells(List<dynamic> cells) =>
       cells.map((data) => DataCell(Text('$data'))).toList();
+
+  Widget buildSearch() => SearchWidget(
+        text: query,
+        hintText: 'Ürün Kodu veya Ürün Adı',
+        onChanged: searchProduct,
+      );
+  void searchProduct(String query) {
+    final products = alinanSiparisBilgileriList.where((urun) {
+      final urunLower = urun.urunKodu!.toLowerCase();
+      final urunAdiLower = urun.urunAdi!.toLowerCase();
+      final searchLower = query.toLowerCase();
+
+      return urunLower.contains(searchLower) ||
+          urunAdiLower.contains(searchLower);
+    }).toList();
+
+    setState(() {
+      this.query = query;
+      cart = products;
+    });
+  }
 }

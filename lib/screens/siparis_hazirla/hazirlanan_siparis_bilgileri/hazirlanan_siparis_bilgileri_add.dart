@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
@@ -484,6 +486,8 @@ class _HazirlananSiparisBilgileriAddState
                         .add(hazirlananSiparisBilgileri)
                     : hazirlananSiparisBilgileriGetIdList
                         .add(hazirlananSiparisBilgileri);
+                Provider.of<AlinanSiparisBilgileriData>(context, listen: false)
+                    .saveListToSharedPref(alinanSiparisBilgileriList);
               } else {
                 var entity = hazirlananSiparisDurum == true
                     ? hazirlananSiparisBilgileriList
@@ -660,6 +664,7 @@ class _HazirlananSiparisBilgileriAddState
         : check.kalanMiktar! - int.parse(adetController.text);
     kalanMiktarDegistir() {
       check.kalanMiktar = fark;
+      if (fark <= 0) check.durum = false;
     }
 
     if (fark != 0) {

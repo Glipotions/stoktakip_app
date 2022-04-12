@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/routes.dart';
@@ -14,6 +15,7 @@ void main() async {
   await KdvData().createPrefObject();
   await KasaData().createPrefObject();
   await IpHostData().createPrefObject();
+  await AlinanSiparisBilgileriData().createPrefObject();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<KdvData>(
         create: (BuildContext context) => KdvData()),
@@ -21,6 +23,8 @@ void main() async {
         create: (BuildContext context) => KasaData()),
     ChangeNotifierProvider<IpHostData>(
         create: (BuildContext context) => IpHostData()),
+    ChangeNotifierProvider<AlinanSiparisBilgileriData>(
+        create: (BuildContext context) => AlinanSiparisBilgileriData()),
   ], child: const MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
@@ -33,6 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Provider.of<KdvData>(context).loadKdvToSharedPref();
     Provider.of<KasaData>(context).loadKasaToSharedPref();
+    Provider.of<AlinanSiparisBilgileriData>(context).getList();
     return MaterialApp(
       title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),

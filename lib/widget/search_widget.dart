@@ -50,7 +50,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               : null,
           hintText: widget.hintText,
           hintStyle: style,
-          border: InputBorder.none,
+          // border: InputBorder.none,
         ),
         style: style,
         onChanged: widget.onChanged,

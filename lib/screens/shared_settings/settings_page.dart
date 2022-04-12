@@ -11,7 +11,6 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/kasa/kasa.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/services/api_services/kasa_api_service.dart';
 
 import '../../size_config.dart';
