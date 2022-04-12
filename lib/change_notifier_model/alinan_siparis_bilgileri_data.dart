@@ -1,19 +1,19 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stoktakip_app/model/shared_preferences_models/ip_host.dart';
-import 'package:stoktakip_app/screens/login/host_page.dart';
+import 'package:stoktakip_app/functions/const_entities.dart';
+import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 
-class AlinanSiparisBilgiler with ChangeNotifier {
+class AlinanSiparisBilgileriData with ChangeNotifier {
   String? _hostAdi;
   String? _ip;
-  static SharedPreferences _sharedPref = SharedPreferences as SharedPreferences;
+  static SharedPreferences _prefs = SharedPreferences as SharedPreferences;
 
   void hostSec(String hostAdi, String ip) {
     // _selectedThemeData = selected ? greenTheme : redTheme;
     _hostAdi = hostAdi;
     _ip = ip;
-    saveHostToSharedPref(hostAdi, ip);
     notifyListeners();
   }
 
@@ -21,27 +21,20 @@ class AlinanSiparisBilgiler with ChangeNotifier {
   String? get hostAdi => _hostAdi;
 
   Future<void> createPrefObject() async {
-    _sharedPref = await SharedPreferences.getInstance();
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  void saveHostListToSharedPref(String encodedData) async {
-    await _sharedPref.setString('ip_host_list', encodedData);
+  Future<void> saveListToSharedPref(List<AlinanSiparisBilgileri> tList) async {
+    await _prefs.setString(
+        'alinan_siparis_bilgileri_listesi', jsonEncode(tList));
   }
 
-  void saveHostToSharedPref(String hostAdi, String ip) {
-    _sharedPref.setString('hostAdi', hostAdi);
-    _sharedPref.setString('ip', ip);
-  }
-
-  Future<String?> loadHostToSharedPref() async {
-    // _hostAdi = _sharedPref.getString('hostAdi') ?? "";
-    // _ip = _sharedPref.getString('ip') ?? "";
-    return _sharedPref.getString('musics_key');
-  }
-
-  Future loadIpHostList() async {
-    final String iphostsString = _sharedPref.getString('ip_host_listesi')!;
-    final List<IpHost> ipHosts = IpHost.decode(iphostsString);
-    ipHostListe = ipHosts;
+  void getList() async {
+    final List<dynamic> jsonData = jsonDecode(
+        _prefs.getString('alinan_siparis_bilgileri_listesi') ?? '[]');
+    alinanSiparisBilgileriList =
+        jsonData.map<AlinanSiparisBilgileri>((jsonItem) {
+      return AlinanSiparisBilgileri.fromJson(jsonItem);
+    }).toList();
   }
 }
