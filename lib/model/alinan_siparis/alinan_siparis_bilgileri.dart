@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-
 class AlinanSiparisBilgileri {
   int? id;
   int urunId;
@@ -120,41 +116,41 @@ class AlinanSiparisBilgileri {
         // "resim": resim,
       };
 
-  static Map<String, dynamic> toMap(
-          AlinanSiparisBilgileri alinanSiparisBilgileri) =>
-      {
-        'id': alinanSiparisBilgileri.id,
-        'urunId': alinanSiparisBilgileri.urunId,
-        'alinanSiparisId': alinanSiparisBilgileri.alinanSiparisId,
-        'miktar': alinanSiparisBilgileri.miktar,
-        'birimFiyat': alinanSiparisBilgileri.birimFiyat,
-        'dovizliBirimFiyat': alinanSiparisBilgileri.dovizliBirimFiyat,
-        'kdvHaricTutar': alinanSiparisBilgileri.kdvHaricTutar,
-        'kdvOrani': alinanSiparisBilgileri.kdvOrani,
-        'kdvTutari': alinanSiparisBilgileri.kdvTutari,
-        'tutar': alinanSiparisBilgileri.tutar,
-        'urunKodu': alinanSiparisBilgileri.urunKodu,
-        'urunAdi': alinanSiparisBilgileri.urunAdi,
-        "insert": alinanSiparisBilgileri.insert,
-        "update": alinanSiparisBilgileri.update,
-        "delete": alinanSiparisBilgileri.delete,
-        "iskontoOrani": alinanSiparisBilgileri.iskontoOrani,
-        "dovizTuru": alinanSiparisBilgileri.dovizTuru,
-        "kalanMiktar": alinanSiparisBilgileri.kalanMiktar,
-        "durum": alinanSiparisBilgileri.durum
-        // "resim": resim,
-      };
+  // static Map<String, dynamic> toMap(
+  //         AlinanSiparisBilgileri alinanSiparisBilgileri) =>
+  //     {
+  //       'id': alinanSiparisBilgileri.id,
+  //       'urunId': alinanSiparisBilgileri.urunId,
+  //       'alinanSiparisId': alinanSiparisBilgileri.alinanSiparisId,
+  //       'miktar': alinanSiparisBilgileri.miktar,
+  //       'birimFiyat': alinanSiparisBilgileri.birimFiyat,
+  //       'dovizliBirimFiyat': alinanSiparisBilgileri.dovizliBirimFiyat,
+  //       'kdvHaricTutar': alinanSiparisBilgileri.kdvHaricTutar,
+  //       'kdvOrani': alinanSiparisBilgileri.kdvOrani,
+  //       'kdvTutari': alinanSiparisBilgileri.kdvTutari,
+  //       'tutar': alinanSiparisBilgileri.tutar,
+  //       'urunKodu': alinanSiparisBilgileri.urunKodu,
+  //       'urunAdi': alinanSiparisBilgileri.urunAdi,
+  //       "insert": alinanSiparisBilgileri.insert,
+  //       "update": alinanSiparisBilgileri.update,
+  //       "delete": alinanSiparisBilgileri.delete,
+  //       "iskontoOrani": alinanSiparisBilgileri.iskontoOrani,
+  //       "dovizTuru": alinanSiparisBilgileri.dovizTuru,
+  //       "kalanMiktar": alinanSiparisBilgileri.kalanMiktar,
+  //       "durum": alinanSiparisBilgileri.durum
+  //       // "resim": resim,
+  //     };
 
-  static String encode(List<AlinanSiparisBilgileri> list) => json.encode(
-        list
-            .map<Map<String, dynamic>>(
-                (liste) => AlinanSiparisBilgileri.toMap(liste))
-            .toList(),
-      );
+  // static String encode(List<AlinanSiparisBilgileri> list) => json.encode(
+  //       list
+  //           .map<Map<String, dynamic>>(
+  //               (liste) => AlinanSiparisBilgileri.toMap(liste))
+  //           .toList(),
+  //     );
 
-  static List<AlinanSiparisBilgileri> decode(String list) =>
-      (json.decode(list) as List<dynamic>)
-          .map<AlinanSiparisBilgileri>(
-              (item) => AlinanSiparisBilgileri.fromJson(item))
-          .toList();
+  // static List<AlinanSiparisBilgileri> decode(String list) =>
+  //     (json.decode(list) as List<dynamic>)
+  //         .map<AlinanSiparisBilgileri>(
+  //             (item) => AlinanSiparisBilgileri.fromJson(item))
+  //         .toList();
 }

@@ -90,11 +90,50 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
 
   Future<void> initStateAsync() async {
     await _getAlinanSiparisler();
+    if (hazirlananSiparisBilgileriList.isNotEmpty ||
+        hazirlananSiparisBilgileriGetIdList.isNotEmpty) {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                'TAMAMLANMAMIŞ SİPARİŞİNİZ VAR!',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.orange),
+              ),
+              content: const Text(
+                'TAMAMLANMAYAN SİPARİŞİNİZE DEVAM ETMEK İSTİYORMUSUNUZ!',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'HAYIR');
+                  },
+                  child: const Text('HAYIR'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'EVET');
+                    Navigator.pushNamed(
+                        context, HazirlananSiparisBilgileriAdd.routeName);
+                    hazirlananSiparisDurum =
+                        hazirlananSiparisBilgileriList.isNotEmpty
+                            ? true
+                            : false;
+                  },
+                  child: const Text('EVET'),
+                ),
+              ],
+            );
+          });
+    }
   }
 
   @override
   void initState() {
     formKey;
+
     initStateAsync();
     super.initState();
   }
@@ -244,6 +283,8 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                           alinanSiparisSingle.cariHesapId =
                               alinanSiparisEntity.cariHesapId;
                           alinanSiparisSingle.siparisTanimi = value;
+                          alinanSiparisSingle.aciklama =
+                              alinanSiparisEntity.aciklama;
                           // alinanSiparisSingle.cariHesapId =
                           //     alinanSiparisEntity.cariHesapId;
 
@@ -252,11 +293,14 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                             alinanSiparisId: alinanSiparisEntity.id,
                             siparisAdi: alinanSiparisEntity.siparisTanimi,
                             durum: true,
+                            isSeciliSiparis: !isSwitched,
                           );
 
                           dropDownMenu = 1;
                         });
                         alinanSiparisBilgileriList.clear();
+                        hazirlananSiparisBilgileriList.clear();
+                        hazirlananSiparisBilgileriGetIdList.clear();
                         if (isSwitched && searchController != null) {
                           await getAlinanSiparisBilgileriByCariId(
                               alinanSiparisSingle.cariHesapId!);

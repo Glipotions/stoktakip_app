@@ -63,6 +63,23 @@ class _BodyState extends State<Body> {
     });
   }
 
+  Future getAlinanSiparisBilgileriByCariId(int id) async {
+    await AlinanSiparisApiService.fetchAlinanSiparisBilgileriByCariIdControl(id)
+        .then((response) {
+      setState(() {
+        if (response.body.isNotEmpty) {
+          dynamic list = json.decode(response.body);
+          List data = list;
+          // List data = list['data'];
+          alinanSiparisBilgileriList = data
+              .map((model) => AlinanSiparisBilgileri.fromJson(model))
+              .cast<AlinanSiparisBilgileri>()
+              .toList();
+        }
+      });
+    });
+  }
+
   Future<void> initStateAsync() async {
     await getHazirlananSiparisler();
   }
@@ -116,7 +133,11 @@ class _BodyState extends State<Body> {
       PdfApi.openFile(pdfFile);
       // You can navigate the user to edit page.
     } else if (value == 'Duzenle') {
-      await getAlinanSiparisBilgileriById(hazirlananSiparis.alinanSiparisId!);
+      if (hazirlananSiparis.isSeciliSiparis!) {
+        await getAlinanSiparisBilgileriById(hazirlananSiparis.alinanSiparisId!);
+      } else if (!hazirlananSiparis.isSeciliSiparis!) {
+        await getAlinanSiparisBilgileriByCariId(hazirlananSiparis.cariHesapId!);
+      }
       hazirlananSiparisEdit = hazirlananSiparis;
       hazirlananSiparisBilgileriDeleteList = [];
       hazirlananSiparisDurum = false;
@@ -140,7 +161,7 @@ class _BodyState extends State<Body> {
         );
 
   Widget buildItem(BuildContext context, int index) {
-    String firma = hazirlananSiparisList[index].siparisAdi!;
+    // String firma = hazirlananSiparisList[index].siparisAdi!;
 
     Future<List> _getHazirlananSiparisBilgileri() async {
       print(hazirlananSiparisList[index].id);

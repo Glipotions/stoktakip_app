@@ -73,6 +73,8 @@ String fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
     '${mainUrl}AlinanSiparisBilgileri/getallbyalinansiparisid?id=';
 String fetchAlinanSiparisBilgileriByCariIdUrl =
     '${mainUrl}AlinanSiparisBilgileri/getallbycari?id=';
+String fetchAlinanSiparisBilgileriByCariIdControlUrl =
+    '${mainUrl}AlinanSiparisBilgileri/getallbycaricontrol?id=';
 String updateAlinanSiparisBilgileriUrl =
     '${mainUrl}AlinanSiparisBilgileri/update?';
 

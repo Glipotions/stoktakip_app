@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
@@ -124,36 +126,37 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 // hazirlananSiparisSingle.toplamTutar = 0;
                                 // hazirlananSiparisSingle.kdvTutari = 0;
                                 // hazirlananSiparisSingle.siparisKdvOrani = 0;
- 
+
                                 var resultSatisFaturaAdd =
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparis(
                                             hazirlananSiparisSingle);
 
-                                for (var urun
-                                    in hazirlananSiparisBilgileriList) {
-                                  await UrunApiService.updateUrunStokById(
-                                      urun.urunId, urun.miktar, true);
-
-                                  await HazirlananSiparisApiService
-                                      .postHazirlananSiparisBilgileri(urun);
-                                }
-
                                 for (var item
                                     in hazirlananSiparisBilgileriList) {
+                                  await UrunApiService.updateUrunStokById(
+                                      item.urunId, item.miktar, true);
+                                  item.hazirlananSiparisId =
+                                      hazirlananSiparisSingle.id;
+                                  await HazirlananSiparisApiService
+                                      .postHazirlananSiparisBilgileri(item);
+
                                   var entity = alinanSiparisBilgileriList
                                       .singleWhere((element) =>
                                           element.urunId == item.urunId);
-                                  // int kalan = entity.kalanMiktar == null
-                                  //     ? entity.miktar - item.miktar
-                                  //     : entity.kalanMiktar! - item.miktar;
-                                  // entity.kalanMiktar = kalan >= 0 ? kalan : 0;
                                   entity.dovizTuru = 1;
                                   await AlinanSiparisApiService
                                       .updateAlinanSiparisBilgileri(entity);
                                 }
+
                                 //TEMİZLİK KISMI
                                 hazirlananSiparisBilgileriList.clear();
+                                Provider.of<HazirlananSiparisBilgileriData>(
+                                        context,
+                                        listen: false)
+                                    .saveListToSharedPref(
+                                        hazirlananSiparisBilgileriGetIdList);
+
                                 faturaAciklama = null;
                                 cariHesapSingle = CariHesap(
                                     firma: null,
@@ -241,6 +244,11 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 //TEMİZLİK KISMI
 
                                 hazirlananSiparisBilgileriGetIdList.clear();
+                                Provider.of<HazirlananSiparisBilgileriData>(
+                                        context,
+                                        listen: false)
+                                    .saveListToSharedPref(
+                                        hazirlananSiparisBilgileriGetIdList);
                                 hazirlananSiparisSingle = HazirlananSiparis();
 
                                 Navigator.of(context).pop(true);

@@ -17,6 +17,8 @@ class HazirlananSiparis {
   String? ozelKod1Adi;
   String? aciklama;
   bool? durum = true;
+  bool? isSeciliSiparis = true;
+  int? cariHesapId;
 
   // int? cariHesapId;
   // int? ozelKod1Id;
@@ -46,6 +48,8 @@ class HazirlananSiparis {
     this.ozelKod1Adi,
     this.aciklama,
     this.durum,
+    this.isSeciliSiparis,
+    this.cariHesapId,
     // this.cariHesapId,
     // this.ozelKod1Id,
     // this.dovizTuru,
@@ -75,6 +79,8 @@ class HazirlananSiparis {
         siparisAdi: json["siparisAdi"],
         aciklama: json["aciklama"],
         durum: json["durum"],
+        isSeciliSiparis: json["isSeciliSiparis"],
+        cariHesapId: json["cariHesapId"],
         // cariHesapId: json["cariHesapId"],
         // ozelKod1Id: json["ozelKod1Id"],
         // dovizTuru: json["dovizTuru"],
@@ -114,6 +120,8 @@ class HazirlananSiparis {
         "siparisAdi": siparisAdi,
         "aciklama": aciklama,
         "durum": durum,
+        "isSeciliSiparis": isSeciliSiparis,
+        "cariHesapId": cariHesapId,
         // "cariHesapId": cariHesapId,
         // "ozelKod1Id": ozelKod1Id,
         // "dovizTuru": dovizTuru,

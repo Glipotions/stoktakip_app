@@ -20,6 +20,11 @@ class AlinanSiparisApiService {
     return await http.get(idUrl);
   }
 
+  static Future fetchAlinanSiparisBilgileriByCariIdControl(int id) async {
+    Uri idUrl = Uri.parse('$fetchAlinanSiparisBilgileriByCariIdControlUrl$id');
+    return await http.get(idUrl);
+  }
+
   static Future updateAlinanSiparisBilgileri(
       AlinanSiparisBilgileri entity) async {
     Map<String, String> header = {

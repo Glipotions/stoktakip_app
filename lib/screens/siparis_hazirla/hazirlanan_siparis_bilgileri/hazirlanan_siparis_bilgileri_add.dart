@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
+import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
@@ -95,6 +96,7 @@ class _HazirlananSiparisBilgileriAddState
         result ??= false;
         if (result) {
           hazirlananSiparisBilgileriList.clear();
+          hazirlananSiparisBilgileriGetIdList.clear();
         }
         return result;
       },
@@ -486,8 +488,6 @@ class _HazirlananSiparisBilgileriAddState
                         .add(hazirlananSiparisBilgileri)
                     : hazirlananSiparisBilgileriGetIdList
                         .add(hazirlananSiparisBilgileri);
-                Provider.of<AlinanSiparisBilgileriData>(context, listen: false)
-                    .saveListToSharedPref(alinanSiparisBilgileriList);
               } else {
                 var entity = hazirlananSiparisDurum == true
                     ? hazirlananSiparisBilgileriList
@@ -499,6 +499,15 @@ class _HazirlananSiparisBilgileriAddState
                     ? entity.ilaveEdilmis! + _miktar!
                     : _miktar;
                 entity.update = true;
+              }
+              if (hazirlananSiparisBilgileriList.length > 0) {
+                Provider.of<AlinanSiparisBilgileriData>(context, listen: false)
+                    .saveListToSharedPref(alinanSiparisBilgileriList);
+                Provider.of<HazirlananSiparisBilgileriData>(context,
+                        listen: false)
+                    .saveListToSharedPref(hazirlananSiparisDurum == true
+                        ? hazirlananSiparisBilgileriList
+                        : hazirlananSiparisBilgileriGetIdList);
               }
               ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
               (context as Element).reassemble();
@@ -664,7 +673,7 @@ class _HazirlananSiparisBilgileriAddState
         : check.kalanMiktar! - int.parse(adetController.text);
     kalanMiktarDegistir() {
       check.kalanMiktar = fark;
-      if (fark <= 0) check.durum = false;
+      // if (fark <= 0) check.durum = false;
     }
 
     if (fark != 0) {
