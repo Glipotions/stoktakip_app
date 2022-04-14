@@ -41,14 +41,14 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
                     style: linkStyle,
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        hazirlananSiparisBilgileriList.clear();
-                        Navigator.of(context).pop(true);
+                        silmeOnay(context);
                       }),
               ],
             ),
           )
         ],
       ),
+
       // actions: [
       //   IconButton(
       //     icon: const Icon(Icons.search),
@@ -58,5 +58,39 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
       //   ),
       // ],
     );
+  }
+
+  silmeOnay(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'SEPETİ TEMİZLE!',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+            ),
+            content: const Text(
+              'SEPETİ TEMİZLEMEK İSTEDİĞİNİZE EMİN MİSİNİZ?!',
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'HAYIR');
+                },
+                child: const Text('HAYIR'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'EVET');
+                  hazirlananSiparisBilgileriList.clear();
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('EVET'),
+              ),
+            ],
+          );
+        });
   }
 }

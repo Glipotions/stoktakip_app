@@ -97,6 +97,8 @@ class _HazirlananSiparisBilgileriAddState
         if (result) {
           hazirlananSiparisBilgileriList.clear();
           hazirlananSiparisBilgileriGetIdList.clear();
+          Provider.of<HazirlananSiparisBilgileriData>(context, listen: false)
+              .saveListToSharedPref(hazirlananSiparisBilgileriList);
         }
         return result;
       },
@@ -109,7 +111,7 @@ class _HazirlananSiparisBilgileriAddState
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                   height: 150.0,
                   width: 30.0,
                   child: GestureDetector(
@@ -505,9 +507,10 @@ class _HazirlananSiparisBilgileriAddState
                     .saveListToSharedPref(alinanSiparisBilgileriList);
                 Provider.of<HazirlananSiparisBilgileriData>(context,
                         listen: false)
-                    .saveListToSharedPref(hazirlananSiparisDurum == true
-                        ? hazirlananSiparisBilgileriList
-                        : hazirlananSiparisBilgileriGetIdList);
+                    .saveListToSharedPref(hazirlananSiparisBilgileriList);
+                // .saveListToSharedPref(hazirlananSiparisDurum == true
+                //     ? hazirlananSiparisBilgileriList
+                //     : hazirlananSiparisBilgileriGetIdList);
               }
               ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
               (context as Element).reassemble();
@@ -611,13 +614,6 @@ class _HazirlananSiparisBilgileriAddState
                   },
                   child: const Text('İPTAL'),
                 ),
-                // TextButton(
-                //   onPressed: () {
-                //     Navigator.pop(context, 'EVET');
-                //     checkUrunItBeAdded = true;
-                //   },
-                //   child: const Text('EVET'),
-                // ),
               ],
             );
           });

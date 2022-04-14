@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
+import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
@@ -70,6 +73,17 @@ class _BodyState extends State<Body> {
                         cart.removeAt(index);
                       }
                       (context as Element).reassemble();
+
+                      if (hazirlananSiparisBilgileriList.length > 3) {
+                        Provider.of<AlinanSiparisBilgileriData>(context,
+                                listen: false)
+                            .saveListToSharedPref(alinanSiparisBilgileriList);
+
+                        Provider.of<HazirlananSiparisBilgileriData>(context,
+                                listen: false)
+                            .saveListToSharedPref(
+                                hazirlananSiparisBilgileriList);
+                      }
                     });
                   },
                   background: Container(

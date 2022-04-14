@@ -23,6 +23,10 @@ class AlinanSiparisBilgileriData with ChangeNotifier {
     }
     encodedData = encodedData + ']';
     await _prefs.setString('alinan_siparis_bilgileri_listesi', encodedData);
+
+    // var x = alinanSiparisBilgileriToJson(tList);
+    // await _prefs.setString('alinan_siparis_bilgileri_listesi',
+    //     alinanSiparisBilgileriToJson(tList));
   }
 
   void getList() async {
