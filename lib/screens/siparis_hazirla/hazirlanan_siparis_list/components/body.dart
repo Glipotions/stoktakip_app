@@ -138,6 +138,7 @@ class _BodyState extends State<Body> {
       } else if (!hazirlananSiparis.isSeciliSiparis!) {
         await getAlinanSiparisBilgileriByCariId(hazirlananSiparis.cariHesapId!);
       }
+
       hazirlananSiparisEdit = hazirlananSiparis;
       hazirlananSiparisBilgileriDeleteList = [];
       hazirlananSiparisDurum = false;

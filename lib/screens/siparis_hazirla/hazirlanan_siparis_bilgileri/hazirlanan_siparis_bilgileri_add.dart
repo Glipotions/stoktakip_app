@@ -82,7 +82,7 @@ class _HazirlananSiparisBilgileriAddState
   // List<UrunBilgileri> hazirlananSiparisBilgileriList = [];
   var urunBarkodBilgileri = <UrunBarkodBilgileri>[];
   var urun = <Urun>[];
-  int? _urunId, _miktar, _tutar, _faturaId = buildId();
+  int? _urunId, _miktar, _tutar, _faturaId = buildId(), _alinanSiparisBilgisiId;
   double? _birimFiyat, _kdvHaricTutar, _kdvTutari;
   bool checkUrunItBeAdded = false;
   // int kdvHaricTutar = _miktar * _birimFiyat;
@@ -476,6 +476,7 @@ class _HazirlananSiparisBilgileriAddState
                   urunAdi: urunAdiController.text,
                   urunKodu: urunKoduController.text,
                   // resim: resimData,
+                  alinanSiparisBilgileriId: _alinanSiparisBilgisiId,
                   insert: true,
                 );
 
@@ -502,7 +503,7 @@ class _HazirlananSiparisBilgileriAddState
                     : _miktar;
                 entity.update = true;
               }
-              if (hazirlananSiparisBilgileriList.length > 0) {
+              if (hazirlananSiparisBilgileriList.length > 3) {
                 Provider.of<AlinanSiparisBilgileriData>(context, listen: false)
                     .saveListToSharedPref(alinanSiparisBilgileriList);
                 Provider.of<HazirlananSiparisBilgileriData>(context,
@@ -657,20 +658,21 @@ class _HazirlananSiparisBilgileriAddState
 
     var check = alinanSiparisBilgileriList
         .singleWhere((element) => element.urunId == id);
-    // : alinanSiparisBilgileriList.singleWhere((element) =>
-    //     element.urunId == id && element.kalanMiktar == null
-    //         ? element.miktar == int.parse(miktarController.text)
-    //         : element.kalanMiktar == int.parse(miktarController.text));
-    int olmasiGerekenMiktar =
-        check.kalanMiktar == null ? check.miktar : check.kalanMiktar!;
-    //check.miktar - (check.miktar-check.kalanMiktar!);
-    int fark = check.kalanMiktar == null
-        ? check.miktar - int.parse(adetController.text)
-        : check.kalanMiktar! - int.parse(adetController.text);
+
+    // int olmasiGerekenMiktar =
+    //     check.kalanMiktar == null ? check.miktar : check.kalanMiktar!;
+    // int fark = check.kalanMiktar == null
+    //     ? check.miktar - int.parse(adetController.text)
+    //     : check.kalanMiktar! - int.parse(adetController.text);
+    int olmasiGerekenMiktar = check.kalanAdet!;
+    int fark = check.kalanAdet! - int.parse(adetController.text);
     kalanMiktarDegistir() {
       check.kalanMiktar = fark;
+      check.kalanAdet = fark;
       // if (fark <= 0) check.durum = false;
     }
+
+    _alinanSiparisBilgisiId = check.id;
 
     if (fark != 0) {
       await showDialog(

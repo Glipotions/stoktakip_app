@@ -19,6 +19,7 @@ class HazirlananSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
+  int? alinanSiparisBilgileriId;
 
   int? ilaveEdilmis;
 
@@ -28,6 +29,7 @@ class HazirlananSiparisBilgileri {
     this.id,
     required this.urunId,
     this.hazirlananSiparisId,
+    this.alinanSiparisBilgileriId,
     required this.miktar,
     required this.birimFiyat,
     required this.dovizliBirimFiyat,
@@ -51,6 +53,7 @@ class HazirlananSiparisBilgileri {
         id: json['id'],
         urunId: json['urunId'],
         hazirlananSiparisId: json['hazirlananSiparisId'],
+        alinanSiparisBilgileriId: json['alinanSiparisBilgileriId'],
         miktar: json['miktar'],
         birimFiyat: json['birimFiyat'],
         dovizliBirimFiyat: json['dovizliBirimFiyat'],
@@ -71,6 +74,7 @@ class HazirlananSiparisBilgileri {
         // 'id': id,
         'urunId': urunId,
         'hazirlananSiparisId': hazirlananSiparisId,
+        'alinanSiparisBilgileriId': alinanSiparisBilgileriId,
         'miktar': miktar,
         'birimFiyat': birimFiyat,
         'dovizliBirimFiyat': dovizliBirimFiyat,
@@ -92,6 +96,7 @@ class HazirlananSiparisBilgileri {
         'id': id,
         'urunId': urunId,
         'hazirlananSiparisId': hazirlananSiparisId,
+        'alinanSiparisBilgileriId': alinanSiparisBilgileriId,
         'miktar': miktar,
         'birimFiyat': birimFiyat,
         'dovizliBirimFiyat': dovizliBirimFiyat,

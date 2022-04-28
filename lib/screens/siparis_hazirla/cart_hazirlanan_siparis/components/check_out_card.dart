@@ -149,6 +149,18 @@ class _CheckoutCardState extends State<CheckoutCard>
                                       .updateAlinanSiparisBilgileri(entity);
                                 }
 
+                                if (hazirlananSiparisSingle.isSeciliSiparis!) {
+                                  int toplam = 0;
+                                  for (var item in alinanSiparisBilgileriList) {
+                                    toplam += item.kalanAdet!;
+                                  }
+                                  if (toplam == 0) {
+                                    await AlinanSiparisApiService
+                                        .updateAlinanSiparisDurumById(
+                                            alinanSiparisSingle.id!);
+                                  }
+                                }
+
                                 //TEMİZLİK KISMI
                                 hazirlananSiparisBilgileriList.clear();
                                 Provider.of<HazirlananSiparisBilgileriData>(
@@ -192,7 +204,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                             if (_firstPress) {
                               _firstPress = false;
 
-                              int toplam = 0;
+                              int toplam = 0, kalanToplam = 0;
                               returnDurum = false;
                               List<String> eksikUrunler = [];
                               for (var item in alinanSiparisBilgileriList) {
@@ -203,7 +215,9 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   toplam += 1;
                                   eksikUrunler.add(item.urunKodu.toString());
                                 }
+                                kalanToplam += item.kalanAdet!;
                               }
+
                               await checkEksikOlanUrun(
                                   context, toplam, eksikUrunler);
                               if (!returnDurum) {
@@ -239,6 +253,14 @@ class _CheckoutCardState extends State<CheckoutCard>
                                         .updateAlinanSiparisBilgileri(entity);
                                   }
                                 }
+                                if (kalanToplam == 0 &&
+                                    hazirlananSiparisEdit.isSeciliSiparis!) {
+                                  await AlinanSiparisApiService
+                                      .updateAlinanSiparisDurumById(
+                                          hazirlananSiparisEdit
+                                              .alinanSiparisId!);
+                                }
+
                                 hazirlananSiparisBilgileriSil();
 
                                 //TEMİZLİK KISMI

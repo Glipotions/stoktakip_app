@@ -54,6 +54,7 @@ String? faturaAciklama, siparisAciklama;
 
 AlinanSiparis alinanSiparisSingle = AlinanSiparis(id: -1);
 List<AlinanSiparis> alinanSiparisList = [];
+String? alinanSiparisBilgileriControlString;
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriList = [];
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriGetIdList = [];
 List<AlinanSiparisBilgileri> alinanSiparisBilgileriDeleteList = [];

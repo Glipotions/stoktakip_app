@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/size_config.dart';
 import 'package:stoktakip_app/widget/search_widget.dart';
@@ -53,16 +52,18 @@ class _BodyState extends State<Body> {
                       if (hazirlananSiparisDurum!) {
                         var entity = alinanSiparisBilgileriList.singleWhere(
                             (element) => element.urunId == cart[index].urunId);
-                        entity.kalanMiktar =
-                            entity.kalanMiktar! + cart[index].miktar;
+                        // entity.kalanMiktar =
+                        //     entity.kalanMiktar! + cart[index].miktar;
+                        entity.kalanAdet =
+                            entity.kalanAdet! + cart[index].miktar;
 
                         hazirlananSiparisBilgileriList.removeWhere(
                             (urun) => urun.urunId == cart[index].urunId);
                       } else {
                         var entity = alinanSiparisBilgileriList.singleWhere(
                             (element) => element.urunId == cart[index].urunId);
-                        entity.kalanMiktar =
-                            entity.kalanMiktar! + cart[index].miktar;
+                        entity.kalanAdet =
+                            entity.kalanAdet! + cart[index].miktar;
 
                         hazirlananSiparisBilgileriDeleteList.add(cart[index]);
                         hazirlananSiparisBilgileriGetIdList.removeWhere(

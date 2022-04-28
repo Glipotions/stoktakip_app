@@ -9,6 +9,13 @@ class AlinanSiparisApiService {
     return await http.get(fetchAlinanSiparisUrl);
   }
 
+  static Future updateAlinanSiparisDurumById(int id) async {
+    var url = Uri.parse('$updateAlinanSiparisDurumByIdUrl$id');
+    var res = await http.patch(url);
+    print("Alınan Sipariş result kod: ${res.statusCode}");
+    return res.statusCode;
+  }
+
   static Future fetchAlinanSiparisBilgileriById(int id) async {
     Uri idUrl =
         Uri.parse('$fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl$id');

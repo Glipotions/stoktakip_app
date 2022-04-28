@@ -68,6 +68,8 @@ String updateCariHesapBakiyeById =
     '${mainUrl}CariHesap/updatecaribakiyebyid?id=';
 
 Uri fetchAlinanSiparisUrl = Uri.parse('${mainUrl}AlinanSiparis/getall');
+String updateAlinanSiparisDurumByIdUrl =
+    '${mainUrl}AlinanSiparis/updatealinansiparisdurumbyid?id=';
 
 String fetchAlinanSiparisBilgileriByAlinanSiparisIdUrl =
     '${mainUrl}AlinanSiparisBilgileri/getallbyalinansiparisid?id=';

@@ -66,6 +66,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
               .map((model) => AlinanSiparisBilgileri.fromJson(model))
               .cast<AlinanSiparisBilgileri>()
               .toList();
+          alinanSiparisBilgileriControlString = response.body;
         }
       });
     });

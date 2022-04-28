@@ -62,7 +62,7 @@ class _BodyState extends State<Body> {
         final cells = [
           alinanSiparisBilgisi.urunKodu,
           alinanSiparisBilgisi.miktar,
-          alinanSiparisBilgisi.kalanMiktar
+          alinanSiparisBilgisi.kalanAdet
         ];
 
         return DataRow(cells: getCells(cells));
