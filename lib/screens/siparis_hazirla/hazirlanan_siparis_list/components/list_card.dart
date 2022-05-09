@@ -7,14 +7,7 @@ import 'package:stoktakip_app/size_config.dart';
 class ListCard extends StatelessWidget {
   ListCard({Key? key, required this.cart}) : super(key: key);
 
-  // final UrunBilgileri cart;
-
   HazirlananSiparis cart;
-  // final Widget? trailing;
-
-  // @override
-  // State<ListCard> createState() => _ListCardState();
-
   CariHesap cari = CariHesap(firma: null, bakiye: 0, id: -1);
   @override
   Widget build(BuildContext context) {
@@ -37,19 +30,10 @@ class ListCard extends StatelessWidget {
                 fontSize: 14,
               ),
               overflow: TextOverflow.ellipsis,
-              // softWrap: false,
               maxLines: 1,
             ),
           ),
         ),
-        // const SizedBox(height: 5),
-        // Text.rich(
-        //   TextSpan(
-        //     text: "Tutar: ₺${cart.toplamTutar!.toStringAsFixed(2)}",
-        //     style: const TextStyle(
-        //         fontWeight: FontWeight.w600, color: kPrimaryColor),
-        //   ),
-        // )
       ],
     );
   }
