@@ -134,8 +134,8 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                                 for (var item
                                     in hazirlananSiparisBilgileriList) {
-                                  await UrunApiService.updateUrunStokById(
-                                      item.urunId, item.miktar, true);
+                                  // await UrunApiService.updateUrunStokById(
+                                  //     item.urunId, item.miktar, true);
                                   item.hazirlananSiparisId =
                                       hazirlananSiparisSingle.id;
                                   await HazirlananSiparisApiService
@@ -226,8 +226,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   if (urun.insert == true) {
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparisBilgileri(urun);
-                                    await UrunApiService.updateUrunStokById(
-                                        urun.urunId, urun.miktar, true);
+                                    // await UrunApiService.updateUrunStokById(
+                                    //     urun.urunId, urun.miktar, true);
                                     var entity = alinanSiparisBilgileriList
                                         .singleWhere((element) =>
                                             element.urunId == urun.urunId);
@@ -242,8 +242,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                                     urun.dovizTuru = 1;
                                     await HazirlananSiparisApiService
                                         .updateHazirlananSiparisBilgileri(urun);
-                                    await UrunApiService.updateUrunStokById(
-                                        urun.urunId, urun.ilaveEdilmis!, true);
+                                    // await UrunApiService.updateUrunStokById(
+                                    //     urun.urunId, urun.ilaveEdilmis!, true);
                                     var entity = alinanSiparisBilgileriList
                                         .singleWhere((element) =>
                                             element.urunId == urun.urunId);
@@ -338,8 +338,8 @@ class _CheckoutCardState extends State<CheckoutCard>
       // entity.kalanMiktar = kalan;
       entity.dovizTuru = 1;
       await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
-      await UrunApiService.updateUrunStokById(
-          urunDelete.urunId, urunDelete.miktar, false);
+      // await UrunApiService.updateUrunStokById(
+      //     urunDelete.urunId, urunDelete.miktar, false);
       await HazirlananSiparisApiService.deleteHazirlananSiparisBilgileri(
           urunDelete);
     }

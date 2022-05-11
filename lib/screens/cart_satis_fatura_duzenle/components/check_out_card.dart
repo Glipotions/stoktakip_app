@@ -11,10 +11,8 @@ import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura_duzenle.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
 import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 
 import '../../../size_config.dart';
@@ -296,18 +294,18 @@ class _CheckoutCardState extends State<CheckoutCard>
                             await SatisFaturaApiService.updateSatisFatura(
                                 satisFaturaNew);
 
-                        double sonrakiTutar = totalTutarwithKdv(
-                            urunBilgileriGetIdList, _iskontoOrani);
-                        var resultCarihesapUpdateSatis =
-                            await CariHesapApiService.updateCariBakiyeById(
-                                satisFaturaDuzenle.cariHesapId!,
-                                sonrakiTutar - satisFaturaDuzenle.oncekiTutar,
-                                "Borc");
+                        // double sonrakiTutar = totalTutarwithKdv(
+                        //     urunBilgileriGetIdList, _iskontoOrani);
+                        // var resultCarihesapUpdateSatis =
+                        //     await CariHesapApiService.updateCariBakiyeById(
+                        //         satisFaturaDuzenle.cariHesapId!,
+                        //         sonrakiTutar - satisFaturaDuzenle.oncekiTutar,
+                        //         "Borc");
 
                         for (var urun in urunBilgileriGetIdList) {
                           if (urun.insert == true) {
-                            await UrunApiService.updateUrunStokById(
-                                urun.urunId, urun.miktar, true);
+                            // await UrunApiService.updateUrunStokById(
+                            //     urun.urunId, urun.miktar, true);
 
                             await UrunBilgileriApiService.postUrunBilgileri(
                                 urun);
@@ -357,8 +355,8 @@ class _CheckoutCardState extends State<CheckoutCard>
                         // Navigator.pop(context);
                         if (
                             // resultCariHesapHareketleriSatisAdd != 200 ||
-                            resultCarihesapUpdateSatis != 200 ||
-                                resultSatisFaturaAdd != 200) {
+                            // resultCarihesapUpdateSatis != 200 ||
+                            resultSatisFaturaAdd != 200) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBarSatisFaturaEkle);
                         } else {
@@ -443,8 +441,8 @@ class _CheckoutCardState extends State<CheckoutCard>
   void urunBilgileriSil() async {
     for (var urunDelete in urunBilgileriDeleteList) {
       urunDelete.dovizTuru = 1;
-      await UrunApiService.updateUrunStokById(
-          urunDelete.urunId, urunDelete.miktar, false);
+      // await UrunApiService.updateUrunStokById(
+      //     urunDelete.urunId, urunDelete.miktar, false);
       await UrunBilgileriApiService.deleteUrunBilgileri(urunDelete);
     }
     urunBilgileriDeleteList = [];

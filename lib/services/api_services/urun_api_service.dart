@@ -35,10 +35,10 @@ class UrunApiService {
     return urunAdi;
   }
 
-  static Future updateUrunStokById(int id, int stok, bool durum) async {
-    var url = Uri.parse('$updateUrunById$id&stok=$stok&durum=$durum');
-    var res = await http.patch(url);
-    print("ürün stok update result kod: ${res.statusCode}");
-    return res.statusCode;
-  }
+  // static Future updateUrunStokById(int id, int stok, bool durum) async {
+  //   var url = Uri.parse('$updateUrunById$id&stok=$stok&durum=$durum');
+  //   var res = await http.patch(url);
+  //   print("ürün stok update result kod: ${res.statusCode}");
+  //   return res.statusCode;
+  // }
 }

@@ -18,23 +18,23 @@ class CariHesapApiService {
     return res.statusCode;
   }
 
-  static Future updateCariBakiyeById(int id, double tutar, String durum) async {
-    var url =
-        Uri.parse('$updateCariHesapBakiyeById$id&tutar=$tutar&durum=$durum');
-    // return await http.put(url, headers: header);
-    var res = await http.patch(url);
-    print("Cari Bakiye result kod: ${res.statusCode}");
-    return res.statusCode;
-  }
+  // static Future updateCariBakiyeById(int id, double tutar, String durum) async {
+  //   var url =
+  //       Uri.parse('$updateCariHesapBakiyeById$id&tutar=$tutar&durum=$durum');
+  //   // return await http.put(url, headers: header);
+  //   var res = await http.patch(url);
+  //   print("Cari Bakiye result kod: ${res.statusCode}");
+  //   return res.statusCode;
+  // }
 
-  static Future postCariHesapHareketleri(
-      int cariHesapId, int hareketId, String durum) async {
-    var url =
-        Uri.parse(cariHesapHareketleriAddUrl(cariHesapId, hareketId, durum));
-    var res = await http.post(url);
-    print("Cari Hareketleri: ${res.statusCode}");
-    return res.statusCode;
-  }
+  // static Future postCariHesapHareketleri(
+  //     int cariHesapId, int hareketId, String durum) async {
+  //   var url =
+  //       Uri.parse(cariHesapHareketleriAddUrl(cariHesapId, hareketId, durum));
+  //   var res = await http.post(url);
+  //   print("Cari Hareketleri: ${res.statusCode}");
+  //   return res.statusCode;
+  // }
 
   static Future fetchCariHesap() async {
     return await http.get(cariHesapGetUri);

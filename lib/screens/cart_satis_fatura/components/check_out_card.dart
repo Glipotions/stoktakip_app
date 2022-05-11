@@ -300,16 +300,16 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                         cariHesapSingle.bakiye = cariHesapSingle.bakiye! +
                             totalTutarwithKdv(urunBilgileriList, _iskontoOrani);
-                        var resultCarihesapUpdateSatis =
-                            await CariHesapApiService.updateCariBakiyeById(
-                                cariHesapSingle.id!,
-                                totalTutarwithKdv(
-                                    urunBilgileriList, _iskontoOrani),
-                                "Borc");
+                        // var resultCarihesapUpdateSatis =
+                        //     await CariHesapApiService.updateCariBakiyeById(
+                        //         cariHesapSingle.id!,
+                        //         totalTutarwithKdv(
+                        //             urunBilgileriList, _iskontoOrani),
+                        //         "Borc");
 
                         for (var urun in urunBilgileriList) {
-                          await UrunApiService.updateUrunStokById(
-                              urun.urunId, urun.miktar, true);
+                          // await UrunApiService.updateUrunStokById(
+                          //     urun.urunId, urun.miktar, true);
 
                           await UrunBilgileriApiService.postUrunBilgileri(urun);
                         }
@@ -333,39 +333,40 @@ class _CheckoutCardState extends State<CheckoutCard>
                           var resultNakitAdd =
                               await NakitApiService.postNakit(nakitEntity);
 
-                          var resultKasaUpdate =
-                              await KasaApiService.updateKasa(
-                                  kasaId, toplamTutar);
+                          // var resultKasaUpdate =
+                          //     await KasaApiService.updateKasa(
+                          //         kasaId, toplamTutar);
 
-                          var resultKasaHareketleriAdd =
-                              await KasaApiService.postKasaHareketleri(
-                                  kasaId, nakitId, "Nakit");
-                          var resultCarihesapUpdateNakit =
-                              await CariHesapApiService.updateCariBakiyeById(
-                                  cariHesapSingle.id!,
-                                  totalTutarwithKdv(
-                                      urunBilgileriList, _iskontoOrani),
-                                  "Odeme");
-                          var resultCariHesapHareketleriNakitAdd =
-                              await CariHesapApiService
-                                  .postCariHesapHareketleri(
-                                      cariHesapSingle.id!, nakitId, "Nakit");
+                          // var resultKasaHareketleriAdd =
+                          //     await KasaApiService.postKasaHareketleri(
+                          //         kasaId, nakitId, "Nakit");
+                          // var resultCarihesapUpdateNakit =
+                          //     await CariHesapApiService.updateCariBakiyeById(
+                          //         cariHesapSingle.id!,
+                          //         totalTutarwithKdv(
+                          //             urunBilgileriList, _iskontoOrani),
+                          //         "Odeme");
+                          // var resultCariHesapHareketleriNakitAdd =
+                          //     await CariHesapApiService
+                          //         .postCariHesapHareketleri(
+                          //             cariHesapSingle.id!, nakitId, "Nakit");
 
-                          if (resultNakitAdd != 200 ||
-                              resultKasaUpdate != 200 ||
-                              resultKasaHareketleriAdd != 200 ||
-                              resultCariHesapHareketleriNakitAdd != 200 ||
-                              resultCarihesapUpdateNakit != 200) {
+                          if (resultNakitAdd != 200
+                              // resultKasaUpdate != 200 ||
+                              // resultKasaHareketleriAdd != 200 ||
+                              // resultCariHesapHareketleriNakitAdd != 200 ||
+                              // resultCarihesapUpdateNakit != 200
+                              ) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBarNakitEkle);
                           }
                         }
 
-                        var resultCariHesapHareketleriSatisAdd =
-                            await CariHesapApiService.postCariHesapHareketleri(
-                                cariHesapSingle.id!,
-                                satisFaturaNew.id,
-                                "Satis");
+                        // var resultCariHesapHareketleriSatisAdd =
+                        //     await CariHesapApiService.postCariHesapHareketleri(
+                        //         cariHesapSingle.id!,
+                        //         satisFaturaNew.id,
+                        //         "Satis");
                         //TEMİZLİK KISMI
                         urunBilgileriList.clear();
                         faturaAciklama = null;
@@ -389,8 +390,9 @@ class _CheckoutCardState extends State<CheckoutCard>
                         // Navigator.pop(context);
                         Navigator.of(context).pop(true);
 
-                        if (resultCariHesapHareketleriSatisAdd != 200 ||
-                            resultCarihesapUpdateSatis != 200 ||
+                        if (
+                            // resultCariHesapHareketleriSatisAdd != 200 ||
+                            // resultCarihesapUpdateSatis != 200 ||
                             resultSatisFaturaAdd != 200) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBarSatisFaturaEkle);

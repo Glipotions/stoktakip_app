@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 class HazirlananSiparisBilgileri {
   int? id;
   int urunId;

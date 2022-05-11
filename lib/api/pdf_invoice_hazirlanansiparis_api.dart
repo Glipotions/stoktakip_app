@@ -26,7 +26,7 @@ class PdfInvoiceHazirlananSiparisApi {
         await rootBundle.load("assets/fonts/roboto/Roboto-Bold.ttf");
 
     final ttfBold = pw.Font.ttf(fontBold);
-    final ttfBoldRoboto = pw.Font.ttf(fontBoldRoboto);
+    // final ttfBoldRoboto = pw.Font.ttf(fontBoldRoboto);
     final ttfItalic = pw.Font.ttf(fontItalic);
 
     pdf.addPage(MultiPage(

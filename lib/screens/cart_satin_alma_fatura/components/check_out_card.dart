@@ -7,10 +7,7 @@ import 'package:stoktakip_app/functions/total_calculate.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
-import 'package:stoktakip_app/services/api.services.dart';
-import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
 import 'package:stoktakip_app/services/api_services/satin_alma_fatura_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_satin_alma_api_service.dart';
 
 import '../../../size_config.dart';
@@ -234,15 +231,15 @@ class _CheckoutCardState extends State<CheckoutCard> {
                       cariHesapSingle.bakiye = cariHesapSingle.bakiye! -
                           totalTutarwithKdvSatinAlma(
                               urunBilgileriSatinAlmaList, _iskontoOrani);
-                      await CariHesapApiService.updateCariBakiyeById(
-                          cariHesapSingle.id!,
-                          totalTutarwithKdvSatinAlma(
-                              urunBilgileriSatinAlmaList, _iskontoOrani),
-                          "Odeme");
+                      // await CariHesapApiService.updateCariBakiyeById(
+                      //     cariHesapSingle.id!,
+                      //     totalTutarwithKdvSatinAlma(
+                      //         urunBilgileriSatinAlmaList, _iskontoOrani),
+                      //     "Odeme");
 
                       for (var urun in urunBilgileriSatinAlmaList) {
-                        await UrunApiService.updateUrunStokById(
-                            urun.urunId, urun.miktar, false);
+                        // await UrunApiService.updateUrunStokById(
+                        //     urun.urunId, urun.miktar, false);
 
                         await UrunBilgileriSatinAlmaApiService
                             .postUrunBilgileriSatinAlma(urun);
