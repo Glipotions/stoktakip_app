@@ -92,3 +92,28 @@ String hazirlananSiparisBilgileriUpdateUrl =
 String hazirlananSiparisBilgileriGetByHazirlananSiparisIdUrl(id) {
   return '${mainUrl}HazirlananSiparisBilgileri/getallbyhazirlanansiparisid?id=$id';
 }
+
+String gelenSiparisAddUrl = '${mainUrl}GelenSiparis';
+Uri fetchGelenSiparisUrl = Uri.parse('${mainUrl}GelenSiparis/getall');
+
+String gelenSiparisBilgileriAddUrl = '${mainUrl}GelenSiparisBilgileri';
+String gelenSiparisBilgileriDeleteUrl =
+    '${mainUrl}GelenSiparisBilgileri/delete';
+String gelenSiparisBilgileriUpdateUrl =
+    '${mainUrl}GelenSiparisBilgileri/update?';
+String gelenSiparisBilgileriGetByGelenSiparisIdUrl(id) {
+  return '${mainUrl}GelenSiparisBilgileri/getallbygelensiparisid?id=$id';
+}
+
+Uri fetchVerilenSiparisUrl = Uri.parse('${mainUrl}VerilenSiparis/getall');
+String updateVerilenSiparisDurumByIdUrl =
+    '${mainUrl}VerilenSiparis/updateverilensiparisdurumbyid?id=';
+
+String fetchVerilenSiparisBilgileriByVerilenSiparisIdUrl =
+    '${mainUrl}VerilenSiparisBilgileri/getallbyverilensiparisid?id=';
+String fetchVerilenSiparisBilgileriByCariIdUrl =
+    '${mainUrl}VerilenSiparisBilgileri/getallbycari?id=';
+String fetchVerilenSiparisBilgileriByCariIdControlUrl =
+    '${mainUrl}VerilenSiparisBilgileri/getallbycaricontrol?id=';
+String updateVerilenSiparisBilgileriUrl =
+    '${mainUrl}VerilenSiparisBilgileri/update?';
