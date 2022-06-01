@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';
+import 'package:stoktakip_app/change_notifier_model/gelen_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kasa_data.dart';
 import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
-import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
+import 'package:stoktakip_app/change_notifier_model/verilen_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/routes.dart';
 import 'package:stoktakip_app/screens/login/host_page.dart';
 import 'package:stoktakip_app/theme.dart';
@@ -19,6 +20,8 @@ void main() async {
   await IpHostData().createPrefObject();
   await AlinanSiparisBilgileriData().createPrefObject();
   await HazirlananSiparisBilgileriData().createPrefObject();
+  await VerilenSiparisBilgileriData().createPrefObject();
+  await GelenSiparisBilgileriData().createPrefObject();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<KdvData>(
         create: (BuildContext context) => KdvData()),
@@ -30,6 +33,10 @@ void main() async {
         create: (BuildContext context) => AlinanSiparisBilgileriData()),
     ChangeNotifierProvider<HazirlananSiparisBilgileriData>(
         create: (BuildContext context) => HazirlananSiparisBilgileriData()),
+    ChangeNotifierProvider<VerilenSiparisBilgileriData>(
+        create: (BuildContext context) => VerilenSiparisBilgileriData()),
+    ChangeNotifierProvider<GelenSiparisBilgileriData>(
+        create: (BuildContext context) => GelenSiparisBilgileriData()),
   ], child: const MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
@@ -44,6 +51,8 @@ class MyApp extends StatelessWidget {
     Provider.of<KasaData>(context).loadKasaToSharedPref();
     Provider.of<AlinanSiparisBilgileriData>(context).getList();
     Provider.of<HazirlananSiparisBilgileriData>(context).getList();
+    Provider.of<VerilenSiparisBilgileriData>(context).getList();
+    Provider.of<GelenSiparisBilgileriData>(context).getList();
     return MaterialApp(
       title: 'Glipotions Stok Takip Uygulaması',
       theme: theme(),

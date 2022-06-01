@@ -1,13 +1,17 @@
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
+import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis.dart';
+import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/kasa/kasa.dart';
 import 'package:stoktakip_app/model/nakit/nakit.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
+import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis.dart';
+import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis_bilgileri.dart';
 import '../model/satin_alma/satin_alma_fatura.dart';
 
-bool? faturaDurum, hazirlananSiparisDurum;
+bool? faturaDurum, hazirlananSiparisDurum, gelenSiparisDurum;
 
 SatisFatura satisFaturaNew = SatisFatura(
     cariHesapId: 1,
@@ -64,3 +68,16 @@ HazirlananSiparis hazirlananSiparisEdit = HazirlananSiparis();
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriGetIdList = [];
 List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriDeleteList = [];
+
+VerilenSiparis verilenSiparisSingle = VerilenSiparis(id: -1);
+List<VerilenSiparis> verilenSiparisList = [];
+String? verilenSiparisBilgileriControlString;
+List<VerilenSiparisBilgileri> verilenSiparisBilgileriList = [];
+List<VerilenSiparisBilgileri> verilenSiparisBilgileriGetIdList = [];
+List<VerilenSiparisBilgileri> verilenSiparisBilgileriDeleteList = [];
+
+GelenSiparis gelenSiparisSingle = GelenSiparis();
+GelenSiparis gelenSiparisEdit = GelenSiparis();
+List<GelenSiparisBilgileri> gelenSiparisBilgileriList = [];
+List<GelenSiparisBilgileri> gelenSiparisBilgileriGetIdList = [];
+List<GelenSiparisBilgileri> gelenSiparisBilgileriDeleteList = [];

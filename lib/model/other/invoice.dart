@@ -1,3 +1,5 @@
+import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis.dart';
+import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
@@ -36,6 +38,23 @@ class InvoiceHazirlananSiparis {
   const InvoiceHazirlananSiparis({
     required this.info,
     required this.hazirlananSiparis,
+    required this.items,
+  });
+}
+
+class InvoiceGelenSiparis {
+  final InvoiceInfo info;
+  // final UrunBilgileri urunBilgileri;
+  // final Supplier supplier;
+  // final Customer customer;
+  final GelenSiparis gelenSiparis;
+
+  // final List<InvoiceItem> items;
+  final List<GelenSiparisBilgileri> items;
+
+  const InvoiceGelenSiparis({
+    required this.info,
+    required this.gelenSiparis,
     required this.items,
   });
 }

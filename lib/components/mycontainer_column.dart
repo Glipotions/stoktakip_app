@@ -22,6 +22,7 @@ class MyContainerColumn extends StatelessWidget {
         Text(
           yazi!,
           style: kBaslikStili,
+          textAlign: TextAlign.center,
         )
       ],
     );

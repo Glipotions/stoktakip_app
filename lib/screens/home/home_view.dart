@@ -6,6 +6,7 @@ import 'package:stoktakip_app/components/mycontainer.dart';
 import 'package:stoktakip_app/components/mycontainer_column.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
+import 'package:stoktakip_app/screens/gelen_urun_siparisi/siparis_hazirla.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/siparis_hazirla.dart';
 
 class HomeViewPage extends StatefulWidget {
@@ -96,21 +97,37 @@ class _HomeViewPageState extends State<HomeViewPage> {
               ),
             ),
             Expanded(
-              child: MyContainer(
-                renk: Colors.deepPurple[200],
-                onPress: () {
-                  Navigator.pushNamed(context, SiparisHazirla.routeName);
-                },
-                child: MyContainerColumn(
-                  yazi: "SİPARİŞLER",
-                  icon: FontAwesomeIcons.cartArrowDown,
-                ),
-                // child: Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text('SİPARİŞLER', style: kBaslikStili),
-                //   ],
-                // ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: MyContainer(
+                      renk: Colors.deepPurple[200],
+                      onPress: () {
+                        Navigator.pushNamed(context, SiparisHazirla.routeName);
+                      },
+                      child: MyContainerColumn(
+                        yazi: "SİPARİŞLER",
+                        icon: FontAwesomeIcons.cartArrowDown,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: MyContainer(
+                      renk: Colors.deepPurple[200],
+                      onPress: () {
+                        Navigator.pushNamed(
+                            context, GelenSiparisHazirla.routeName);
+                      },
+                      child: MyContainerColumn(
+                        yazi: "GELEN SİPARİŞLER",
+                        icon: FontAwesomeIcons.cartPlus,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(

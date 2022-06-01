@@ -4,16 +4,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
+import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis_bilgileri.dart';
 // import 'package:shop_app/models/Cart.dart';
 
 import 'components/body.dart';
 import 'components/check_out_card.dart';
 
-class CartScreenHazirlananSiparis extends StatelessWidget {
-  static String routeName = "/cart-hazirlanan-siparis";
+class CartScreenGelenSiparis extends StatelessWidget {
+  static String routeName = "/cart-gelen-siparis";
 
-  const CartScreenHazirlananSiparis({Key? key}) : super(key: key);
+  const CartScreenGelenSiparis({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
       title: Column(
         children: [
           Text(
-            "Sepet -(${hazirlananSiparisDurum == true ? hazirlananSiparisSingle.siparisAdi : hazirlananSiparisEdit.siparisAdi})",
+            "Sepet -(${gelenSiparisDurum == true ? gelenSiparisSingle.siparisAdi : gelenSiparisEdit.siparisAdi})",
             style: const TextStyle(color: Colors.black),
           ),
           RichText(
@@ -36,7 +36,7 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
               children: [
                 TextSpan(
                   text:
-                      "${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length} ürün",
+                      "${gelenSiparisDurum == true ? gelenSiparisBilgileriList.length : gelenSiparisBilgileriGetIdList.length} ürün",
                   style: Theme.of(context).textTheme.caption,
                 ),
                 TextSpan(
@@ -78,15 +78,15 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'EVET');
-                  hazirlananSiparisBilgileriList.clear();
+                  gelenSiparisBilgileriList.clear();
                   Navigator.of(context).pop(true);
                   dynamic list =
-                      json.decode(alinanSiparisBilgileriControlString!);
+                      json.decode(verilenSiparisBilgileriControlString!);
                   List data = list;
                   // List data = list['data'];
-                  alinanSiparisBilgileriList = data
-                      .map((model) => AlinanSiparisBilgileri.fromJson(model))
-                      .cast<AlinanSiparisBilgileri>()
+                  verilenSiparisBilgileriList = data
+                      .map((model) => VerilenSiparisBilgileri.fromJson(model))
+                      .cast<VerilenSiparisBilgileri>()
                       .toList();
                 },
                 child: const Text('EVET'),
