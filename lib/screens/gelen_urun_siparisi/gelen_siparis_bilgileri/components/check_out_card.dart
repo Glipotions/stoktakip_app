@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
-import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
+import 'package:stoktakip_app/screens/gelen_urun_siparisi/siparisi_goruntule/gelen_siparisi_goruntule_list.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CheckoutCard extends StatefulWidget {
@@ -57,8 +57,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                         ),
                         child: const Text("Siparişi Gör"),
                         onPressed: () {
-                          Navigator.pushNamed(
-                              context, ListSiparisiGoruntuleTable.routeName);
+                          Navigator.pushNamed(context,
+                              ListGelenSiparisiGoruntuleTable.routeName);
                         }),
                   ),
                 ),

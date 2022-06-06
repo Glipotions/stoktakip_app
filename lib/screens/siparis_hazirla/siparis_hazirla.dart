@@ -24,7 +24,8 @@ class SiparisHazirla extends StatefulWidget {
 class _SiparisHazirlaState extends State<SiparisHazirla> {
   List<AlinanSiparis> alinanSiparisler = [];
   // List<AlinanSiparisBilgileri> alinanSiparisBilgileri = [];
-  List<String> _suggestions = <String>[];
+  // List<String> _suggestions = <String>[];
+  // List<SearchFieldListItem> _suggestionSearch = <SearchFieldListItem>[];
 
   Object? dropDownMenu;
   String? _selectedItem;
@@ -45,10 +46,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
             .map((model) => AlinanSiparis.fromJson(model))
             .where((element) => element.durum == true)
             .toList();
-        // _suggestions = data
-        //     .map((model) => AlinanSiparis.fromJson(model).siparisTanimi!)
-        //     .toList();
-        _suggestions = alinanSiparisler.map((e) => e.siparisTanimi!).toList();
+        // _suggestions = alinanSiparisler.map((e) => e.siparisTanimi!).toList();
       });
     });
     return alinanSiparisler;
@@ -250,7 +248,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                     child: SearchField(
                       hint: 'Ara',
                       controller: searchController,
-                      suggestionState: SuggestionState.enabled,
+                      suggestionState: Suggestion.expand,
                       searchInputDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -273,17 +271,19 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      onTap: (value) async {
+
+                      onSuggestionTap: (value) async {
                         setState(() {
-                          _selectedItem = value!;
+                          _selectedItem = value.searchKey;
                           var alinanSiparisEntity = alinanSiparisler
-                              .where(
-                                  (element) => element.siparisTanimi == value)
+                              .where((element) =>
+                                  element.siparisTanimi == value.searchKey)
                               .single;
                           alinanSiparisSingle.id = alinanSiparisEntity.id;
                           alinanSiparisSingle.cariHesapId =
                               alinanSiparisEntity.cariHesapId;
-                          alinanSiparisSingle.siparisTanimi = value;
+                          alinanSiparisSingle.siparisTanimi = value.searchKey;
+
                           alinanSiparisSingle.aciklama =
                               alinanSiparisEntity.aciklama;
                           // alinanSiparisSingle.cariHesapId =
@@ -317,7 +317,11 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                         //     alinanSiparisSingle.id!);
                         // print(alinanSiparisBilgileriList.length);
                       },
-                      suggestions: _suggestions,
+                      // suggestions: _suggestions,
+                      suggestions: alinanSiparisler
+                          .map((e) =>
+                              SearchFieldListItem(e.siparisTanimi!, item: e))
+                          .toList(),
                     ),
                   ),
                   // SizedBox(

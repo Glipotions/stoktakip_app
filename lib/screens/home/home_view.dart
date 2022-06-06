@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stoktakip_app/components/mycontainer.dart';
 import 'package:stoktakip_app/components/mycontainer_column.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/screens/fatura_olustur/fatura_olustur.dart';
-import 'package:stoktakip_app/screens/gelen_urun_siparisi/siparis_hazirla.dart';
+import 'package:stoktakip_app/screens/gelen_urun_siparisi/gelen_siparis_hazirla.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/siparis_hazirla.dart';
 
 class HomeViewPage extends StatefulWidget {
@@ -109,21 +108,21 @@ class _HomeViewPageState extends State<HomeViewPage> {
                       },
                       child: MyContainerColumn(
                         yazi: "SİPARİŞLER",
-                        icon: FontAwesomeIcons.cartArrowDown,
+                        icon: FontAwesomeIcons.arrowCircleUp,
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: MyContainer(
-                      renk: Colors.deepPurple[200],
+                      renk: Colors.deepOrange[200],
                       onPress: () {
                         Navigator.pushNamed(
                             context, GelenSiparisHazirla.routeName);
                       },
                       child: MyContainerColumn(
                         yazi: "GELEN SİPARİŞLER",
-                        icon: FontAwesomeIcons.cartPlus,
+                        icon: FontAwesomeIcons.arrowCircleDown,
                       ),
                     ),
                   ),

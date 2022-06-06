@@ -21,8 +21,8 @@ class VerilenSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
-  int? kalanMiktar;
-  int? kalanAdet;
+  int? faturayaGoreKalan;
+  int? sipariseGoreKalanAdet;
   bool durum;
 
   // ByteData? resim;
@@ -46,8 +46,8 @@ class VerilenSiparisBilgileri {
     this.delete,
     this.iskontoOrani,
     this.dovizTuru,
-    this.kalanMiktar,
-    this.kalanAdet,
+    this.faturayaGoreKalan,
+    this.sipariseGoreKalanAdet,
     // this.resim,
   });
 
@@ -69,8 +69,8 @@ class VerilenSiparisBilgileri {
         update: json['update'],
         delete: json['delete'],
         iskontoOrani: json['iskontoOrani'],
-        kalanMiktar: json['kalanMiktar'],
-        kalanAdet: json['kalanAdet'],
+        faturayaGoreKalan: json['faturayaGoreKalan'],
+        sipariseGoreKalanAdet: json['sipariseGoreKalanAdet'],
         durum: json['durum'],
         // resim: json['resim'],
       );
@@ -93,8 +93,8 @@ class VerilenSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "kalanMiktar": kalanMiktar,
-        "kalanAdet": kalanAdet,
+        "faturayaGoreKalan": faturayaGoreKalan,
+        "sipariseGoreKalanAdet": sipariseGoreKalanAdet,
         "durum": durum,
         // "resim": resim,
       };
@@ -117,8 +117,8 @@ class VerilenSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "kalanMiktar": kalanMiktar,
-        "kalanAdet": kalanAdet,
+        "faturayaGoreKalan": faturayaGoreKalan,
+        "sipariseGoreKalanAdet": sipariseGoreKalanAdet,
         "durum": durum
         // "resim": resim,
       };

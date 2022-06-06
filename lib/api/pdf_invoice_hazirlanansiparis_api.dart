@@ -22,8 +22,8 @@ class PdfInvoiceHazirlananSiparisApi {
     final fontBold = await rootBundle.load("assets/fonts/muli/Muli-Bold.ttf");
     final fontItalic =
         await rootBundle.load("assets/fonts/roboto/Roboto-Regular.ttf");
-    final fontBoldRoboto =
-        await rootBundle.load("assets/fonts/roboto/Roboto-Bold.ttf");
+    // final fontBoldRoboto =
+    //     await rootBundle.load("assets/fonts/roboto/Roboto-Bold.ttf");
 
     final ttfBold = pw.Font.ttf(fontBold);
     // final ttfBoldRoboto = pw.Font.ttf(fontBoldRoboto);

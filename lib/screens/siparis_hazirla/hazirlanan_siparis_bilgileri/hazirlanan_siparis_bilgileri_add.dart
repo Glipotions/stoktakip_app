@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/alinan_siparis_bilgileri_data.dart';

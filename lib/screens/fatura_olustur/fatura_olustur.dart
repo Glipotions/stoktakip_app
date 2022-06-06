@@ -23,7 +23,9 @@ class FaturaOlustur extends StatefulWidget {
 
 class _FaturaOlusturState extends State<FaturaOlustur> {
   List<CariHesap> cariHesap = <CariHesap>[];
-  List<String> _suggestions = <String>[];
+  // List<String> _suggestions = <String>[];
+  // List<SearchFieldListItem> _suggestionSearch = <SearchFieldListItem>[];
+
   var cariHesap1 = <CariHesap>[];
   Object? dropDownMenu;
   String? _selectedItem;
@@ -39,8 +41,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
         // List data = list['data'];
         List data = list;
         cariHesap = data.map((model) => CariHesap.fromJson(model)).toList();
-        _suggestions =
-            data.map((model) => CariHesap.fromJson(model).firma!).toList();
+        // _suggestions =
+        //     data.map((model) => CariHesap.fromJson(model).firma!).toList();
       });
     });
     return cariHesap;
@@ -143,7 +145,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                     child: SearchField(
                       hint: 'Ara',
                       controller: searchController,
-                      suggestionState: SuggestionState.enabled,
+                      // suggestionState: SuggestionState.enabled,
+                      suggestionState: Suggestion.expand,
                       searchInputDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -166,9 +169,10 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      onTap: (value) async {
+
+                      onSuggestionTap: (value) async {
                         setState(() {
-                          _selectedItem = value!;
+                          _selectedItem = value.item.toString();
                           cariHesapSingle.id = cariHesap
                               .where((element) => element.firma == value)
                               .single
@@ -178,7 +182,10 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                         await getCariHesapById(cariHesapSingle.id!);
                         print(cariHesapSingle.id);
                       },
-                      suggestions: _suggestions,
+                      // suggestions: _suggestions,
+                      suggestions: cariHesap
+                          .map((e) => SearchFieldListItem(e.firma!, item: e))
+                          .toList(),
                     ),
                   ),
 

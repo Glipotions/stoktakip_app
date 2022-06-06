@@ -7,7 +7,7 @@ import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis.dart';
 import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis.dart';
 import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis_bilgileri.dart';
-import 'package:stoktakip_app/screens/siparis_hazirla/siparisi_goruntule/siparisi_goruntule_list.dart';
+import 'package:stoktakip_app/screens/gelen_urun_siparisi/siparisi_goruntule/gelen_siparisi_goruntule_list.dart';
 import 'package:stoktakip_app/services/api_services/verilen_siparis_api_service.dart';
 import '../../size_config.dart';
 import 'gelen_siparis_bilgileri/gelen_siparis_bilgileri_add.dart';
@@ -24,7 +24,6 @@ class GelenSiparisHazirla extends StatefulWidget {
 class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
   List<VerilenSiparis> verilenSiparisler = [];
   // List<VerilenSiparisBilgileri> verilenSiparisBilgileri = [];
-  List<String> _suggestions = <String>[];
 
   Object? dropDownMenu;
   String? _selectedItem;
@@ -45,7 +44,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
             .map((model) => VerilenSiparis.fromJson(model))
             .where((element) => element.durum == true)
             .toList();
-        _suggestions = verilenSiparisler.map((e) => e.siparisTanimi!).toList();
+        // _suggestions = verilenSiparisler.map((e) => e.siparisTanimi!).toList();
       });
     });
     return verilenSiparisler;
@@ -186,8 +185,8 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                             flex: 8,
                             child: Text(
                               isSwitched == true
-                                  ? "CARİNİN TÜM SİPARİŞLERİ"
-                                  : "SEÇİLİ SİPARİŞ",
+                                  ? "CARİNİN TÜM VERİLEN SİPARİŞLERİ"
+                                  : "SEÇİLİ VERİLEN SİPARİŞ",
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey.shade800,
@@ -242,7 +241,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                     child: SearchField(
                       hint: 'Ara',
                       controller: searchController,
-                      suggestionState: SuggestionState.enabled,
+                      suggestionState: Suggestion.expand,
                       searchInputDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -265,9 +264,9 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      onTap: (value) async {
+                      onSuggestionTap: (value) async {
                         setState(() {
-                          _selectedItem = value!;
+                          _selectedItem = value.item.toString();
                           var verilenSiparisEntity = verilenSiparisler
                               .where(
                                   (element) => element.siparisTanimi == value)
@@ -275,7 +274,8 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                           verilenSiparisSingle.id = verilenSiparisEntity.id;
                           verilenSiparisSingle.cariHesapId =
                               verilenSiparisEntity.cariHesapId;
-                          verilenSiparisSingle.siparisTanimi = value;
+                          verilenSiparisSingle.siparisTanimi =
+                              value.item.toString();
                           verilenSiparisSingle.aciklama =
                               verilenSiparisEntity.aciklama;
 
@@ -303,7 +303,11 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                           const Center(child: CircularProgressIndicator());
                         }
                       },
-                      suggestions: _suggestions,
+                      // suggestions: _suggestions,
+                      suggestions: verilenSiparisler
+                          .map((e) =>
+                              SearchFieldListItem(e.siparisTanimi!, item: e))
+                          .toList(),
                     ),
                   ),
                   SizedBox(
@@ -312,7 +316,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
-                          child: const Text("Sipariş Hazırla"),
+                          child: const Text("Gelen Siparişi Gir"),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.brown,
                             shape: RoundedRectangleBorder(
@@ -350,7 +354,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                               // searchController.clear();
                               // dropDownMenu = null;
                               Navigator.pushNamed(context,
-                                  ListSiparisiGoruntuleTable.routeName);
+                                  ListGelenSiparisiGoruntuleTable.routeName);
                             }
                           }),
                     ),

@@ -1,9 +1,7 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/gelen_siparis_bilgileri_data.dart';
@@ -664,11 +662,11 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
     // int fark = check.kalanMiktar == null
     //     ? check.miktar - int.parse(adetController.text)
     //     : check.kalanMiktar! - int.parse(adetController.text);
-    int olmasiGerekenMiktar = check.kalanAdet!;
-    int fark = check.kalanAdet! - int.parse(adetController.text);
+    int olmasiGerekenMiktar = check.sipariseGoreKalanAdet!;
+    int fark = check.sipariseGoreKalanAdet! - int.parse(adetController.text);
     kalanMiktarDegistir() {
-      check.kalanMiktar = fark;
-      check.kalanAdet = fark;
+      check.faturayaGoreKalan = fark;
+      check.sipariseGoreKalanAdet = fark;
       // if (fark <= 0) check.durum = false;
     }
 

@@ -37,8 +37,8 @@ class _PdfPageState extends State<PdfPage> {
                 ButtonWidget(
                   text: 'Fiş PDF',
                   onClicked: () async {
-                    final date = DateTime.now();
-                    final dueDate = date.add(const Duration(days: 7));
+                    // final date = DateTime.now();
+                    // final dueDate = date.add(const Duration(days: 7));
 
                     final invoice = InvoiceSatisFatura(
                         satisFatura: satisFaturaNew,

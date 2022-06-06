@@ -333,24 +333,6 @@ class _CheckoutCardState extends State<CheckoutCard>
                           var resultNakitAdd =
                               await NakitApiService.postNakit(nakitEntity);
 
-                          // var resultKasaUpdate =
-                          //     await KasaApiService.updateKasa(
-                          //         kasaId, toplamTutar);
-
-                          // var resultKasaHareketleriAdd =
-                          //     await KasaApiService.postKasaHareketleri(
-                          //         kasaId, nakitId, "Nakit");
-                          // var resultCarihesapUpdateNakit =
-                          //     await CariHesapApiService.updateCariBakiyeById(
-                          //         cariHesapSingle.id!,
-                          //         totalTutarwithKdv(
-                          //             urunBilgileriList, _iskontoOrani),
-                          //         "Odeme");
-                          // var resultCariHesapHareketleriNakitAdd =
-                          //     await CariHesapApiService
-                          //         .postCariHesapHareketleri(
-                          //             cariHesapSingle.id!, nakitId, "Nakit");
-
                           if (resultNakitAdd != 200
                               // resultKasaUpdate != 200 ||
                               // resultKasaHareketleriAdd != 200 ||

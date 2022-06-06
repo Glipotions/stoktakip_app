@@ -134,7 +134,7 @@ class _BodyState extends State<Body> {
         );
 
   Widget buildItem(BuildContext context, int index) {
-    String firma = satisFaturaList[index].firmaUnvani!;
+    // String firma = satisFaturaList[index].firmaUnvani!;
 
     Future<List> _getUrunBilgileri() async {
       print(satisFaturaList[index].id);

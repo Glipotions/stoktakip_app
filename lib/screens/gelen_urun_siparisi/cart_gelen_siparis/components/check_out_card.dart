@@ -138,7 +138,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   int toplam = 0;
                                   for (var item
                                       in verilenSiparisBilgileriList) {
-                                    toplam += item.kalanAdet!;
+                                    toplam += item.sipariseGoreKalanAdet!;
                                   }
                                   if (toplam == 0) {
                                     await VerilenSiparisApiService
@@ -199,7 +199,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                   toplam += 1;
                                   eksikUrunler.add(item.urunKodu.toString());
                                 }
-                                kalanToplam += item.kalanAdet!;
+                                kalanToplam += item.sipariseGoreKalanAdet!;
                               }
 
                               await checkEksikOlanUrun(

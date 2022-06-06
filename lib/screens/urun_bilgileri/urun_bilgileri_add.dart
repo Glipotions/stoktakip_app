@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stoktakip_app/components/default_button.dart';
@@ -15,7 +14,6 @@ import 'package:stoktakip_app/model/satin_alma/urun_bilgileri_satin_alma.dart';
 import 'package:stoktakip_app/screens/cart_satin_alma_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/cart_satis_fatura/cart_screen.dart';
 import 'package:stoktakip_app/screens/urun_bilgileri/components/check_out_card.dart';
-import 'package:stoktakip_app/services/api.services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';

@@ -54,16 +54,16 @@ class _BodyState extends State<Body> {
                             (element) => element.urunId == cart[index].urunId);
                         // entity.kalanMiktar =
                         //     entity.kalanMiktar! + cart[index].miktar;
-                        entity.kalanAdet =
-                            entity.kalanAdet! + cart[index].miktar;
+                        entity.sipariseGoreKalanAdet =
+                            entity.sipariseGoreKalanAdet! + cart[index].miktar;
 
                         gelenSiparisBilgileriList.removeWhere(
                             (urun) => urun.urunId == cart[index].urunId);
                       } else {
                         var entity = verilenSiparisBilgileriList.singleWhere(
                             (element) => element.urunId == cart[index].urunId);
-                        entity.kalanAdet =
-                            entity.kalanAdet! + cart[index].miktar;
+                        entity.sipariseGoreKalanAdet =
+                            entity.sipariseGoreKalanAdet! + cart[index].miktar;
 
                         gelenSiparisBilgileriDeleteList.add(cart[index]);
                         gelenSiparisBilgileriGetIdList.removeWhere(

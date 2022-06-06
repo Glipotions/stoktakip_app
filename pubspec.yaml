@@ -20,6 +20,8 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
+  # sdk: ">=2.12.0 <3.0.0"
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -31,7 +33,7 @@ dependencies:
     sdk: flutter
   http: any
   # flutter_bloc: ^6.1.1
-
+  platform: ^3.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,8 +42,10 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   flutter_svg: ^0.23.0+1
   provider: ^6.0.1
-  dropdown_search: ^2.0.1
-  searchfield: ^0.5.6
+  # dropdown_search: ^2.0.1
+  dropdown_search: ^5.0.2
+  # searchfield: ^0.5.6
+  searchfield: ^0.6.5
   path_provider: ^2.0.8
   open_file: ^3.2.1
   syncfusion_flutter_pdf: ^19.4.48-beta
