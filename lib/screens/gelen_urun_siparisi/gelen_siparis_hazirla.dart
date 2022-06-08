@@ -268,8 +268,8 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                         setState(() {
                           _selectedItem = value.item.toString();
                           var verilenSiparisEntity = verilenSiparisler
-                              .where(
-                                  (element) => element.siparisTanimi == value)
+                              .where((element) =>
+                                  element.siparisTanimi == value.searchKey)
                               .single;
                           verilenSiparisSingle.id = verilenSiparisEntity.id;
                           verilenSiparisSingle.cariHesapId =
