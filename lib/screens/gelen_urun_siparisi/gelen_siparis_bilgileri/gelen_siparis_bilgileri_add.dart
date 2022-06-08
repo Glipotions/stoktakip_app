@@ -12,7 +12,6 @@ import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis_bilgileri.dart';
-import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun/urun.dart';
 import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -26,8 +25,8 @@ import 'components/check_out_card.dart';
 class GelenSiparisBilgileriAdd extends StatefulWidget {
   static String routeName = "/gelen-siparis-bilgileri-add";
 
-  List<SatisFatura>? satisFaturas;
-  GelenSiparisBilgileriAdd({Key? key}) : super(key: key);
+  // List<SatisFatura>? satisFaturas;
+  const GelenSiparisBilgileriAdd({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

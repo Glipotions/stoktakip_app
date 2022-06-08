@@ -351,8 +351,6 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                           onPressed: () {
                             if (dropDownMenu == null) {
                             } else {
-                              // searchController.clear();
-                              // dropDownMenu = null;
                               Navigator.pushNamed(context,
                                   ListGelenSiparisiGoruntuleTable.routeName);
                             }
