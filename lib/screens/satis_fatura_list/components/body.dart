@@ -137,7 +137,6 @@ class _BodyState extends State<Body> {
     // String firma = satisFaturaList[index].firmaUnvani!;
 
     Future<List> _getUrunBilgileri() async {
-      print(satisFaturaList[index].id);
       await UrunBilgileriApiService.fetchUrunBilgileriBySatisFaturaId(
               satisFaturaList[index].id)
           .then(

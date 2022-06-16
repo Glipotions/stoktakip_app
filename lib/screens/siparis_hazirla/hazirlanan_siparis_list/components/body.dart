@@ -165,7 +165,6 @@ class _BodyState extends State<Body> {
     // String firma = hazirlananSiparisList[index].siparisAdi!;
 
     Future<List> _getHazirlananSiparisBilgileri() async {
-      print(hazirlananSiparisList[index].id);
       await HazirlananSiparisApiService
               .fetchHazirlananSiparisBilgileriByHazirlananSiparisId(
                   hazirlananSiparisList[index].id)

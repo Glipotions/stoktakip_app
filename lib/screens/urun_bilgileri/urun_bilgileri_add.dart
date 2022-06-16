@@ -19,6 +19,7 @@ import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
+// ignore: must_be_immutable
 class UrunBilgileriAdd extends StatefulWidget {
   static String routeName = "/urun-bilgileri-add";
 
@@ -39,7 +40,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
   String? lastInputValue;
 
   // final formKey = GlobalKey<FormState>();
-  static GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var barkodController = TextEditingController(),
       kdvHaricTutarController = TextEditingController(),
       urunKoduController = TextEditingController(),
@@ -99,7 +100,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                   height: 150.0,
                   width: 30.0,
                   child: GestureDetector(
@@ -477,7 +478,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
               urunBilgileriSatinAlmaList.add(urunBilgileriSatinAlma);
             }
 
-            print("Fatura ID: $_faturaId");
+            debugPrint("Fatura ID: $_faturaId");
 
             ScaffoldMessenger.of(context).showSnackBar(snackBarUrunEkle);
             (context as Element).reassemble();
@@ -528,7 +529,7 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
             data.map((model) => UrunBarkodBilgileri.fromJson(model)).toList();
         for (var element in urunBarkodBilgileri) {
           _urunId = element.urunId!;
-          print('urun Id:$_urunId');
+          debugPrint('urun Id:$_urunId');
         }
       });
     });

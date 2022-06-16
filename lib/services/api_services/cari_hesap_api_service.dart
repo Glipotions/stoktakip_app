@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
@@ -14,7 +15,7 @@ class CariHesapApiService {
     var myCariHesap = entity.toJson();
     var cariHesapBody = json.encode(myCariHesap);
     var res = await http.post(url, headers: header, body: cariHesapBody);
-    print(res.statusCode);
+    debugPrint("Cari Hesap Ekle Status: ${res.statusCode}");
     return res.statusCode;
   }
 

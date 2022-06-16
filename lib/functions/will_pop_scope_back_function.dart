@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Future<bool?> onBackPressed(BuildContext context, String detay) {
@@ -30,10 +29,3 @@ Future onBackPressedCancelApp(BuildContext context) async {
   return await onBackPressed(context,
       'Programdan Çıkış Yapmak Üzeresiniz!\nÇıkmak istediğinize emin misiniz?');
 }
-
-// onWillPop: () async {
-//         bool? result =
-//             await onBackPressedCancelFatura(context, "Fatura düzenlemesi");
-//         result ??= false;
-//         return result;
-//       },

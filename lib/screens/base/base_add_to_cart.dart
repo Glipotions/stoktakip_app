@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 
 abstract class BaseAddToPageScreen extends StatefulWidget {

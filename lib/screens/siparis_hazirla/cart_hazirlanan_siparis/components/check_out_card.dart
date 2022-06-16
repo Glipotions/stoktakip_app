@@ -7,7 +7,6 @@ import 'package:stoktakip_app/model/cari_hesap/cari_hesap.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
 
 class CheckoutCard extends StatefulWidget {

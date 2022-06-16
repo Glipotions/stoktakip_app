@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stoktakip_app/components/default_button.dart';
@@ -104,7 +103,7 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                   height: 150.0,
                   width: 30.0,
                   child: GestureDetector(
@@ -188,7 +187,7 @@ class _UrunBilgileriDuzenleAddState extends State<UrunBilgileriDuzenleAdd> {
             ),
           ),
         ),
-        bottomNavigationBar: CheckoutCard(),
+        bottomNavigationBar: const CheckoutCard(),
       ),
     );
   }

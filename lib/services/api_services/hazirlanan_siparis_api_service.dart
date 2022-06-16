@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
@@ -19,7 +20,7 @@ class HazirlananSiparisApiService {
     var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
-    print("HazirlananSiparis result kod: ${res.statusCode}");
+    debugPrint("HazirlananSiparis result kod: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -35,7 +36,7 @@ class HazirlananSiparisApiService {
     var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
-    print("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
+    debugPrint("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -57,7 +58,7 @@ class HazirlananSiparisApiService {
     var myEntity = entity.toJsonWithId();
     var deleteBody = json.encode(myEntity);
     var res = await http.delete(url, headers: header, body: deleteBody);
-    print("Ürün Bilgisi Silindi: ${res.statusCode}");
+    debugPrint("Ürün Bilgisi Silindi: ${res.statusCode}");
 
     // }
     return res.statusCode;
@@ -74,7 +75,7 @@ class HazirlananSiparisApiService {
     var myEntity = entity.toJsonWithId();
     var updateBody = json.encode(myEntity);
     var res = await http.patch(url, headers: header, body: updateBody);
-    print("Hazırlanan Sipariş Bilgisi Güncellendi: ${res.statusCode}");
+    debugPrint("Hazırlanan Sipariş Bilgisi Güncellendi: ${res.statusCode}");
 
     return res.statusCode;
   }

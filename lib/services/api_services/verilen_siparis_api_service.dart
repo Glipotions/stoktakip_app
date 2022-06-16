@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis_bilgileri.dart';
@@ -12,7 +13,7 @@ class VerilenSiparisApiService {
   static Future updateVerilenSiparisDurumById(int id) async {
     var url = Uri.parse('$updateVerilenSiparisDurumByIdUrl$id');
     var res = await http.patch(url);
-    print("Alınan Sipariş result kod: ${res.statusCode}");
+    debugPrint("Alınan Sipariş result kod: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -43,7 +44,7 @@ class VerilenSiparisApiService {
     var myEntity = entity.toJsonWithId();
     var updateBody = json.encode(myEntity);
     var res = await http.patch(url, headers: header, body: updateBody);
-    print("Alınan Sipariş Bilgisi Güncellendi: ${res.statusCode}");
+    debugPrint("Alınan Sipariş Bilgisi Güncellendi: ${res.statusCode}");
 
     return res.statusCode;
   }

@@ -38,7 +38,8 @@ final Map<String, WidgetBuilder> routes = {
   UrunBilgileriDuzenleAdd.routeName: (context) => UrunBilgileriDuzenleAdd(),
   HazirlananSiparisBilgileriAdd.routeName: (context) =>
       HazirlananSiparisBilgileriAdd(),
-  GelenSiparisBilgileriAdd.routeName: (context) => GelenSiparisBilgileriAdd(),
+  GelenSiparisBilgileriAdd.routeName: (context) =>
+      const GelenSiparisBilgileriAdd(),
 
   FaturaOlustur.routeName: (context) => const FaturaOlustur(),
   SiparisHazirla.routeName: (context) => const SiparisHazirla(),

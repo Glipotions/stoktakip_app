@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, unnecessary_null_comparison
 
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:stoktakip_app/const/text_const.dart';
@@ -29,7 +28,6 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
   var cariHesap1 = <CariHesap>[];
   Object? dropDownMenu;
   String? _selectedItem;
-  int? _selectedItemId;
   var searchController = TextEditingController();
   var aciklamaController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -108,26 +106,6 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                   SizedBox(
                     height: getProportionateScreenHeight(20),
                   ),
-                  // Text('data'),
-                  // DropdownButton(
-                  //   hint: const Text('Firma Seçiniz'),
-                  //   value: dropDownMenu,
-                  //   items: cariHesap.map((cari) {
-                  //     return DropdownMenuItem(
-                  //       value: cari.id,
-                  //       child: Text(cari.firma.toString()),
-                  //     );
-                  //   }).toList(),
-                  //   onChanged: (newValue) async {
-                  //     setState(() {
-                  //       dropDownMenu = newValue;
-                  //       cariHesapSingle.id = int.parse(dropDownMenu.toString());
-                  //       // await fetchCariHesapById(int.parse(dropDownMenu.toString()));
-                  //     });
-                  //     await getCariHesapById();
-                  //   },
-                  // ),
-
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -172,9 +150,9 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
 
                       onSuggestionTap: (value) async {
                         setState(() {
-                          _selectedItem = value.item.toString();
+                          _selectedItem = value.searchKey.toString();
                           cariHesapSingle.id = cariHesap
-                              .where((element) => element.firma == value)
+                              .where((element) => element == value.item)
                               .single
                               .id;
                           dropDownMenu = 1;
@@ -188,50 +166,6 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                           .toList(),
                     ),
                   ),
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(30),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.grey.withOpacity(0.2),
-                  //         blurRadius: 10,
-                  //         offset: Offset(0, 10),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: DropdownSearch<String>(
-                  //     //mode of dropdown
-                  //     mode: Mode.BOTTOM_SHEET,
-                  //     //to show search box
-                  //     showSearchBox: true,
-                  //     // showSelectedItem: true,
-                  //     //list of dropdown items
-                  //     showClearButton: true,
-                  //     items: _suggestions,
-                  //     label: "Firma Seçiniz..",
-                  //     onChanged: (value) async {
-                  //       if (value != null) {
-                  //         setState(() {
-                  //           _selectedItem = value;
-                  //           cariHesapSingle.id = cariHesap
-                  //               .where((element) => element.firma == value)
-                  //               .single
-                  //               .id;
-                  //           dropDownMenu = 1;
-                  //         });
-                  //         await getCariHesapById(cariHesapSingle.id!);
-                  //         print(cariHesapSingle.id);
-                  //       } else {
-                  //         _selectedItem = null;
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
-
                   SizedBox(
                     // key: UniqueKey(),
                     height: 40,
@@ -257,7 +191,6 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     width: double.infinity,
                     height: getProportionateScreenHeight(90),
@@ -356,44 +289,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                                 color: Colors.grey.shade800,
                                 fontWeight: FontWeight.w600),
                           ),
-
-                          // SizedBox(
-                          //   key: UniqueKey(),
-                          //   height: 25,
-                          //   // decoration: BoxDecorationSettings(),
-                          //   child: Container(
-                          //     alignment: Alignment.center,
-                          //     width: getProportionateScreenWidth(300),
-                          //     child: TextFormField(
-                          //       controller: aciklamaController,
-                          //       decoration: const InputDecoration(
-                          //         labelText: "Açıklama Giriniz.",
-                          //         icon: Icon(Icons.comment),
-                          //         hintText: "Sayı Giriniz.",
-                          //       ),
-                          //       style: kMetinStili,
-                          //     ),
-                          //   ),
-                          // )
                         ],
                       ),
-
-                // )
-                // MaterialButton(
-                //   onPressed: () {},
-                //   color: Colors.black,
-                //   minWidth: 50,
-                //   height: 50,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(50),
-                //   ),
-                //   padding: const EdgeInsets.all(0),
-                //   child: const Icon(
-                //     Icons.arrow_forward_ios,
-                //     color: Colors.blueGrey,
-                //     size: 24,
-                //   ),
-                // )
               ],
             ),
           ),

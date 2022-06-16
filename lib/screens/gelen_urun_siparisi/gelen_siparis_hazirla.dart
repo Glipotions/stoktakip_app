@@ -3,11 +3,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:searchfield/searchfield.dart';
+import 'package:stoktakip_app/components/my_search_field.dart';
+import 'package:stoktakip_app/components/mycontainer.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
+import 'package:stoktakip_app/model/depo/depo.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis.dart';
 import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis.dart';
 import 'package:stoktakip_app/model/verilen_siparis/verilen_siparis_bilgileri.dart';
 import 'package:stoktakip_app/screens/gelen_urun_siparisi/siparisi_goruntule/gelen_siparisi_goruntule_list.dart';
+import 'package:stoktakip_app/services/api_services/depo_api_service.dart';
 import 'package:stoktakip_app/services/api_services/verilen_siparis_api_service.dart';
 import '../../size_config.dart';
 import 'gelen_siparis_bilgileri/gelen_siparis_bilgileri_add.dart';
@@ -23,16 +27,31 @@ class GelenSiparisHazirla extends StatefulWidget {
 
 class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
   List<VerilenSiparis> verilenSiparisler = [];
-  // List<VerilenSiparisBilgileri> verilenSiparisBilgileri = [];
-
-  Object? dropDownMenu;
+  List<Depo> depolar = [];
+  Object? dropDownMenu, dropDownDepo;
   String? _selectedItem;
   // int? _selectedItemId;
-  var searchController = TextEditingController();
-  var aciklamaController = TextEditingController();
+  TextEditingController searchDepoController = TextEditingController(),
+      aciklamaController = TextEditingController(),
+      searchGelenSiparisController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
   bool isSwitched = false;
   final keyRefresh = GlobalKey<RefreshIndicatorState>();
+
+  Future<List> _getDepo() async {
+    await DepoApiService.fetchDepo().then((response) {
+      setState(() {
+        dynamic list = json.decode(response.body);
+        List data = list;
+        depolar = data
+            .map((model) => Depo.fromJson(model))
+            .where((element) => element.durum == true)
+            .toList();
+      });
+    });
+    return depolar;
+  }
 
   Future<List> _getVerilenSiparisler() async {
     await VerilenSiparisApiService.fetchVerilenSiparis().then((response) {
@@ -86,6 +105,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
   }
 
   Future<void> initStateAsync() async {
+    await _getDepo();
     await _getVerilenSiparisler();
     if (gelenSiparisBilgileriList.isNotEmpty ||
         gelenSiparisBilgileriGetIdList.isNotEmpty) {
@@ -135,7 +155,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
 
   @override
   void dispose() {
-    searchController.dispose();
+    searchGelenSiparisController.dispose();
     aciklamaController.dispose();
     super.dispose();
   }
@@ -151,235 +171,234 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          body: Container(
-            margin: const EdgeInsets.all(2),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    height: getProportionateScreenHeight(20),
-                  ),
-                  SizedBox(
-                    // height: getProportionateScreenHeight(10),
-                    child: Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow[300],
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 10,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Spacer(
-                            flex: 1,
-                          ),
-                          Expanded(
-                            flex: 8,
-                            child: Text(
-                              isSwitched == true
-                                  ? "CARİNİN TÜM VERİLEN SİPARİŞLERİ"
-                                  : "SEÇİLİ VERİLEN SİPARİŞ",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w600),
+          body: verilenSiparisler.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              // : depolar.isEmpty
+              //     ? const Center(child: CircularProgressIndicator())
+              : Container(
+                  margin: const EdgeInsets.all(2),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          height: getProportionateScreenHeight(20),
+                        ),
+                        SizedBox(
+                          // height: getProportionateScreenHeight(10),
+                          child: Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[300],
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Switch(
-                              value: isSwitched,
-                              onChanged: (value) async {
-                                setState(() {
-                                  isSwitched = value;
-                                });
-                                verilenSiparisBilgileriList.clear();
+                            child: Row(
+                              children: [
+                                const Spacer(
+                                  flex: 1,
+                                ),
+                                Expanded(
+                                  flex: 8,
+                                  child: Text(
+                                    isSwitched == true
+                                        ? "CARİNİN TÜM VERİLEN SİPARİŞLERİ"
+                                        : "SEÇİLİ VERİLEN SİPARİŞ",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade800,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Switch(
+                                    value: isSwitched,
+                                    onChanged: (value) async {
+                                      setState(() {
+                                        isSwitched = value;
+                                      });
+                                      verilenSiparisBilgileriList.clear();
 
-                                if (isSwitched && searchController != null) {
-                                  await getVerilenSiparisBilgileriByCariId(
-                                      verilenSiparisSingle.cariHesapId!);
-                                } else if (!isSwitched &&
-                                    searchController != null) {
-                                  await getVerilenSiparisBilgileriById(
-                                      verilenSiparisSingle.id!);
-                                }
-                                if (verilenSiparisBilgileriList.isEmpty) {
-                                  const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              },
-                              activeTrackColor: Colors.lightGreenAccent,
-                              activeColor: Colors.green,
+                                      if (isSwitched &&
+                                          searchGelenSiparisController !=
+                                              null) {
+                                        await getVerilenSiparisBilgileriByCariId(
+                                            verilenSiparisSingle.cariHesapId!);
+                                      } else if (!isSwitched &&
+                                          searchGelenSiparisController !=
+                                              null) {
+                                        await getVerilenSiparisBilgileriById(
+                                            verilenSiparisSingle.id!);
+                                      }
+                                      if (verilenSiparisBilgileriList.isEmpty) {
+                                        const Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                    activeTrackColor: Colors.lightGreenAccent,
+                                    activeColor: Colors.green,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 10),
+                        ),
+                        MyContainer(
+                          renk: const Color.fromARGB(255, 220, 226, 226),
+                          child: MySearchField(
+                            controller: searchDepoController,
+                            hint: "Giriş Deposu Seçiniz",
+                            onSuggestionTap: (value) async {
+                              setState(() {
+                                var depoEntity = depolar
+                                    .where((element) => element == value.item)
+                                    .single;
+                                depoGelenSiparis.depoAdi = depoEntity.depoAdi;
+                                depoGelenSiparis.id = depoEntity.id;
+                              });
+                            },
+                            suggestions: depolar
+                                .map((e) =>
+                                    SearchFieldListItem(e.depoAdi!, item: e))
+                                .toList(),
+                          ),
+                        ),
+                        MyContainer(
+                          renk: Colors.white,
+                          child: MySearchField(
+                            hint: "Gelen Sipariş Ara",
+                            controller: searchGelenSiparisController,
+                            onSuggestionTap: (value) async {
+                              setState(() {
+                                _selectedItem = value.searchKey.toString();
+                                var verilenSiparisEntity = verilenSiparisler
+                                    .where((element) => element == value.item)
+                                    .single;
+                                verilenSiparisSingle.id =
+                                    verilenSiparisEntity.id;
+                                // verilenSiparisSingle.id = value;
+                                verilenSiparisSingle.cariHesapId =
+                                    verilenSiparisEntity.cariHesapId;
+                                verilenSiparisSingle.siparisTanimi =
+                                    value.searchKey.toString();
+                                verilenSiparisSingle.aciklama =
+                                    verilenSiparisEntity.aciklama;
+
+                                gelenSiparisSingle = GelenSiparis(
+                                  aciklama: verilenSiparisEntity.aciklama,
+                                  verilenSiparisId: verilenSiparisEntity.id,
+                                  siparisAdi:
+                                      verilenSiparisEntity.siparisTanimi,
+                                  durum: true,
+                                  isSeciliSiparis: !isSwitched,
+                                );
+
+                                dropDownMenu = 1;
+                              });
+                              verilenSiparisBilgileriList.clear();
+                              gelenSiparisBilgileriList.clear();
+                              gelenSiparisBilgileriGetIdList.clear();
+                              if (isSwitched &&
+                                  searchGelenSiparisController != null) {
+                                await getVerilenSiparisBilgileriByCariId(
+                                    verilenSiparisSingle.cariHesapId!);
+                              } else if (!isSwitched &&
+                                  searchGelenSiparisController != null) {
+                                await getVerilenSiparisBilgileriById(
+                                    verilenSiparisSingle.id!);
+                              }
+                              if (verilenSiparisBilgileriList.isEmpty) {
+                                const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
+                            suggestions: verilenSiparisler
+                                .map((e) => SearchFieldListItem(
+                                    e.siparisTanimi!,
+                                    item: e))
+                                .toList(),
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: getProportionateScreenHeight(90),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: ElevatedButton(
+                                child: const Text("Gelen Siparişi Gir"),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.brown,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
+                                onPressed: () {
+                                  //searchController.text.isEmpty
+                                  if (dropDownMenu == null) {
+                                  } else {
+                                    gelenSiparisDurum = true;
+                                    searchGelenSiparisController.clear();
+                                    // aciklamaController.clear();
+                                    dropDownMenu = null;
+                                    Navigator.pushNamed(context,
+                                        GelenSiparisBilgileriAdd.routeName);
+                                  }
+                                }),
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: getProportionateScreenHeight(90),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.lightBlue,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
+                                child: const Text("Seçilen Siparişi Gör"),
+                                onPressed: () {
+                                  if (dropDownMenu == null) {
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context,
+                                        ListGelenSiparisiGoruntuleTable
+                                            .routeName);
+                                  }
+                                }),
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: getProportionateScreenHeight(90),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.cyan,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
+                                child: const Text("Gelen Siparişler Listesi"),
+                                onPressed: () {
+                                  aciklamaController.clear();
+                                  Navigator.pushNamed(context,
+                                      ListScreenGelenSiparis.routeName);
+                                }),
+                          ),
                         ),
                       ],
                     ),
-                    child: SearchField(
-                      hint: 'Ara',
-                      controller: searchController,
-                      suggestionState: Suggestion.expand,
-                      searchInputDecoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.blueGrey.shade200,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: Colors.blue.withOpacity(0.8),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      maxSuggestionsInViewPort: 6,
-                      itemHeight: 50,
-                      suggestionsDecoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onSuggestionTap: (value) async {
-                        setState(() {
-                          _selectedItem = value.item.toString();
-                          var verilenSiparisEntity = verilenSiparisler
-                              .where((element) =>
-                                  element.siparisTanimi == value.searchKey)
-                              .single;
-                          verilenSiparisSingle.id = verilenSiparisEntity.id;
-                          verilenSiparisSingle.cariHesapId =
-                              verilenSiparisEntity.cariHesapId;
-                          verilenSiparisSingle.siparisTanimi =
-                              value.item.toString();
-                          verilenSiparisSingle.aciklama =
-                              verilenSiparisEntity.aciklama;
-
-                          gelenSiparisSingle = GelenSiparis(
-                            aciklama: verilenSiparisEntity.aciklama,
-                            verilenSiparisId: verilenSiparisEntity.id,
-                            siparisAdi: verilenSiparisEntity.siparisTanimi,
-                            durum: true,
-                            isSeciliSiparis: !isSwitched,
-                          );
-
-                          dropDownMenu = 1;
-                        });
-                        verilenSiparisBilgileriList.clear();
-                        gelenSiparisBilgileriList.clear();
-                        gelenSiparisBilgileriGetIdList.clear();
-                        if (isSwitched && searchController != null) {
-                          await getVerilenSiparisBilgileriByCariId(
-                              verilenSiparisSingle.cariHesapId!);
-                        } else if (!isSwitched && searchController != null) {
-                          await getVerilenSiparisBilgileriById(
-                              verilenSiparisSingle.id!);
-                        }
-                        if (verilenSiparisBilgileriList.isEmpty) {
-                          const Center(child: CircularProgressIndicator());
-                        }
-                      },
-                      // suggestions: _suggestions,
-                      suggestions: verilenSiparisler
-                          .map((e) =>
-                              SearchFieldListItem(e.siparisTanimi!, item: e))
-                          .toList(),
-                    ),
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: getProportionateScreenHeight(90),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                          child: const Text("Gelen Siparişi Gir"),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.brown,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          onPressed: () {
-                            //searchController.text.isEmpty
-                            if (dropDownMenu == null) {
-                            } else {
-                              gelenSiparisDurum = true;
-                              searchController.clear();
-                              // aciklamaController.clear();
-                              dropDownMenu = null;
-                              Navigator.pushNamed(
-                                  context, GelenSiparisBilgileriAdd.routeName);
-                            }
-                          }),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: getProportionateScreenHeight(90),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.lightBlue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          child: const Text("Seçilen Siparişi Gör"),
-                          onPressed: () {
-                            if (dropDownMenu == null) {
-                            } else {
-                              Navigator.pushNamed(context,
-                                  ListGelenSiparisiGoruntuleTable.routeName);
-                            }
-                          }),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: getProportionateScreenHeight(90),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.cyan,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          child: const Text("Gelen Siparişler Listesi"),
-                          onPressed: () {
-                            aciklamaController.clear();
-                            Navigator.pushNamed(
-                                context, ListScreenGelenSiparis.routeName);
-                          }),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
           bottomNavigationBar: Container(
             height: getProportionateScreenHeight(70),
             padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),

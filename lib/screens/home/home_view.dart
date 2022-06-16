@@ -28,7 +28,7 @@ class _HomeViewPageState extends State<HomeViewPage> {
         timeBackPressed = DateTime.now();
 
         if (isExitWarning) {
-          final message = 'Programdan çıkış yapmak için bir daha tıklayınız.';
+          const message = 'Programdan çıkış yapmak için bir daha tıklayınız.';
           // Fluttertoast.showToast(msg: message, fontSize: 18);
           return false;
         } else {
@@ -175,7 +175,7 @@ class _HomeViewPageState extends State<HomeViewPage> {
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
+          children: const [],
         )
       ],
     );

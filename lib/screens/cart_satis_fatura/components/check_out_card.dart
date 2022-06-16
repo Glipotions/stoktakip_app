@@ -11,11 +11,8 @@ import 'package:stoktakip_app/change_notifier_model/kdv_data.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
 import 'package:stoktakip_app/screens/shared_settings/settings_page.dart';
-import 'package:stoktakip_app/services/api_services/cari_hesap_api_service.dart';
-import 'package:stoktakip_app/services/api_services/kasa_api_service.dart';
 import 'package:stoktakip_app/services/api_services/nakit_api_service.dart';
 import 'package:stoktakip_app/services/api_services/satis_fatura_api_service.dart';
-import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/services/api_services/urun_bilgileri_api_service.dart';
 
 import '../../../size_config.dart';
@@ -65,7 +62,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   double _iskontoOrani = 0;
   var kdvController = TextEditingController();
-  var _iskontoController = TextEditingController();
+  final _iskontoController = TextEditingController();
 
   @override
   void dispose() {

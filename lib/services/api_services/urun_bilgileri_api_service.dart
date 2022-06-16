@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/satis_fatura/urun_bilgileri.dart';
@@ -26,7 +27,7 @@ class UrunBilgileriApiService {
     var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
-    print("Ürün Bilgisi Ekle: ${res.statusCode}");
+    debugPrint("Ürün Bilgisi Ekle: ${res.statusCode}");
     return res.statusCode;
   }
 
@@ -40,7 +41,7 @@ class UrunBilgileriApiService {
     var myEntity = entity.toJsonWithId();
     var deleteBody = json.encode(myEntity);
     var res = await http.delete(url, headers: header, body: deleteBody);
-    print("Ürün Bilgisi Silindi: ${res.statusCode}");
+    debugPrint("Ürün Bilgisi Silindi: ${res.statusCode}");
 
     // }
     return res.statusCode;
@@ -56,7 +57,7 @@ class UrunBilgileriApiService {
     var myEntity = entity.toJsonWithId();
     var updateBody = json.encode(myEntity);
     var res = await http.patch(url, headers: header, body: updateBody);
-    print("Ürün Bilgisi Güncellendi: ${res.statusCode}");
+    debugPrint("Ürün Bilgisi Güncellendi: ${res.statusCode}");
 
     return res.statusCode;
   }

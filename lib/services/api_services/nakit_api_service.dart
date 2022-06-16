@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/const/api_const.dart';
 import 'package:stoktakip_app/model/nakit/nakit.dart';
@@ -14,7 +15,7 @@ class NakitApiService {
     var myEntity = entity.toJson();
     var entityBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: entityBody);
-    print("Nakit Ekle: ${res.statusCode}");
+    debugPrint("Nakit Ekle: ${res.statusCode}");
     return res.statusCode;
   }
 }

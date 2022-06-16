@@ -1,5 +1,6 @@
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis.dart';
 import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
+import 'package:stoktakip_app/model/depo/depo.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
@@ -81,3 +82,5 @@ GelenSiparis gelenSiparisEdit = GelenSiparis();
 List<GelenSiparisBilgileri> gelenSiparisBilgileriList = [];
 List<GelenSiparisBilgileri> gelenSiparisBilgileriGetIdList = [];
 List<GelenSiparisBilgileri> gelenSiparisBilgileriDeleteList = [];
+
+Depo depoGelenSiparis = Depo();

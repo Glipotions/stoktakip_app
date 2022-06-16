@@ -79,11 +79,7 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
   // List<UrunBilgileri> gelenSiparisBilgileriList = [];
   var urunBarkodBilgileri = <UrunBarkodBilgileri>[];
   var urun = <Urun>[];
-  int? _urunId,
-      _miktar,
-      _tutar,
-      _faturaId = buildId(),
-      _verilenSiparisBilgisiId;
+  int? _urunId, _miktar, _faturaId = buildId(), _verilenSiparisBilgisiId;
   double? _birimFiyat, _kdvHaricTutar, _kdvTutari;
   bool checkUrunItBeAdded = false;
   // int kdvHaricTutar = _miktar * _birimFiyat;
@@ -521,7 +517,6 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
               paketIciAdetController.clear();
               paketSayisiController.clear();
             }
-            print("Fatura ID: $_faturaId");
           },
         ),
       ),
@@ -546,7 +541,6 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
             data.map((model) => UrunBarkodBilgileri.fromJson(model)).toList();
         for (var element in urunBarkodBilgileri) {
           _urunId = element.urunId!;
-          print('urun Id:$_urunId');
         }
       });
     });

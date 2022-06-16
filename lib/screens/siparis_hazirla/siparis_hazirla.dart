@@ -276,8 +276,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                         setState(() {
                           _selectedItem = value.searchKey;
                           var alinanSiparisEntity = alinanSiparisler
-                              .where((element) =>
-                                  element.siparisTanimi == value.searchKey)
+                              .where((element) => element == value.item)
                               .single;
                           alinanSiparisSingle.id = alinanSiparisEntity.id;
                           alinanSiparisSingle.cariHesapId =

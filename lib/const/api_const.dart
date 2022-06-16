@@ -20,19 +20,6 @@ String cariHesapGetUrl = '${mainUrl}CariHesap/getall';
 String cariHesapGetByIdUrl = '${mainUrl}CariHesap/getbyid?id=';
 Uri cariHesapGetUri = Uri.parse('${mainUrl}CariHesap/getall');
 
-String cariHesapHareketleriAddUrl(
-    int cariHesapId, int hareketId, String durum) {
-  return '${mainUrl}CariHesapHareketleri?cariHesapId=$cariHesapId&hareketId=$hareketId&durum=$durum';
-}
-
-String kasaHareketleriAddUrl(int kasaId, int hareketId, String durum) {
-  return '${mainUrl}KasaHareketleri?kasaId=$kasaId&hareketId=$hareketId&durum=$durum';
-}
-
-String kasaUpdateBakiyeUrl(int id, double bakiye) {
-  return '${mainUrl}Kasa/updatekasabakiyebyid?id=$id&bakiye=$bakiye';
-}
-
 String kasaGetByIdUrl(int id) {
   return '${mainUrl}Kasa/getbyid?id=$id';
 }
@@ -63,9 +50,6 @@ Uri urunBarkodBilgileriGetUrunUri =
 String urunGetByIdUrl = '${mainUrl}Urun/getbyid?id=';
 String urunGetByCodeUrl = '${mainUrl}Urun/getbycode?code=';
 String updateUrunById = '${mainUrl}Urun/updateurunbyid?id=';
-
-String updateCariHesapBakiyeById =
-    '${mainUrl}CariHesap/updatecaribakiyebyid?id=';
 
 Uri fetchAlinanSiparisUrl = Uri.parse('${mainUrl}AlinanSiparis/getall');
 String updateAlinanSiparisDurumByIdUrl =
@@ -117,3 +101,9 @@ String fetchVerilenSiparisBilgileriByCariIdControlUrl =
     '${mainUrl}VerilenSiparisBilgileri/getallbycaricontrol?id=';
 String updateVerilenSiparisBilgileriUrl =
     '${mainUrl}VerilenSiparisBilgileri/update?';
+
+String depoGetByIdUrl(int id) {
+  return '${mainUrl}Depo/getbyid?id=$id';
+}
+
+Uri depoGetUrl = Uri.parse('${mainUrl}Depo/getall');

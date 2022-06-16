@@ -112,6 +112,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                         .first.gelenSiparisId;
 
                                 gelenSiparisSingle.tarih = DateTime.now();
+                                gelenSiparisSingle.depoId = depoGelenSiparis.id;
                                 siparisAciklama != null
                                     ? gelenSiparisSingle.aciklama =
                                         siparisAciklama

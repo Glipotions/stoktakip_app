@@ -18,6 +18,7 @@ class GelenSiparis {
   bool? durum = true;
   bool? isSeciliSiparis = true;
   int? cariHesapId;
+  int? depoId;
 
   GelenSiparis({
     this.kod,
@@ -31,6 +32,7 @@ class GelenSiparis {
     this.durum,
     this.isSeciliSiparis,
     this.cariHesapId,
+    this.depoId,
   });
 
   factory GelenSiparis.fromJson(Map<String, dynamic> json) => GelenSiparis(
@@ -45,6 +47,7 @@ class GelenSiparis {
         durum: json["durum"],
         isSeciliSiparis: json["isSeciliSiparis"],
         cariHesapId: json["cariHesapId"],
+        depoId: json["depoId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -59,5 +62,6 @@ class GelenSiparis {
         "durum": durum,
         "isSeciliSiparis": isSeciliSiparis,
         "cariHesapId": cariHesapId,
+        "depoId": depoId,
       };
 }

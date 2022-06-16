@@ -520,7 +520,7 @@ class _HazirlananSiparisBilgileriAddState
               paketIciAdetController.clear();
               paketSayisiController.clear();
             }
-            print("Fatura ID: $_faturaId");
+            debugPrint("Fatura ID: $_faturaId");
           },
         ),
       ),
@@ -545,7 +545,7 @@ class _HazirlananSiparisBilgileriAddState
             data.map((model) => UrunBarkodBilgileri.fromJson(model)).toList();
         for (var element in urunBarkodBilgileri) {
           _urunId = element.urunId!;
-          print('urun Id:$_urunId');
+          debugPrint('urun Id:$_urunId');
         }
       });
     });

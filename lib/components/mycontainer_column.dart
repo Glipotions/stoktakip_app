@@ -13,11 +13,11 @@ class MyContainerColumn extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 60,
+          size: 40,
           color: Colors.black54,
         ),
         const SizedBox(
-          height: 10,
+          height: 8,
         ),
         Text(
           yazi!,
