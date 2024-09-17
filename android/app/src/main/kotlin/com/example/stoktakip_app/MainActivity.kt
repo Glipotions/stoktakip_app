@@ -1,4 +1,4 @@
-package com.example.stoktakip_app
+package com.stoktakip.local.app
 
 import io.flutter.embedding.android.FlutterActivity
 
