@@ -19,7 +19,7 @@ class MySearchField<T> extends StatelessWidget {
       hint: hint,
       controller: controller,
       suggestionState: Suggestion.expand,
-      searchInputDecoration: InputDecoration(
+      searchInputDecoration: SearchInputDecoration( // Changed InputDecoration to SearchInputDecoration
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.blueGrey.shade200,
@@ -37,9 +37,8 @@ class MySearchField<T> extends StatelessWidget {
       ),
       maxSuggestionsInViewPort: 6,
       itemHeight: getProportionateScreenHeight(50),
-      suggestionsDecoration: BoxDecoration(
-        color: const Color.fromARGB(255, 247, 232, 232),
-        borderRadius: BorderRadius.circular(10),
+          suggestionsDecoration: SuggestionDecoration( // Changed from BoxDecoration to SuggestionDecoration
+        color:const Color.fromARGB(255, 247, 232, 232),
       ),
       suggestions: suggestions,
       onSuggestionTap: onSuggestionTap,

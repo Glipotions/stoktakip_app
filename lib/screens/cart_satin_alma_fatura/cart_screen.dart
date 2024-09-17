@@ -35,7 +35,7 @@ class CartScreenSatinAlmaFatura extends StatelessWidget {
               children: [
                 TextSpan(
                   text: "${urunBilgileriSatinAlmaList.length} ürün",
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
                     text: '  Sepeti Temizle',

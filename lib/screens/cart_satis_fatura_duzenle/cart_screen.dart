@@ -35,7 +35,7 @@ class CartScreenSatisFaturaDuzenle extends StatelessWidget {
               children: [
                 TextSpan(
                   text: "${urunBilgileriGetIdList.length} ürün",
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
                     text: '  Sepeti Temizle',

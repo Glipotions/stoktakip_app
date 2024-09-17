@@ -238,7 +238,8 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
               icon: const Icon(Icons.camera_alt_outlined),
               label: Text('Tara', style: kFontStili(12)),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.amber, onPrimary: Colors.black),
+                  foregroundColor: Colors.amber,
+                  backgroundColor: Colors.black),
             ),
           )
         ],
@@ -655,8 +656,8 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
     // int fark = check.kalanMiktar == null
     //     ? check.miktar - int.parse(adetController.text)
     //     : check.kalanMiktar! - int.parse(adetController.text);
-    int olmasiGerekenMiktar = check.sipariseGoreKalanAdet!;
-    int fark = check.sipariseGoreKalanAdet! - int.parse(adetController.text);
+    double olmasiGerekenMiktar = check.sipariseGoreKalanAdet!;
+    double fark = check.sipariseGoreKalanAdet! - double.parse(adetController.text);
     kalanMiktarDegistir() {
       check.faturayaGoreKalan = fark;
       check.sipariseGoreKalanAdet = fark;

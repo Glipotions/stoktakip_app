@@ -37,7 +37,7 @@ class CartScreenGelenSiparis extends StatelessWidget {
                 TextSpan(
                   text:
                       "${gelenSiparisDurum == true ? gelenSiparisBilgileriList.length : gelenSiparisBilgileriGetIdList.length} ürün",
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
                     text: '  Sepeti Temizle',

@@ -335,7 +335,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                             child: ElevatedButton(
                                 child: const Text("Gelen Siparişi Gir"),
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.brown,
+                                  backgroundColor: Colors.brown,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15)),
                                 ),
@@ -360,7 +360,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                             padding: const EdgeInsets.all(12),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.lightBlue,
+                                  backgroundColor: Colors.lightBlue,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15)),
                                 ),
@@ -383,7 +383,7 @@ class _GelenSiparisHazirlaState extends State<GelenSiparisHazirla> {
                             padding: const EdgeInsets.all(12),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.cyan,
+                                  backgroundColor: Colors.cyan,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15)),
                                 ),

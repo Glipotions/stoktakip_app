@@ -51,7 +51,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     padding: const EdgeInsets.all(8),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.lightBlue,
+                          backgroundColor: Colors.lightBlue,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),

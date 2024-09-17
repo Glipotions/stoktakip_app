@@ -55,7 +55,7 @@ class CartCard extends StatelessWidget {
                 children: [
                   TextSpan(
                       text: " ${cart.miktar}  | ",
-                      style: Theme.of(context).textTheme.bodyText1),
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const TextSpan(
                     text: " İlave Edilmiş: ",
                     style: TextStyle(
@@ -63,7 +63,7 @@ class CartCard extends StatelessWidget {
                   ),
                   TextSpan(
                       text: " ${cart.ilaveEdilmis ?? 0}",
-                      style: Theme.of(context).textTheme.bodyText1),
+                      style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
             )

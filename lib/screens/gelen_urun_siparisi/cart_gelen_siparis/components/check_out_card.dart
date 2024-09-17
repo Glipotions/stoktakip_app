@@ -91,7 +91,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
                             if (_firstPress) {
                               _firstPress = false;
-                              int toplam = 0;
+                              double toplam = 0;
                               returnDurum = false;
                               List<String> eksikUrunler = [];
                               for (var item in verilenSiparisBilgileriList) {
@@ -136,7 +136,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                                 }
 
                                 if (gelenSiparisSingle.isSeciliSiparis!) {
-                                  int toplam = 0;
+                                  double toplam = 0;
                                   for (var item
                                       in verilenSiparisBilgileriList) {
                                     toplam += item.sipariseGoreKalanAdet!;
@@ -190,7 +190,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                             if (_firstPress) {
                               _firstPress = false;
 
-                              int toplam = 0, kalanToplam = 0;
+                              double toplam = 0, kalanToplam = 0;
                               returnDurum = false;
                               List<String> eksikUrunler = [];
                               for (var item in verilenSiparisBilgileriList) {
@@ -312,7 +312,7 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   checkEksikOlanUrun(
     BuildContext context,
-    int toplam,
+    double toplam,
     List<String> urunler,
   ) async {
     if (toplam > 0) {

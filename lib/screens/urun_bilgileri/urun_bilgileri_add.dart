@@ -231,7 +231,9 @@ class _UrunBilgileriAddState extends State<UrunBilgileriAdd> {
               icon: const Icon(Icons.camera_alt_outlined),
               label: Text('Tara', style: kFontStili(12)),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.amber, onPrimary: Colors.black),
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+              ),
             ),
           )
         ],

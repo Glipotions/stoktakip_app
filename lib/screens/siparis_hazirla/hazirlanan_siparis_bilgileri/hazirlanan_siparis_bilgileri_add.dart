@@ -237,7 +237,7 @@ class _HazirlananSiparisBilgileriAddState
               icon: const Icon(Icons.camera_alt_outlined),
               label: Text('Tara', style: kFontStili(12)),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.amber, onPrimary: Colors.black),
+                  foregroundColor: Colors.amber, backgroundColor: Colors.black),
             ),
           )
         ],
@@ -601,15 +601,22 @@ class _HazirlananSiparisBilgileriAddState
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
-              content: const Text('ÜRÜNÜ EKLEYEMEZSİNİZ!',
+              content: const Text('Ürünü Yine de Eklemek İstiyor musunuz?',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'İPTAL');
-                    checkUrunItBeAdded = false;
+                    Navigator.pop(context, 'HAYIR');
+                    checkUrunItBeAdded = false; // Ürün eklenmeyecek
                   },
-                  child: const Text('İPTAL'),
+                  child: const Text('HAYIR'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'EVET');
+                    checkUrunItBeAdded = true; // Ürün eklenebilir
+                  },
+                  child: const Text('EVET'),
                 ),
               ],
             );
@@ -653,22 +660,23 @@ class _HazirlananSiparisBilgileriAddState
     }
 
     var check = alinanSiparisBilgileriList
-        .singleWhere((element) => element.urunId == id);
+        .where((element) => element.urunId == id)
+        .firstOrNull;
+    int fark = 0;
+    int olmasiGerekenMiktar = 0;
+    if (check != null) {
+      olmasiGerekenMiktar = check.kalanAdet!;
+      fark = check.kalanAdet! - int.parse(adetController.text);
 
-    // int olmasiGerekenMiktar =
-    //     check.kalanMiktar == null ? check.miktar : check.kalanMiktar!;
-    // int fark = check.kalanMiktar == null
-    //     ? check.miktar - int.parse(adetController.text)
-    //     : check.kalanMiktar! - int.parse(adetController.text);
-    int olmasiGerekenMiktar = check.kalanAdet!;
-    int fark = check.kalanAdet! - int.parse(adetController.text);
-    kalanMiktarDegistir() {
-      check.kalanMiktar = fark;
-      check.kalanAdet = fark;
-      // if (fark <= 0) check.durum = false;
+      _alinanSiparisBilgisiId = check.id;
     }
-
-    _alinanSiparisBilgisiId = check.id;
+    
+    kalanMiktarDegistir() {
+      if (check != null) {
+        check.kalanMiktar = fark;
+        check.kalanAdet = fark;
+      }
+    }
 
     if (fark != 0) {
       await showDialog(

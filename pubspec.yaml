@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <=3.4.3"
 
   # sdk: ">=2.12.0 <3.0.0"
 
@@ -40,20 +40,20 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.9
   flutter_barcode_scanner: ^2.0.0
-  flutter_svg: ^0.23.0+1
+  flutter_svg: ^2.0.10+1
   provider: ^6.0.1
   # dropdown_search: ^2.0.1
   dropdown_search: ^5.0.2
   # searchfield: ^0.5.6
-  searchfield: ^0.6.5
+  searchfield: ^1.1.0
   path_provider: ^2.0.8
   open_file: ^3.2.1
-  syncfusion_flutter_pdf: ^19.4.48-beta
+  syncfusion_flutter_pdf: ^26.2.14
   universal_html: ^2.0.8
-  pdf: ^3.7.1
-  jiffy: ^5.0.0
-  intl: ^0.17.0
-  font_awesome_flutter: ^9.2.0
+  pdf: ^3.11.1
+  jiffy: ^6.3.1
+  intl: ^0.19.0
+  font_awesome_flutter: ^10.7.0
   # fluttertoast: ^8.0.7
   # google_fonts: ^2.2.0
 
@@ -66,7 +66,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^4.0.0
   
 
 # For information on the generic Dart part of this file, see the

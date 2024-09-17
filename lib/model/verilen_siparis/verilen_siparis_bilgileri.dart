@@ -5,7 +5,7 @@ class VerilenSiparisBilgileri {
   int urunId;
 
   int verilenSiparisId;
-  int miktar;
+  double miktar;
   double birimFiyat;
   double dovizliBirimFiyat;
   double kdvHaricTutar;
@@ -21,8 +21,8 @@ class VerilenSiparisBilgileri {
   bool? delete = false;
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
-  int? faturayaGoreKalan;
-  int? sipariseGoreKalanAdet;
+  double? faturayaGoreKalan;
+  double? sipariseGoreKalanAdet;
   bool durum;
 
   // ByteData? resim;

@@ -18,6 +18,7 @@ class HazirlananSiparisBilgileri {
   int? dovizTuru = 1;
   double? iskontoOrani = 0;
   int? alinanSiparisBilgileriId;
+  int? familyAlinanSiparisBilgileriId;
 
   int? ilaveEdilmis;
 
@@ -43,6 +44,7 @@ class HazirlananSiparisBilgileri {
     this.iskontoOrani,
     this.dovizTuru,
     this.ilaveEdilmis,
+    this.familyAlinanSiparisBilgileriId
     // this.resim,
   });
 
@@ -65,6 +67,7 @@ class HazirlananSiparisBilgileri {
         update: json['update'],
         delete: json['delete'],
         iskontoOrani: json['iskontoOrani'],
+        familyAlinanSiparisBilgileriId: json['iskontoOrani']
         // resim: json['resim'],
       );
 
@@ -87,6 +90,7 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        "familyAlinanSiparisBilgileriId":familyAlinanSiparisBilgileriId
         // "resim": resim,
       };
 
@@ -109,6 +113,7 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
+        "familyAlinanSiparisBilgileriId":familyAlinanSiparisBilgileriId
         // "resim": resim,
       };
 }

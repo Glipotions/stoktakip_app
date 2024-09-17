@@ -249,7 +249,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       hint: 'Ara',
                       controller: searchController,
                       suggestionState: Suggestion.expand,
-                      searchInputDecoration: InputDecoration(
+                      searchInputDecoration: SearchInputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blueGrey.shade200,
@@ -267,7 +267,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       ),
                       maxSuggestionsInViewPort: 6,
                       itemHeight: 50,
-                      suggestionsDecoration: BoxDecoration(
+                      suggestionsDecoration: SuggestionDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -356,7 +356,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       child: ElevatedButton(
                           child: const Text("Sipariş Hazırla"),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.brown,
+                            backgroundColor: Colors.brown,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),
@@ -381,7 +381,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.lightBlue,
+                            backgroundColor: Colors.lightBlue,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),
@@ -404,7 +404,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.cyan,
+                            backgroundColor: Colors.cyan,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),

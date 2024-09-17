@@ -125,7 +125,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       controller: searchController,
                       // suggestionState: SuggestionState.enabled,
                       suggestionState: Suggestion.expand,
-                      searchInputDecoration: InputDecoration(
+                      searchInputDecoration: SearchInputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blueGrey.shade200,
@@ -143,8 +143,8 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       ),
                       maxSuggestionsInViewPort: 6,
                       itemHeight: 50,
-                      suggestionsDecoration: BoxDecoration(
-                        color: Colors.white,
+                      suggestionsDecoration: SuggestionDecoration(
+                        color: const Color.fromARGB(255, 92, 65, 65),
                         borderRadius: BorderRadius.circular(10),
                       ),
 
@@ -199,7 +199,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       child: ElevatedButton(
                           child: const Text("Satış Faturası"),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.brown,
+                            backgroundColor: Colors.brown,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),
@@ -224,7 +224,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.deepOrange,
+                            backgroundColor: Colors.deepOrange,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),
@@ -250,7 +250,7 @@ class _FaturaOlusturState extends State<FaturaOlustur> {
                       padding: const EdgeInsets.all(12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.cyan,
+                            backgroundColor: Colors.cyan,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),

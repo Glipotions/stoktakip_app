@@ -118,34 +118,34 @@ class _CheckoutCardState extends State<CheckoutCard>
                                         siparisAciklama
                                     : satinAlmaFaturaNew.aciklama;
 
-                                // hazirlananSiparisSingle.dovizTutar = 0;
-                                // hazirlananSiparisSingle.iskontoOrani = 0;
-                                // hazirlananSiparisSingle.iskontoTutari = 0;
-                                // hazirlananSiparisSingle.kdvHaricTutar = 0;
-                                // hazirlananSiparisSingle.toplamTutar = 0;
-                                // hazirlananSiparisSingle.kdvTutari = 0;
-                                // hazirlananSiparisSingle.siparisKdvOrani = 0;
-
                                 var resultSatisFaturaAdd =
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparis(
                                             hazirlananSiparisSingle);
-
+                                var alinanSiparisBilgileriId =
+                                    alinanSiparisBilgileriList
+                                        .first
+                                        .id;
                                 for (var item
                                     in hazirlananSiparisBilgileriList) {
                                   // await UrunApiService.updateUrunStokById(
                                   //     item.urunId, item.miktar, true);
+                                  item.familyAlinanSiparisBilgileriId=alinanSiparisBilgileriId;
                                   item.hazirlananSiparisId =
                                       hazirlananSiparisSingle.id;
                                   await HazirlananSiparisApiService
                                       .postHazirlananSiparisBilgileri(item);
 
                                   var entity = alinanSiparisBilgileriList
-                                      .singleWhere((element) =>
-                                          element.urunId == item.urunId);
-                                  entity.dovizTuru = 1;
-                                  await AlinanSiparisApiService
-                                      .updateAlinanSiparisBilgileri(entity);
+                                      .where((element) =>
+                                          element.urunId == item.urunId)
+                                      .firstOrNull;
+
+                                  if (entity != null) {
+                                    entity.dovizTuru = 1;
+                                    await AlinanSiparisApiService
+                                        .updateAlinanSiparisBilgileri(entity);
+                                  }
                                 }
 
                                 if (hazirlananSiparisSingle.isSeciliSiparis!) {
@@ -220,8 +220,16 @@ class _CheckoutCardState extends State<CheckoutCard>
                               await checkEksikOlanUrun(
                                   context, toplam, eksikUrunler);
                               if (!returnDurum) {
+                                var alinanSiparisBilgileriId =
+                                    hazirlananSiparisBilgileriGetIdList
+                                        .where((x) =>
+                                            x.alinanSiparisBilgileriId != null)
+                                        .first
+                                        .alinanSiparisBilgileriId;
                                 for (var urun
                                     in hazirlananSiparisBilgileriGetIdList) {
+                                  urun.familyAlinanSiparisBilgileriId =
+                                      alinanSiparisBilgileriId;
                                   if (urun.insert == true) {
                                     await HazirlananSiparisApiService
                                         .postHazirlananSiparisBilgileri(urun);
@@ -312,7 +320,7 @@ class _CheckoutCardState extends State<CheckoutCard>
   String toplamMiktar() {
     int toplam = 0;
     setState(() {
-      if (hazirlananSiparisDurum!) {
+      if (hazirlananSiparisDurum != null && hazirlananSiparisDurum!) {
         for (var item in hazirlananSiparisBilgileriList) {
           toplam += item.miktar;
         }

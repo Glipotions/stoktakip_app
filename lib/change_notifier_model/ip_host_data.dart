@@ -40,7 +40,8 @@ class IpHostData with ChangeNotifier {
   }
 
   Future loadIpHostList() async {
-    final String iphostsString = _sharedPref.getString('ip_host_listesi')!;
+    final String? iphostsString = _sharedPref.getString('ip_host_listesi');
+    if(iphostsString==null) return;
     final List<IpHost> ipHosts = IpHost.decode(iphostsString);
     ipHostListe = ipHosts;
   }
