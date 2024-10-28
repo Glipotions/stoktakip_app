@@ -40,7 +40,11 @@ void main() async {
   ], child: const MyApp()));
   HttpOverrides.global = MyHttpOverrides();
 }
-
+/// COMMAND LINE örneği
+/// flutter run --flavor product lib/main.dart
+/// flutter build apk --release --flavor product lib/main.dart
+/// flutter build ios --release --flavor product lib/main.dart
+/// flutter build appbundle --release --flavor product lib/main.dart
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

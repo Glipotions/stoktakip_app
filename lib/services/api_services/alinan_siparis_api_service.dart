@@ -12,7 +12,7 @@ class AlinanSiparisApiService {
 
   static Future updateAlinanSiparisDurumById(int id) async {
     var url = Uri.parse('$updateAlinanSiparisDurumByIdUrl$id');
-    var res = await http.patch(url);
+    var res = await http.post(url);
     debugPrint("Alınan Sipariş result kod: ${res.statusCode}");
     return res.statusCode;
   }

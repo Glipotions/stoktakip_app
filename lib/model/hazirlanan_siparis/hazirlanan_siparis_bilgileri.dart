@@ -21,7 +21,7 @@ class HazirlananSiparisBilgileri {
   int? familyAlinanSiparisBilgileriId;
 
   int? ilaveEdilmis;
-
+  String? sackNo;
   // Uint8List? resim;
 
   HazirlananSiparisBilgileri({
@@ -44,32 +44,34 @@ class HazirlananSiparisBilgileri {
     this.iskontoOrani,
     this.dovizTuru,
     this.ilaveEdilmis,
-    this.familyAlinanSiparisBilgileriId
+    this.familyAlinanSiparisBilgileriId,
+this.sackNo,
     // this.resim,
   });
 
   factory HazirlananSiparisBilgileri.fromJson(Map<String, dynamic> json) =>
       HazirlananSiparisBilgileri(
-        id: json['id'],
-        urunId: json['urunId'],
-        hazirlananSiparisId: json['hazirlananSiparisId'],
-        alinanSiparisBilgileriId: json['alinanSiparisBilgileriId'],
-        miktar: json['miktar'],
-        birimFiyat: json['birimFiyat'],
-        dovizliBirimFiyat: json['dovizliBirimFiyat'],
-        kdvHaricTutar: json['kdvHaricTutar'],
-        kdvOrani: json['kdvOrani'],
-        kdvTutari: json['kdvTutari'],
-        tutar: json['tutar'],
-        urunAdi: json['urunAdi'],
-        urunKodu: json['urunKodu'],
-        insert: json['insert'],
-        update: json['update'],
-        delete: json['delete'],
-        iskontoOrani: json['iskontoOrani'],
-        familyAlinanSiparisBilgileriId: json['iskontoOrani']
-        // resim: json['resim'],
-      );
+          id: json['id'],
+          urunId: json['urunId'],
+          hazirlananSiparisId: json['hazirlananSiparisId'],
+          alinanSiparisBilgileriId: json['alinanSiparisBilgileriId'],
+          miktar: json['miktar'],
+          birimFiyat: json['birimFiyat'],
+          dovizliBirimFiyat: json['dovizliBirimFiyat'],
+          kdvHaricTutar: json['kdvHaricTutar'],
+          kdvOrani: json['kdvOrani'],
+          kdvTutari: json['kdvTutari'],
+          tutar: json['tutar'],
+          urunAdi: json['urunAdi'],
+          urunKodu: json['urunKodu'],
+          insert: json['insert'],
+          update: json['update'],
+          delete: json['delete'],
+          iskontoOrani: json['iskontoOrani'],
+          familyAlinanSiparisBilgileriId: json['familyAlinanSiparisBilgileriId'],
+          sackNo: json['sackNo']
+          // resim: json['resim'],
+          );
 
   Map<String, dynamic> toJson() => {
         // 'id': id,
@@ -90,7 +92,8 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "familyAlinanSiparisBilgileriId":familyAlinanSiparisBilgileriId
+        "familyAlinanSiparisBilgileriId": familyAlinanSiparisBilgileriId,
+        "sackNo": sackNo,
         // "resim": resim,
       };
 
@@ -113,7 +116,8 @@ class HazirlananSiparisBilgileri {
         "delete": delete,
         "iskontoOrani": iskontoOrani,
         "dovizTuru": dovizTuru,
-        "familyAlinanSiparisBilgileriId":familyAlinanSiparisBilgileriId
+        "familyAlinanSiparisBilgileriId": familyAlinanSiparisBilgileriId,
+        "sackNo": sackNo,
         // "resim": resim,
       };
 }

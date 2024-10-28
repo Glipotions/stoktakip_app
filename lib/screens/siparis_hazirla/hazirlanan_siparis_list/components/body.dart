@@ -92,27 +92,23 @@ class _BodyState extends State<Body> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          children: const [
-            Text(
-              "Hazırlanan Siparişler",
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: getHazirlananSiparisler,
-          ),
-        ],
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text(
+        "Hazırlanan Siparişler",
+        style: TextStyle(color: Colors.black),
       ),
-      body: buildList(),
-    );
-  }
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: getHazirlananSiparisler,
+        ),
+      ],
+    ),
+    body: buildList(),
+  );
+}
 
   void actionPopUpItemSelected(
       String value,
@@ -187,8 +183,11 @@ class _BodyState extends State<Body> {
       key: UniqueKey(),
       padding: EdgeInsets.symmetric(vertical: getProportionateScreenWidth(10)),
       child: ListTile(
-        leading: ListCard(
-          cart: hazirlananSiparisList[index],
+        leading: SizedBox(
+          width: getProportionateScreenWidth(330),
+          child: ListCard(
+            cart: hazirlananSiparisList[index],
+          ),
         ),
         trailing: PopupMenuButton(
           itemBuilder: (context) {

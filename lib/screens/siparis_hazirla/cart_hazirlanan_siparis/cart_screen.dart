@@ -16,9 +16,12 @@ class CartScreenHazirlananSiparis extends StatelessWidget {
   const CartScreenHazirlananSiparis({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    List<int>? sackNos = arguments['sackNos'];
+
     return Scaffold(
       appBar: buildAppBar(context),
-      body: const Body(),
+      body:  Body(sackNos: sackNos??[1]),
       bottomNavigationBar: const CheckoutCard(),
     );
   }

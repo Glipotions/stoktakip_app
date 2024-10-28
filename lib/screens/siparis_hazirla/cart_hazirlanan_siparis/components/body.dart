@@ -10,7 +10,8 @@ import 'package:stoktakip_app/widget/search_widget.dart';
 import 'cart_card.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  const Body({Key? key, required this.sackNos}) : super(key: key);
+  final List<int> sackNos;
   @override
   _BodyState createState() => _BodyState();
 }
@@ -93,8 +94,8 @@ class _BodyState extends State<Body> {
                       color: const Color(0xFFFFE6E6),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Spacer(),
                         Icon(Icons.restore_from_trash),
                         // SvgPicture.asset("assets/icons/Trash.svg"),
@@ -102,8 +103,13 @@ class _BodyState extends State<Body> {
                     ),
                   ),
                   child: CartCard(
-                    cart: cart[index],
-                  ),
+                      cart: cart[index],
+                      sackNos: widget.sackNos,
+                      onSackChange: (newSackNo) {
+                        setState(() {
+                          cart[index].sackNo = newSackNo.toString(); // Modelde güncelleme yap
+                        });
+                      }),
                   // child:
                 ),
               ),

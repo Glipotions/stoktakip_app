@@ -49,7 +49,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
               children: [
                 Column(children: [
                   buildTextRich(
-                      "Sepetteki Ürün Sayısı: ${faturaDurum! ? urunBilgileriList.length : urunBilgileriSatinAlmaList.length}",
+                      "Sepet Ürün Sayısı: ${faturaDurum! ? urunBilgileriList.length : urunBilgileriSatinAlmaList.length}",
                       Colors.black87),
                 ]),
                 Column(

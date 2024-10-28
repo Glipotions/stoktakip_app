@@ -85,6 +85,21 @@ class _HazirlananSiparisBilgileriAddState
 
   @override
   Widget build(BuildContext context) {
+    var maxSackNo = hazirlananSiparisBilgileriGetIdList.isNotEmpty
+        ? hazirlananSiparisBilgileriGetIdList
+            .map((item) => int.parse(
+                item.sackNo ?? '0')) // 'value' alanını integer'a çevir
+            .reduce((curr, next) => curr > next ? curr : next)
+        : 1;
+    if (maxSackNo > 1 && sackNos.length == 0) {
+      for (var i = 1; i <= maxSackNo; i++) {
+        sackNos.add(i);
+      }
+      sackNoCounter = maxSackNo;
+    } else if(sackNos.length == 0){
+      sackNos.add(1);
+    }
+
     return WillPopScope(
       onWillPop: () async {
         bool? result = await onBackPressedCancelFatura(
@@ -113,7 +128,8 @@ class _HazirlananSiparisBilgileriAddState
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(
-                          context, CartScreenHazirlananSiparis.routeName);
+                          context, CartScreenHazirlananSiparis.routeName,
+                          arguments: {'sackNos': sackNos});
                     },
                     child: Stack(
                       children: <Widget>[
@@ -399,34 +415,70 @@ class _HazirlananSiparisBilgileriAddState
     );
   }
 
+  int sackNoCounter = 1;
+  List<int> sackNos = []; // Başlangıçta 1 numaralı torba var
+  int selectedSackNo = 1; // Varsayılan olarak ilk torba seçili
+
   Widget buildAdet() {
-    return SizedBox(
-      key: UniqueKey(),
-      height: 60,
-      // decoration: BoxDecorationSettings(),
-      child: TextFormField(
-        // initialValue: '1',
-        controller: adetController,
-        // focusNode: _adetFocus,
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(','),
-        ],
-        decoration: const InputDecoration(
-          labelText: "Adeti Giriniz.",
-          // labelStyle: kMetinStili,
-          icon: Icon(Icons.calculate_rounded),
-          hintText: "Sayı Giriniz.",
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          key: UniqueKey(),
+          height: 60,
+          child: TextFormField(
+            controller: adetController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(','),
+            ],
+            decoration: const InputDecoration(
+              labelText: "Adeti Giriniz.",
+              icon: Icon(Icons.calculate_rounded),
+              hintText: "Sayı Giriniz.",
+            ),
+            style: kMetinStili,
+            validator: (val) {
+              if (val!.isEmpty) {
+                return "Adet Boş Bırakılamaz.";
+              } else {
+                return null;
+              }
+            },
+          ),
         ),
-        style: kMetinStili,
-        validator: (val) {
-          if (val!.isEmpty) {
-            return "Adet Boş Bırakılamaz.";
-          } else {
-            return null;
-          }
-        },
-      ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: DropdownButton<int>(
+                value: selectedSackNo,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedSackNo = newValue!;
+                  });
+                },
+                items: sackNos.map<DropdownMenuItem<int>>((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text("Torba No: $value"),
+                  );
+                }).toList(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  sackNoCounter++; // Yeni çuval ekle
+                  sackNos.add(sackNoCounter);
+                  selectedSackNo = sackNoCounter;
+                });
+              },
+              child: const Text("Yeni Torba Ekle"),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -452,10 +504,12 @@ class _HazirlananSiparisBilgileriAddState
               _kdvTutari = _miktar! * 0 / 100;
 
               var check = hazirlananSiparisDurum == true
-                  ? hazirlananSiparisBilgileriList
-                      .any((element) => element.urunId == _urunId)
-                  : hazirlananSiparisBilgileriGetIdList
-                      .any((element) => element.urunId == _urunId);
+                  ? hazirlananSiparisBilgileriList.any((element) =>
+                      element.urunId == _urunId &&
+                      element.sackNo == selectedSackNo.toString())
+                  : hazirlananSiparisBilgileriGetIdList.any((element) =>
+                      element.urunId == _urunId &&
+                      element.sackNo == selectedSackNo.toString());
               if (!check) {
                 HazirlananSiparisBilgileri hazirlananSiparisBilgileri =
                     HazirlananSiparisBilgileri(
@@ -473,6 +527,7 @@ class _HazirlananSiparisBilgileriAddState
                   urunKodu: urunKoduController.text,
                   // resim: resimData,
                   alinanSiparisBilgileriId: _alinanSiparisBilgisiId,
+                  sackNo: selectedSackNo.toString(),
                   insert: true,
                 );
 
@@ -489,10 +544,13 @@ class _HazirlananSiparisBilgileriAddState
                         .add(hazirlananSiparisBilgileri);
               } else {
                 var entity = hazirlananSiparisDurum == true
-                    ? hazirlananSiparisBilgileriList
-                        .singleWhere((element) => element.urunId == _urunId)
-                    : hazirlananSiparisBilgileriGetIdList
-                        .singleWhere((element) => element.urunId == _urunId);
+                    ? hazirlananSiparisBilgileriList.singleWhere((element) =>
+                        element.urunId == _urunId &&
+                        element.sackNo == selectedSackNo.toString())
+                    : hazirlananSiparisBilgileriGetIdList.singleWhere(
+                        (element) =>
+                            element.urunId == _urunId &&
+                            element.sackNo == selectedSackNo.toString());
                 entity.miktar += _miktar!;
                 entity.ilaveEdilmis = entity.ilaveEdilmis != null
                     ? entity.ilaveEdilmis! + _miktar!
@@ -670,7 +728,7 @@ class _HazirlananSiparisBilgileriAddState
 
       _alinanSiparisBilgisiId = check.id;
     }
-    
+
     kalanMiktarDegistir() {
       if (check != null) {
         check.kalanMiktar = fark;

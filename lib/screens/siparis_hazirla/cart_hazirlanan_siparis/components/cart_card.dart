@@ -2,73 +2,102 @@ import 'package:flutter/material.dart';
 import 'package:stoktakip_app/const/constants.dart';
 import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
-import 'package:stoktakip_app/model/urun/urun.dart';
-import 'package:stoktakip_app/size_config.dart';
 
 class CartCard extends StatelessWidget {
-  CartCard({Key? key, required this.cart}) : super(key: key);
-
-  // final UrunBilgileri cart;
+  CartCard(
+      {Key? key,
+      required this.cart,
+      required this.sackNos,
+      required this.onSackChange})
+      : super(key: key);
 
   HazirlananSiparisBilgileri cart;
-  var urun = <Urun>[];
+  List<int> sackNos; // Mevcut torba numaralarının listesi
+  final Function(int)
+      onSackChange; // Seçilen torba numarasını güncellemek için callback fonksiyonu
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 49,
-          child: AspectRatio(
-            aspectRatio: 0.88,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F6F9),
-                borderRadius: BorderRadius.circular(15),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                cart.urunKodu!,
+                style: kFontStili(13),
+                maxLines: 2,
               ),
-              // child: Image.asset(cart.),
-            ),
-          ),
-        ),
-        SizedBox(width: getProportionateScreenWidth(20)),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              cart.urunKodu!,
-              style: kFontStili(13),
-              maxLines: 2,
-            ),
-            Text(
-              cart.urunAdi!,
-              // overflow: TextOverflow.clip,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-              maxLines: 2,
-            ),
-            const SizedBox(height: 10),
-            Text.rich(
-              TextSpan(
-                text: "Toplam Adet: ",
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: kPrimaryColor),
+              const SizedBox(height: 5),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal, // Yatay kaydırma özelliği
+                child: Text(
+                  cart.urunAdi!,
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
+                  overflow:
+                      TextOverflow.ellipsis, // Taşma durumunda "..." koyar
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
                 children: [
-                  TextSpan(
-                      text: " ${cart.miktar}  | ",
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  const TextSpan(
-                    text: " İlave Edilmiş: ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600, color: kPrimaryColor),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Toplam: ",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400, color: kPrimaryColor),
+                        children: [
+                          TextSpan(
+                              text: " ${cart.miktar}  | ",
+                              style: Theme.of(context).textTheme.bodyMedium),
+                          const TextSpan(
+                            text: " İlave Edilmiş: ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: kPrimaryColor),
+                          ),
+                          TextSpan(
+                              text: " ${cart.ilaveEdilmis ?? 0}",
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
                   ),
-                  TextSpan(
-                      text: " ${cart.ilaveEdilmis ?? 0}",
-                      style: Theme.of(context).textTheme.bodyMedium),
+                  cart.sackNo != null
+                      ? const Text(
+                          "Torba No: ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: kPrimaryColor),
+                        )
+                      : const SizedBox(),
+                  cart.sackNo != null
+                      ? DropdownButton<int>(
+                          value:
+                              int.parse(cart.sackNo!), // Mevcut torba numarası
+                          onChanged: (int? newValue) {
+                            if (newValue != null) {
+                              onSackChange(
+                                  newValue); // Torba numarasını değiştirme işlemi
+                            }
+                          },
+                          items:
+                              sackNos.map<DropdownMenuItem<int>>((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text("$value"),
+                            );
+                          }).toList(),
+                        )
+                      : const SizedBox(),
                 ],
               ),
-            )
-          ],
-        )
+              // const SizedBox(height: 10),
+            ],
+          ),
+        ),
       ],
     );
   }

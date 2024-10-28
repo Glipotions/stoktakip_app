@@ -65,7 +65,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                 Column(children: [
                   SingleChildScrollView(
                     child: buildTextRich(
-                        "Sepetteki Ürün Sayısı: ${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length}",
+                        "Sepet Ürün Sayısı: ${hazirlananSiparisDurum == true ? hazirlananSiparisBilgileriList.length : hazirlananSiparisBilgileriGetIdList.length}",
                         Colors.black87),
                   ),
                 ]),

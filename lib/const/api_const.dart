@@ -65,10 +65,15 @@ String updateAlinanSiparisBilgileriUrl =
     '${mainUrl}AlinanSiparisBilgileri/update?';
 
 String hazirlananSiparisAddUrl = '${mainUrl}HazirlananSiparis';
+String hazirlananSiparisCompleteOrderUrl =
+    '${mainUrl}HazirlananSiparis/CompleteOrder';
+String hazirlananSiparisBullEditPreparedOrderUrl =
+    '${mainUrl}HazirlananSiparis/BulkEditOrder';
 Uri fetchHazirlananSiparisUrl = Uri.parse('${mainUrl}HazirlananSiparis/getall');
 
 String hazirlananSiparisBilgileriAddUrl =
     '${mainUrl}HazirlananSiparisBilgileri';
+
 String hazirlananSiparisBilgileriDeleteUrl =
     '${mainUrl}HazirlananSiparisBilgileri/delete';
 String hazirlananSiparisBilgileriUpdateUrl =

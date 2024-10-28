@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:stoktakip_app/const/api_const.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/bulk_edit_prepared_order.dart';
+import 'package:stoktakip_app/model/hazirlanan_siparis/complete_prepared_order.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 
@@ -38,6 +40,34 @@ class HazirlananSiparisApiService {
     var res = await http.post(url, headers: header, body: postBody);
     debugPrint("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
     return res.statusCode;
+  }
+
+  static Future postCompletePreparedOrder(
+      CompletePreparedOrderDto entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+    var url = Uri.parse(hazirlananSiparisCompleteOrderUrl);
+    var myEntity = entity.toJson();
+    var postBody = json.encode(myEntity);
+    var res = await http.post(url, headers: header, body: postBody);
+    debugPrint("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
+    return res;
+  }
+
+  static Future postBulkEditPreparedOrder(
+      BulkEditOrderDto entity) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+    var url = Uri.parse(hazirlananSiparisBullEditPreparedOrderUrl);
+    var myEntity = entity.toJson();
+    var postBody = json.encode(myEntity);
+    var res = await http.post(url, headers: header, body: postBody);
+    debugPrint("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
+    return res;
   }
 
   static Future fetchHazirlananSiparisBilgileriByHazirlananSiparisId(id) async {
