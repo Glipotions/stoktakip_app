@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
+import 'package:uuid/uuid.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
@@ -36,6 +37,7 @@ class _CheckoutCardState extends State<CheckoutCard>
   late AnimationController controller;
 
   bool _firstPress = true, returnDurum = false;
+  String? _idempotencyKey;
   @override
   void initState() {
     controller = AnimationController(
@@ -46,6 +48,9 @@ class _CheckoutCardState extends State<CheckoutCard>
       });
     controller.repeat(reverse: true);
     super.initState();
+
+    var uuid = Uuid();
+    _idempotencyKey = uuid.v4();
   }
 
   final GlobalKey<ScaffoldMessengerState> snackbarKey =
@@ -85,6 +90,7 @@ class _CheckoutCardState extends State<CheckoutCard>
         // Prepare the DTO
         CompletePreparedOrderDto completeOrder = CompletePreparedOrderDto(
           hazirlananSiparis: hazirlananSiparisSingle,
+          idempotencyKey: _idempotencyKey!,
           hazirlananSiparisBilgileriList:
               hazirlananSiparisBilgileriList.map((item) {
             item.familyAlinanSiparisBilgileriId =
@@ -189,6 +195,8 @@ class _CheckoutCardState extends State<CheckoutCard>
           hazirlananSiparis: hazirlananSiparisEdit,
           insertList: insertList,
           updateList: updateList,
+          deleteList: hazirlananSiparisBilgileriDeleteList,
+          idempotencyKey: _idempotencyKey!
         );
 
         // Send the bulk API request
@@ -444,112 +452,135 @@ class _CheckoutCardState extends State<CheckoutCard>
       return;
     }
 
-   final pdf = pw.Document();
-final pageWidth = 100 * PdfPageFormat.mm; // Sayfa genişliği 100mm
-final pageHeight = 250 * PdfPageFormat.mm; // Sayfa yüksekliği 250mm
+    final pdf = pw.Document();
+    final pageWidth = 100 * PdfPageFormat.mm; // Sayfa genişliği 100mm
+    final pageHeight = 250 * PdfPageFormat.mm; // Sayfa yüksekliği 250mm
 
 // filteredList'i sackNo alanına göre gruplandırıyoruz
-final groupedBySackNo = <String, List<HazirlananSiparisBilgileri>>{};
-for (var item in filteredList) {
-  final sackNo = item.sackNo ?? "1"; // Eğer sackNo yoksa 1 olarak varsayalım
-  if (groupedBySackNo.containsKey(sackNo)) {
-    groupedBySackNo[sackNo]!.add(item);
-  } else {
-    groupedBySackNo[sackNo] = [item];
-  }
-}
+    final groupedBySackNo = <String, List<HazirlananSiparisBilgileri>>{};
+    for (var item in filteredList) {
+      final sackNo =
+          item.sackNo ?? "1"; // Eğer sackNo yoksa 1 olarak varsayalım
+      if (groupedBySackNo.containsKey(sackNo)) {
+        groupedBySackNo[sackNo]!.add(item);
+      } else {
+        groupedBySackNo[sackNo] = [item];
+      }
+    }
 
 // Tüm sack grupları için sayfalar oluştur
-int totalPieceSum = 0;
-for (var entry in groupedBySackNo.entries) {
-  final sackNo = entry.key;
-  final items = entry.value;
+    int totalPieceSum = 0;
+    for (var entry in groupedBySackNo.entries) {
+      final sackNo = entry.key;
+      final items = entry.value;
 
-  // Bu sayfadaki tüm ürünler için toplam miktarı hesapla
-  final totalPiece = items.fold<int>(0, (sum, item) => sum + (item.miktar));
-  totalPieceSum += totalPiece; // Genel toplam için ekle
+      // Bu sayfadaki tüm ürünler için toplam miktarı hesapla
+      final totalPiece = items.fold<int>(0, (sum, item) => sum + (item.miktar));
+      totalPieceSum += totalPiece; // Genel toplam için ekle
 
-  pdf.addPage(
-    pw.Page(
-      pageFormat: PdfPageFormat(pageWidth, pageHeight),
-      margin: pw.EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      theme: await pdfThemeData(),
-      build: (pw.Context context) {
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            // Sadece ilk sayfa için başlıklar
-            if (sackNo == groupedBySackNo.keys.first)
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat(pageWidth, pageHeight),
+          margin: pw.EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          theme: await pdfThemeData(),
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // Sadece ilk sayfa için başlıklar
+                if (sackNo == groupedBySackNo.keys.first)
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text('Cari Hesap',
+                                  style: pw.TextStyle(fontSize: 10)),
+                              pw.Text('Açıklama',
+                                  style: pw.TextStyle(fontSize: 10)),
+                            ],
+                          ),
+                          pw.Text(
+                            '12.11.2024',
+                            style: pw.TextStyle(
+                                fontSize: 12, fontWeight: pw.FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      pw.SizedBox(height: 10),
+                    ],
+                  ),
+
+                // "Sack" Başlığı
+                pw.Text(
+                  '$sackNo. SACK',
+                  style: pw.TextStyle(
+                      fontSize: 12, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 5),
+
+                // Tablo Başlıkları
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Container(
+                        width: 25 * PdfPageFormat.mm,
+                        child: pw.Text('CODE', textAlign: pw.TextAlign.center)),
+                    pw.Container(
+                        width: 60 * PdfPageFormat.mm,
+                        child: pw.Text('EXPLANATION',
+                            textAlign: pw.TextAlign.center)),
+                    pw.Container(
+                        width: 15 * PdfPageFormat.mm,
+                        child:
+                            pw.Text('PIECE', textAlign: pw.TextAlign.center)),
+                  ],
+                ),
+                pw.Divider(),
+
+                // Tablo Satırları
+                for (var item in items)
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          pw.Text('Cari Hesap', style: pw.TextStyle(fontSize: 10)),
-                          pw.Text('Açıklama', style: pw.TextStyle(fontSize: 10)),
-                        ],
-                      ),
+                      pw.Container(
+                          width: 25 * PdfPageFormat.mm,
+                          child: pw.Text(item.urunKodu ?? '',
+                              textAlign: pw.TextAlign.center)),
+                      pw.Container(
+                          width: 60 * PdfPageFormat.mm,
+                          child: pw.Text(item.urunAdi ?? '',
+                              textAlign: pw.TextAlign.center)),
+                      pw.Container(
+                          width: 15 * PdfPageFormat.mm,
+                          child: pw.Text(item.miktar.toString(),
+                              textAlign: pw.TextAlign.center)),
+                    ],
+                  ),
+                pw.Divider(),
+
+                // Sadece son sayfa için "Total Piece" alanı
+                if (sackNo == groupedBySackNo.keys.last)
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                    children: [
                       pw.Text(
-                        '12.11.2024',
-                        style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+                        'Total Piece: $totalPieceSum',
+                        style: pw.TextStyle(
+                            fontSize: 12, fontWeight: pw.FontWeight.bold),
                       ),
                     ],
                   ),
-                  pw.SizedBox(height: 10),
-                ],
-              ),
-
-            // "Sack" Başlığı
-            pw.Text(
-              '$sackNo. SACK',
-              style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-            ),
-            pw.SizedBox(height: 5),
-
-            // Tablo Başlıkları
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Container(width: 25 * PdfPageFormat.mm, child: pw.Text('CODE', textAlign: pw.TextAlign.center)),
-                pw.Container(width: 60 * PdfPageFormat.mm, child: pw.Text('EXPLANATION', textAlign: pw.TextAlign.center)),
-                pw.Container(width: 15 * PdfPageFormat.mm, child: pw.Text('PIECE', textAlign: pw.TextAlign.center)),
               ],
-            ),
-            pw.Divider(),
-
-            // Tablo Satırları
-            for (var item in items)
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Container(width: 25 * PdfPageFormat.mm, child: pw.Text(item.urunKodu ?? '', textAlign: pw.TextAlign.center)),
-                  pw.Container(width: 60 * PdfPageFormat.mm, child: pw.Text(item.urunAdi ?? '', textAlign: pw.TextAlign.center)),
-                  pw.Container(width: 15 * PdfPageFormat.mm, child: pw.Text(item.miktar.toString(), textAlign: pw.TextAlign.center)),
-                ],
-              ),
-            pw.Divider(),
-
-            // Sadece son sayfa için "Total Piece" alanı
-            if (sackNo == groupedBySackNo.keys.last)
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.end,
-                children: [
-                  pw.Text(
-                    'Total Piece: $totalPieceSum',
-                    style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-                  ),
-                ],
-              ),
-          ],
-        );
-      },
-    ),
-  );
-}
+            );
+          },
+        ),
+      );
+    }
     // Print the PDF
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.save(),

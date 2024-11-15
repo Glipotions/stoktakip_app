@@ -5,15 +5,17 @@ import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgil
 class CompletePreparedOrderDto {
   final HazirlananSiparis hazirlananSiparis;
   final List<HazirlananSiparisBilgileri> hazirlananSiparisBilgileriList;
+  String idempotencyKey;
 
-  CompletePreparedOrderDto({
-    required this.hazirlananSiparis,
-    required this.hazirlananSiparisBilgileriList,
-  });
+  CompletePreparedOrderDto(
+      {required this.hazirlananSiparis,
+      required this.hazirlananSiparisBilgileriList,
+      required this.idempotencyKey});
 
   Map<String, dynamic> toJson() => {
         'hazirlananSiparis': hazirlananSiparis.toJson(),
         'hazirlananSiparisBilgileriList':
             hazirlananSiparisBilgileriList.map((e) => e.toJson()).toList(),
+        'idempotencyKey': idempotencyKey
       };
 }
