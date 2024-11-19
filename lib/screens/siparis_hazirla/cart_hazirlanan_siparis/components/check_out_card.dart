@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pdf/pdf.dart';
+import 'package:stoktakip_app/functions/extentions/string_extentions.dart';
 import 'package:uuid/uuid.dart';
-import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
@@ -17,7 +17,6 @@ import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgil
 import 'package:stoktakip_app/services/api_services/alinan_siparis_api_service.dart';
 import 'package:stoktakip_app/services/api_services/hazirlanan_siparis_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 class CheckoutCard extends StatefulWidget {
   const CheckoutCard({Key? key}) : super(key: key);
@@ -31,6 +30,12 @@ class _CheckoutCardState extends State<CheckoutCard>
   final snackBar = const SnackBar(content: Text('Sipariş Hazırlandı!'));
   final snackBarSatisFaturaEkle = const SnackBar(
       content: Text('Sipariş Oluştururken 1 hata meydana geldi!'));
+
+  BlueThermalPrinter printer = BlueThermalPrinter.instance;
+  List<BluetoothDevice> devices = [];
+  BluetoothDevice? selectedDevice;
+  bool _connected = false;
+  bool isSimulator = false;
 
   var formKey = GlobalKey<FormState>();
 
@@ -51,10 +56,78 @@ class _CheckoutCardState extends State<CheckoutCard>
 
     var uuid = Uuid();
     _idempotencyKey = uuid.v4();
+    
+    // Check if running on simulator
+    checkSimulator();
   }
 
-  final GlobalKey<ScaffoldMessengerState> snackbarKey =
-      GlobalKey<ScaffoldMessengerState>();
+  // Check if running on simulator
+  void checkSimulator() async {
+    try {
+      devices = await printer.getBondedDevices();
+      isSimulator = false;
+    } catch (e) {
+      isSimulator = true;
+      _connected = false;
+    }
+    setState(() {});
+  }
+
+  // Initialize the printer
+  void initPrinter() async {
+    if (isSimulator) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Simülatörde yazıcı kullanılamaz. Lütfen fiziksel cihaz kullanın.')),
+      );
+      return;
+    }
+
+    try {
+      devices = await printer.getBondedDevices();
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Yazıcı başlatılırken hata oluştu. Bluetooth açık olduğundan emin olun.')),
+      );
+    }
+  }
+
+  // Connect to printer
+  void connectToPrinter(BluetoothDevice device) async {
+    try {
+      if (device != null) {
+        bool? isConnected = await printer.isConnected;
+        if (isConnected == true) {
+          setState(() {
+            selectedDevice = device;
+            _connected = true;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Yazıcı zaten bağlı: ${device.name}')),
+          );
+          return;
+        }
+        
+        await printer.connect(device);
+        setState(() {
+          selectedDevice = device;
+          _connected = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Yazıcıya bağlandı: ${device.name}')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _connected = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Yazıcıya bağlanırken hata: $e')),
+      );
+    }
+  }
+
+  final snackbarKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -246,99 +319,75 @@ class _CheckoutCardState extends State<CheckoutCard>
     }
   }
 
-  // void _editOrder() async {
-  //   if (_firstPress) {
-  //     _firstPress = false;
-
-  //     int toplam = 0, kalanToplam = 0;
-  //     returnDurum = false;
-  //     List<String> eksikUrunler = [];
-  //     for (var item in alinanSiparisBilgileriList) {
-  //       var durum = hazirlananSiparisBilgileriGetIdList
-  //           .any((element) => element.urunId == item.urunId);
-  //       if (!durum) {
-  //         toplam += 1;
-  //         eksikUrunler.add(item.urunKodu.toString());
-  //       }
-  //       kalanToplam += item.kalanAdet!;
-  //     }
-
-  //     await checkEksikOlanUrun(context, toplam, eksikUrunler);
-  //     if (!returnDurum) {
-  //       var alinanSiparisBilgileriId = hazirlananSiparisBilgileriGetIdList
-  //           .where((x) => x.alinanSiparisBilgileriId != null)
-  //           .first
-  //           .alinanSiparisBilgileriId;
-  //       for (var urun in hazirlananSiparisBilgileriGetIdList) {
-  //         urun.familyAlinanSiparisBilgileriId = alinanSiparisBilgileriId;
-  //         if (urun.insert == true) {
-  //           await HazirlananSiparisApiService.postHazirlananSiparisBilgileri(
-  //               urun);
-  //           var entity = alinanSiparisBilgileriList
-  //               .singleWhere((element) => element.urunId == urun.urunId);
-  //           entity.dovizTuru = 1;
-  //           await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
-  //         } else if (urun.update!) {
-  //           urun.dovizTuru = 1;
-  //           await HazirlananSiparisApiService.updateHazirlananSiparisBilgileri(
-  //               urun);
-  //           // await UrunApiService.updateUrunStokById(
-  //           //     urun.urunId, urun.ilaveEdilmis!, true);
-  //           var entity = alinanSiparisBilgileriList
-  //               .singleWhere((element) => element.urunId == urun.urunId);
-
-  //           entity.dovizTuru = 1;
-  //           await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
-  //         }
-  //       }
-  //       if (kalanToplam == 0 && hazirlananSiparisEdit.isSeciliSiparis!) {
-  //         await AlinanSiparisApiService.updateAlinanSiparisDurumById(
-  //             hazirlananSiparisEdit.alinanSiparisId!);
-  //       }
-
-  //       hazirlananSiparisBilgileriSil();
-
-  //       //TEMİZLİK KISMI
-
-  //       hazirlananSiparisBilgileriGetIdList.clear();
-  //       Provider.of<HazirlananSiparisBilgileriData>(context, listen: false)
-  //           .saveListToSharedPref(hazirlananSiparisBilgileriGetIdList);
-  //       hazirlananSiparisSingle = HazirlananSiparis();
-
-  //       Navigator.of(context).pop(true);
-  //       Navigator.of(context).pop(true);
-  //     }
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text('Birden Fazla Tıklamalar Dikkate Alınmadı!')));
-  //   }
-  // }
-
-  Future<pw.ThemeData> pdfThemeData() async {
-    final ttfRegular =
-        await rootBundle.load("assets/fonts/roboto/Roboto-Regular.ttf");
-    final ttfBold =
-        await rootBundle.load("assets/fonts/roboto/Roboto-Bold.ttf");
-    final ttfItalic =
-        await rootBundle.load("assets/fonts/roboto/Roboto-Italic.ttf");
-    final ttfBoldItalic =
-        await rootBundle.load("assets/fonts/roboto/Roboto-BoldItalic.ttf");
-
-    final fontRegular = pw.Font.ttf(ttfRegular);
-    final fontBold = pw.Font.ttf(ttfBold);
-    final fontItalic = pw.Font.ttf(ttfItalic);
-    final fontBoldItalic = pw.Font.ttf(ttfBoldItalic);
-
-    final theme = pw.ThemeData.withFont(
-      base: fontRegular,
-      bold: fontBold,
-      italic: fontItalic,
-      boldItalic: fontBoldItalic,
-    );
-    return theme;
+  // Convert Turkish characters to English equivalents
+  String convertTurkishToEnglish(String text) {
+    const turkishChars = ['ı', 'ğ', 'İ', 'Ğ', 'ç', 'Ç', 'ş', 'Ş', 'ö', 'Ö', 'ü', 'Ü'];
+    const englishChars = ['i', 'g', 'I', 'G', 'c', 'C', 's', 'S', 'o', 'O', 'u', 'U'];
+    
+    String result = text;
+    for (int i = 0; i < turkishChars.length; i++) {
+      result = result.replaceAll(turkishChars[i], englishChars[i]);
+    }
+    return result;
   }
 
-  void _printOrder() async {
+  // Format text to fit within specified width
+  List<String> wrapText(String text, int width) {
+    List<String> lines = [];
+    while (text.length > width) {
+      int spaceIndex = text.substring(0, width).lastIndexOf(' ');
+      if (spaceIndex == -1) {
+        spaceIndex = width;
+      }
+      lines.add(text.substring(0, spaceIndex).trim());
+      text = text.substring(spaceIndex).trim();
+    }
+    if (text.isNotEmpty) {
+      lines.add(text);
+    }
+    return lines;
+  }
+
+  // Print formatted columns with proper width and alignment
+  Future<void> printFormattedColumns(String code, String explanation, String piece) async {
+    const int leftMargin = 2;      // 1.5mm margin
+    const int codeWidth = 12;      // ~20.5mm
+    const int explanationWidth = 45; // ~66mm
+    const int pieceWidth = 2;      // ~10mm
+    
+    // Convert Turkish characters
+    code = convertTurkishToEnglish(code);
+    explanation = convertTurkishToEnglish(explanation);
+    
+    // Wrap long explanation text
+    List<String> wrappedExplanation = wrapText(explanation, explanationWidth);
+    
+    // Print first line with all columns
+    String line = '${' ' * leftMargin}${code.padRight(codeWidth)}|${wrappedExplanation[0].padRight(explanationWidth)}|${piece.padLeft(pieceWidth)}';
+    await printer.printCustom(line, 1, 0);
+    
+    // Print remaining lines of explanation if any
+    for (int i = 1; i < wrappedExplanation.length; i++) {
+      String continuationLine = '${' ' * leftMargin}${''.padRight(codeWidth)}|${wrappedExplanation[i].padRight(explanationWidth)}|${''.padRight(pieceWidth)}';
+      await printer.printCustom(continuationLine, 1, 0);
+    }
+  }
+
+  Future<void> _printOrder() async {
+    if (isSimulator) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Simülatörde yazıcı kullanılamaz. Lütfen fiziksel cihaz kullanın.')),
+      );
+      return;
+    }
+
+    if (!_connected) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lütfen önce yazıcıya bağlanın')),
+      );
+      return;
+    }
+
     // Show a dialog to select sackNo options
     List<String> uniqueSackNos = hazirlananSiparisBilgileriList.isNotEmpty
         ? hazirlananSiparisBilgileriList
@@ -353,7 +402,6 @@ class _CheckoutCardState extends State<CheckoutCard>
             .toList();
 
     uniqueSackNos.sort();
-
     List<String> selectedSackNos = [];
 
     await showDialog(
@@ -404,14 +452,13 @@ class _CheckoutCardState extends State<CheckoutCard>
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cancel
+                Navigator.of(context).pop();
               },
               child: const Text('İptal'),
             ),
             TextButton(
               onPressed: () {
                 if (selectedSackNos.isEmpty) {
-                  // If no selection, default to all
                   selectedSackNos = List.from(uniqueSackNos);
                 }
                 Navigator.of(context).pop();
@@ -424,177 +471,160 @@ class _CheckoutCardState extends State<CheckoutCard>
     );
 
     if (selectedSackNos.isEmpty) {
-      // User canceled the dialog
       return;
     }
 
-    // Filter the list based on selectedSackNos
-    List<HazirlananSiparisBilgileri> filteredList =
-        hazirlananSiparisBilgileriList.isNotEmpty
-            ? hazirlananSiparisBilgileriList.where((item) {
-                if (selectedSackNos.contains(item.sackNo)) {
-                  return true;
-                }
-                return false;
-              }).toList()
-            : hazirlananSiparisBilgileriGetIdList.where((item) {
-                if (selectedSackNos.contains(item.sackNo)) {
-                  return true;
-                }
-                return false;
-              }).toList();
+    try {
+      // Filter the list based on selectedSackNos
+      List<HazirlananSiparisBilgileri> filteredList =
+          hazirlananSiparisBilgileriList.isNotEmpty
+              ? hazirlananSiparisBilgileriList.where((item) {
+                  return selectedSackNos.contains(item.sackNo);
+                }).toList()
+              : hazirlananSiparisBilgileriGetIdList.where((item) {
+                  return selectedSackNos.contains(item.sackNo);
+                }).toList();
 
-    if (filteredList.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Seçilen sackNo\'ya ait ürün bulunamadı!')),
-      );
-      return;
-    }
-
-    final pdf = pw.Document();
-    final pageWidth = 100 * PdfPageFormat.mm; // Sayfa genişliği 100mm
-    final pageHeight = 250 * PdfPageFormat.mm; // Sayfa yüksekliği 250mm
-
-// filteredList'i sackNo alanına göre gruplandırıyoruz
-    final groupedBySackNo = <String, List<HazirlananSiparisBilgileri>>{};
-    for (var item in filteredList) {
-      final sackNo =
-          item.sackNo ?? "1"; // Eğer sackNo yoksa 1 olarak varsayalım
-      if (groupedBySackNo.containsKey(sackNo)) {
-        groupedBySackNo[sackNo]!.add(item);
-      } else {
-        groupedBySackNo[sackNo] = [item];
+      if (filteredList.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Seçilen sackNo\'ya ait ürün bulunamadı!')),
+        );
+        return;
       }
-    }
 
-// Tüm sack grupları için sayfalar oluştur
-    int totalPieceSum = 0;
-    for (var entry in groupedBySackNo.entries) {
-      final sackNo = entry.key;
-      final items = entry.value;
+      // Group items by sackNo
+      final groupedBySackNo = <String, List<HazirlananSiparisBilgileri>>{};
+      for (var item in filteredList) {
+        final sackNo = item.sackNo ?? "1";
+        if (groupedBySackNo.containsKey(sackNo)) {
+          groupedBySackNo[sackNo]!.add(item);
+        } else {
+          groupedBySackNo[sackNo] = [item];
+        }
+      }
 
-      // Bu sayfadaki tüm ürünler için toplam miktarı hesapla
-      final totalPiece = items.fold<int>(0, (sum, item) => sum + (item.miktar));
-      totalPieceSum += totalPiece; // Genel toplam için ekle
+      int totalPieceSum = 0;
 
-      pdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat(pageWidth, pageHeight),
-          margin: pw.EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          theme: await pdfThemeData(),
-          build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                // Sadece ilk sayfa için başlıklar
-                if (sackNo == groupedBySackNo.keys.first)
-                  pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
-                          pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Text('Cari Hesap',
-                                  style: pw.TextStyle(fontSize: 10)),
-                              pw.Text('Açıklama',
-                                  style: pw.TextStyle(fontSize: 10)),
-                            ],
-                          ),
-                          pw.Text(
-                            '12.11.2024',
-                            style: pw.TextStyle(
-                                fontSize: 12, fontWeight: pw.FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      pw.SizedBox(height: 10),
-                    ],
-                  ),
+      // Print header once
+      await printer.printNewLine();
+      await printer.printNewLine();  // Extra line for 1.5mm spacing
 
-                // "Sack" Başlığı
-                pw.Text(
-                  '$sackNo. SACK',
-                  style: pw.TextStyle(
-                      fontSize: 12, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.SizedBox(height: 5),
+      const totalWidth = 66;  // Total width in characters
+      final separator = ' ' * 2 + '-' * (totalWidth - 2);  // Include left margin in separator
 
-                // Tablo Başlıkları
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Container(
-                        width: 25 * PdfPageFormat.mm,
-                        child: pw.Text('CODE', textAlign: pw.TextAlign.center)),
-                    pw.Container(
-                        width: 60 * PdfPageFormat.mm,
-                        child: pw.Text('EXPLANATION',
-                            textAlign: pw.TextAlign.center)),
-                    pw.Container(
-                        width: 15 * PdfPageFormat.mm,
-                        child:
-                            pw.Text('PIECE', textAlign: pw.TextAlign.center)),
-                  ],
-                ),
-                pw.Divider(),
+      // Print header with CARI HESAP and date on the same line
+      var date=DateTime.now();
+      final dateStr = '${date.day}-${date.month}-${date.year}';
+      const headerText = "CURRENT ACCOUNT";
+      // Ensure date stays on same line by calculating exact position
+      final headerLine = '  $headerText${' '.repeat(totalWidth - headerText.length - dateStr.length - 2)}$dateStr';
+      await printer.printCustom(headerLine, 2, 0);  
+      await printer.printNewLine();
+      
+      await printer.printCustom('  DESCRIPTION', 2, 0);  
+      await printer.printNewLine();
 
-                // Tablo Satırları
-                for (var item in items)
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Container(
-                          width: 25 * PdfPageFormat.mm,
-                          child: pw.Text(item.urunKodu ?? '',
-                              textAlign: pw.TextAlign.center)),
-                      pw.Container(
-                          width: 60 * PdfPageFormat.mm,
-                          child: pw.Text(item.urunAdi ?? '',
-                              textAlign: pw.TextAlign.center)),
-                      pw.Container(
-                          width: 15 * PdfPageFormat.mm,
-                          child: pw.Text(item.miktar.toString(),
-                              textAlign: pw.TextAlign.center)),
-                    ],
-                  ),
-                pw.Divider(),
+      // Print each sack group
+      for (var entry in groupedBySackNo.entries) {
+        final sackNo = entry.key;
+        final items = entry.value;
 
-                // Sadece son sayfa için "Total Piece" alanı
-                if (sackNo == groupedBySackNo.keys.last)
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.end,
-                    children: [
-                      pw.Text(
-                        'Total Piece: $totalPieceSum',
-                        style: pw.TextStyle(
-                            fontSize: 12, fontWeight: pw.FontWeight.bold),
-                      ),
-                    ],
-                  ),
-              ],
-            );
-          },
-        ),
+        final totalPiece = items.fold<int>(0, (sum, item) => sum + (item.miktar));
+        totalPieceSum += totalPiece;
+        // Print sack header
+        await printer.printCustom("  $sackNo. SACK".padLeft(30), 2, 1);
+        await printer.printNewLine();
+
+        // Print table header with adjusted widths
+        final headerLine = '${' ' * 2}${'CODE'.padRight(12)}|${'EXPLANATION'.padRight(45)}|PIECE';
+        await printer.printCustom(headerLine, 2, 0);  
+        await printer.printCustom(separator, 1, 0);
+
+        // Print items
+        for (var item in items) {
+          await printFormattedColumns(
+            item.urunKodu ?? '',
+            item.urunAdi ?? '',
+            item.miktar.toString()
+          );
+          await printer.printCustom(separator, 1, 0);
+        }
+        await printer.printNewLine();
+      }
+
+      // Print total at the end
+      final totalLine = '${'${' ' * 2}${' '.padRight(45)} TOTAL PIECE'}: ${totalPieceSum.toString().padLeft(1)}';
+      await printer.printCustom(totalLine, 2, 0);  
+      await printer.printNewLine();
+      await printer.printNewLine();
+      await printer.paperCut();
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Yazdırma sırasında hata: $e')),
       );
     }
-    // Print the PDF
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
+  }
+
+  Future<void> _showPrinterSelectionDialog() async {
+    if (isSimulator) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Simülatörde yazıcı kullanılamaz. Lütfen fiziksel cihaz kullanın.')),
+      );
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Yazıcı Seç'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: devices.isEmpty
+                ? const Center(child: Text('Eşleştirilmiş yazıcı bulunamadı'))
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: devices.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(devices[index].name ?? 'Bilinmeyen Cihaz'),
+                        subtitle: Text(devices[index].address ?? ''),
+                        onTap: () {
+                          connectToPrinter(devices[index]);
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Yenile'),
+              onPressed: () async {
+                devices = await printer.getBondedDevices();
+                setState(() {});
+              },
+            ),
+            TextButton(
+              child: const Text('İptal'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: formKey,
       padding: EdgeInsets.symmetric(
-          vertical: getProportionateScreenWidth(15),
-          horizontal: getProportionateScreenWidth(30)),
-      // height: 174,
+        vertical: getProportionateScreenWidth(15),
+        horizontal: getProportionateScreenWidth(20),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.only(
@@ -614,31 +644,88 @@ class _CheckoutCardState extends State<CheckoutCard>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: getProportionateScreenHeight(5)),
-            buildTextRich("Toplam Adet: ${toplamMiktar()}", Colors.teal),
+            // Total Amount Display
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(10),
+                vertical: getProportionateScreenWidth(8),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.teal,
+                    size: getProportionateScreenWidth(24),
+                  ),
+                  SizedBox(width: getProportionateScreenWidth(8)),
+                  Text(
+                    "Toplam Adet: ${toplamMiktar()}",
+                    style: const TextStyle(
+                      color: Colors.teal,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: getProportionateScreenHeight(20)),
+            
+            // Bottom Buttons
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: getProportionateScreenWidth(190),
-                  child: hazirlananSiparisDurum == true
-                      ? DefaultButton(
-                          text: "Siparişi Tamamla",
-                          press: _completeOrder,
-                        )
-                      : DefaultButton(
-                          text: "Düzenle",
-                          press: _editOrder,
-                        ),
+                // Main Action Button (Complete/Edit)
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    height: getProportionateScreenHeight(55),
+                    child: hazirlananSiparisDurum == true
+                        ? DefaultButton(
+                            text: "Siparişi Tamamla",
+                            press: _completeOrder,
+                            color: Colors.white,
+                          )
+                        : DefaultButton(
+                            text: "Düzenle",
+                            press: _editOrder,
+                            color: Colors.white,
+                          ),
+                  ),
                 ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: getProportionateScreenWidth(100),
-                  child: DefaultButton(
-                    text: "Yazdır",
-                    press: _printOrder,
-                    // color: Colors.blue, // Optional: Different color for print
+                SizedBox(width: getProportionateScreenWidth(8)),
+                
+                // Print Button
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    height: getProportionateScreenHeight(55),
+                    child: DefaultButton(
+                      text: "Yazdır",
+                      press: isSimulator || !_connected ? null : _printOrder,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: getProportionateScreenWidth(8)),
+                
+                // Printer Connection Button
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    height: getProportionateScreenHeight(55),
+                    child: DefaultButton(
+                      text: isSimulator 
+                          ? "Simülatör" 
+                          : (_connected ? "Bağlı ✓" : "Yazıcı"),
+                      press: _showPrinterSelectionDialog,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

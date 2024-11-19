@@ -1,6 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stoktakip.local.app">
-   <application
+   <uses-permission android:name="android.permission.INTERNET"/>
+   <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    
+    <application
         android:label="stoktakip_app"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -39,5 +45,4 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
