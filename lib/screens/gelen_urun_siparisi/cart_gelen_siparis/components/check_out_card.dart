@@ -85,7 +85,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                   width: getProportionateScreenWidth(190),
                   child: gelenSiparisDurum == true
                       ? DefaultButton(
-                          text: "Siparişi Tamamla",
+                          text: "Tamamla",
                           press: () async {
                             // formKey.currentState!.save(); //elimizdeki student oluştu
 

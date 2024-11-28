@@ -21,7 +21,7 @@ class BulkEditOrderDto {
         'hazirlananSiparis': hazirlananSiparis.toJson(),
         'insertList': insertList.map((e) => e.toJson()).toList(),
         'updateList': updateList.map((e) => e.toJson()).toList(),
-        'deleteList': deleteList.map((e) => e.toJson()).toList(),
+        'deleteList': deleteList.map((e) => e.toJsonWithId()).toList(),
         'idempotencyKey': idempotencyKey,
       };
 }

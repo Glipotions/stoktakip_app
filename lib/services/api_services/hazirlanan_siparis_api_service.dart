@@ -66,6 +66,7 @@ class HazirlananSiparisApiService {
     var myEntity = entity.toJson();
     var postBody = json.encode(myEntity);
     var res = await http.post(url, headers: header, body: postBody);
+    debugPrint(res.body);
     debugPrint("HazirlananSiparisBilgileri Ekle: ${res.statusCode}");
     return res;
   }

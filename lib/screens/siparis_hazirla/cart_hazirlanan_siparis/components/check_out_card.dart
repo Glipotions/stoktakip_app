@@ -268,7 +268,7 @@ class _CheckoutCardState extends State<CheckoutCard>
           hazirlananSiparis: hazirlananSiparisEdit,
           insertList: insertList,
           updateList: updateList,
-          deleteList: hazirlananSiparisBilgileriDeleteList,
+          deleteList: hazirlananSiparisBilgileriDeleteList.where((e) => e.id!=null).toList(),
           idempotencyKey: _idempotencyKey!
         );
 
@@ -687,7 +687,7 @@ class _CheckoutCardState extends State<CheckoutCard>
                     height: getProportionateScreenHeight(55),
                     child: hazirlananSiparisDurum == true
                         ? DefaultButton(
-                            text: "Siparişi Tamamla",
+                            text: "Tamamla",
                             press: _completeOrder,
                             color: Colors.white,
                           )
@@ -762,16 +762,16 @@ class _CheckoutCardState extends State<CheckoutCard>
   }
 
   void hazirlananSiparisBilgileriSil() async {
-    for (var urunDelete in hazirlananSiparisBilgileriDeleteList) {
-      urunDelete.dovizTuru = 1;
+    // for (var urunDelete in hazirlananSiparisBilgileriDeleteList) {
+    //   urunDelete.dovizTuru = 1;
 
-      var entity = alinanSiparisBilgileriList
-          .singleWhere((element) => element.urunId == urunDelete.urunId);
-      entity.dovizTuru = 1;
-      await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
-      await HazirlananSiparisApiService.deleteHazirlananSiparisBilgileri(
-          urunDelete);
-    }
+    //   var entity = alinanSiparisBilgileriList
+    //       .singleWhere((element) => element.urunId == urunDelete.urunId);
+    //   entity.dovizTuru = 1;
+    //   await AlinanSiparisApiService.updateAlinanSiparisBilgileri(entity);
+    //   await HazirlananSiparisApiService.deleteHazirlananSiparisBilgileri(
+    //       urunDelete);
+    // }
     hazirlananSiparisBilgileriDeleteList = [];
   }
 

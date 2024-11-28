@@ -210,11 +210,14 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
                                 });
                                 alinanSiparisBilgileriList.clear();
 
-                                if (isSwitched && searchController != null) {
+                                if (isSwitched &&
+                                    searchController.text != null &&
+                                    searchController.text != "") {
                                   await getAlinanSiparisBilgileriByCariId(
                                       alinanSiparisSingle.cariHesapId!);
                                 } else if (!isSwitched &&
-                                    searchController != null) {
+                                    (searchController.text != null &&
+                                        searchController.text != "")) {
                                   await getAlinanSiparisBilgileriById(
                                       alinanSiparisSingle.id!);
                                 }
@@ -448,6 +451,7 @@ class _SiparisHazirlaState extends State<SiparisHazirla> {
               ],
             ),
           ),
+        appBar: AppBar(),
         ),
       ),
     );

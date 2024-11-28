@@ -66,7 +66,10 @@ class _BodyState extends State<Body> {
                         entity.kalanAdet =
                             entity.kalanAdet! + cart[index].miktar;
 
-                        hazirlananSiparisBilgileriDeleteList.add(cart[index]);
+                        // hazirlananSiparisBilgileriDeleteList.add(cart[index]);
+                        hazirlananSiparisBilgileriDeleteList.add(
+                            hazirlananSiparisBilgileriGetIdList.where(
+                                (urun) => urun.urunId == cart[index].urunId).first);
                         hazirlananSiparisBilgileriGetIdList.removeWhere(
                             (urun) => urun.urunId == cart[index].urunId);
                         // cart.removeAt(index);
@@ -107,7 +110,8 @@ class _BodyState extends State<Body> {
                       sackNos: widget.sackNos,
                       onSackChange: (newSackNo) {
                         setState(() {
-                          cart[index].sackNo = newSackNo.toString(); // Modelde güncelleme yap
+                          cart[index].sackNo =
+                              newSackNo.toString(); // Modelde güncelleme yap
                         });
                       }),
                   // child:

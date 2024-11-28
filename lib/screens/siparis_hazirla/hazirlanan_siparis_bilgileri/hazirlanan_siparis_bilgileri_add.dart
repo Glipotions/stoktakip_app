@@ -9,6 +9,7 @@ import 'package:stoktakip_app/const/text_const.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
 import 'package:stoktakip_app/functions/general_functions.dart';
 import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
+import 'package:stoktakip_app/model/alinan_siparis/alinan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/hazirlanan_siparis/hazirlanan_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun/urun.dart';
@@ -96,7 +97,7 @@ class _HazirlananSiparisBilgileriAddState
         sackNos.add(i);
       }
       sackNoCounter = maxSackNo;
-    } else if(sackNos.length == 0){
+    } else if (sackNos.length == 0) {
       sackNos.add(1);
     }
 
@@ -689,37 +690,71 @@ class _HazirlananSiparisBilgileriAddState
         .where((element) => element.urunId == id)
         .length;
 
+    AlinanSiparisBilgileri? selectedProduct;
     if (howManyProduct > 1) {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                'BİRDEN FAZLA SİPARİŞ VAR!',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.orange),
+      var sameProducts = alinanSiparisBilgileriList
+          .where((element) => element.urunId == id)
+          .toList();
+
+      selectedProduct = await showDialog<AlinanSiparisBilgileri>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              'Ürün Seçimi',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              content: const Text(
-                'BU ÜRÜNDEN BİRDEN FAZLA SİPARİŞ OLDUĞU İÇİN KONTROLÜ SAĞLANAMIYOR!',
-                style: TextStyle(color: Colors.black),
+            ),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: sameProducts.length,
+                itemBuilder: (context, index) {
+                  final product = sameProducts[index];
+                  return ListTile(
+                    title: Text(product.urunAdi ?? ''),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Miktar: ${product.kalanAdet}'),
+                        // if (product. != null)
+                        //   Text('Sipariş: ${product.siparisTanimi}'),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop(product);
+                    },
+                  );
+                },
               ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, 'TAMAM');
-                  },
-                  child: const Text('TAMAM'),
-                ),
-              ],
-            );
-          });
-      checkUrunItBeAdded = false;
-      return;
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('İptal'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (selectedProduct != null) {
+        // Use the selected product
+        // alinanSiparisBilgileriList = [selectedProduct];
+        checkUrunItBeAdded = true;
+      } else {
+        checkUrunItBeAdded = false;
+      }
+      // return;
     }
 
-    var check = alinanSiparisBilgileriList
-        .where((element) => element.urunId == id)
-        .firstOrNull;
+    var check = selectedProduct ?? alinanSiparisBilgileriList
+            .where((element) => element.urunId == id)
+            .firstOrNull;
     int fark = 0;
     int olmasiGerekenMiktar = 0;
     if (check != null) {

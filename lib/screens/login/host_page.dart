@@ -37,16 +37,27 @@ class _HostPageState extends State<HostPage> {
   //   _pref = await SharedPreferences.getInstance();
   // }
 
+Future<void> temizleSharedPreferences() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool sonuc = await prefs.clear();
+  if (sonuc) {
+    print("Tüm SharedPreferences verileri başarıyla temizlendi.");
+  } else {
+    print("Veriler temizlenirken bir hata oluştu.");
+  }
+}
+
   Future<void> initStateAsync() async {
     Provider.of<IpHostData>(context, listen: false).loadIpHostList();
-    // await _loadIpHostList();
   }
 
   @override
   void initState() {
+// temizleSharedPreferences().then((_) {
+//     _loadUserIpHost();
+//   });
+
     _loadUserIpHost();
-    // initStateAsync();
-    // _loadIpHostList();
     super.initState();
   }
 
@@ -89,9 +100,10 @@ class _HostPageState extends State<HostPage> {
                   alignment: Alignment.center,
                   hint: const Text('Host Seçiniz.'),
                   value: dropDownMenu,
-                  items: ipHostListe.map((ipHost) {
+                  items: ipHostListe// null olanları filtrele
+                      .map((ipHost) {
                     return DropdownMenuItem(
-                      value: ipHost.hostAdi,
+                      value: ipHost.ip,
                       child: Text(ipHost.hostAdi.toString()),
                       onTap: () {
                         _ipHostController.text = ipHost.ip;

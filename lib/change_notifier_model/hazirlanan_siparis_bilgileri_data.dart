@@ -24,8 +24,9 @@ class HazirlananSiparisBilgileriData with ChangeNotifier {
       await _prefs.setBool('hazirlanan_siparis_isSeciliSiparis',
           hazirlananSiparisSingle.isSeciliSiparis!);
     }
-
-    await _prefs.setInt('alinan_siparis_single_id', alinanSiparisSingle.id!);
+    if (alinanSiparisSingle.id != null) {
+      await _prefs.setInt('alinan_siparis_single_id', alinanSiparisSingle.id!);
+    }
     await _prefs.setInt(
         'alinan_siparis_single_cari_id', alinanSiparisSingle.cariHesapId!);
     await _prefs.setString('alinan_siparis_single_siparisTanimi',
