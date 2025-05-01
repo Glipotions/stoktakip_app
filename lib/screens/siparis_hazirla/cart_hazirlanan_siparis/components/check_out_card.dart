@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:stoktakip_app/functions/extentions/string_extentions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+import 'package:flutter_thermal_printer/flutter_thermal_printer.dart';
+import 'package:flutter_thermal_printer/utils/printer.dart';
 import 'package:stoktakip_app/change_notifier_model/hazirlanan_siparis_bilgileri_data.dart';
 import 'package:stoktakip_app/components/default_button.dart';
 import 'package:stoktakip_app/functions/const_entities.dart';
@@ -31,9 +32,9 @@ class _CheckoutCardState extends State<CheckoutCard>
   final snackBarSatisFaturaEkle = const SnackBar(
       content: Text('Sipariş Oluştururken 1 hata meydana geldi!'));
 
-  BlueThermalPrinter printer = BlueThermalPrinter.instance;
-  List<BluetoothDevice> devices = [];
-  BluetoothDevice? selectedDevice;
+  final FlutterThermalPrinter _printer = FlutterThermalPrinter.instance;
+  List<Printer> devices = [];
+  Printer? selectedDevice;
   bool _connected = false;
   bool isSimulator = false;
 
@@ -64,7 +65,7 @@ class _CheckoutCardState extends State<CheckoutCard>
   // Check if running on simulator
   void checkSimulator() async {
     try {
-      devices = await printer.getBondedDevices();
+      startScan();
       isSimulator = false;
     } catch (e) {
       isSimulator = true;
@@ -73,8 +74,8 @@ class _CheckoutCardState extends State<CheckoutCard>
     setState(() {});
   }
 
-  // Initialize the printer
-  void initPrinter() async {
+  // Start scanning for printers
+  void startScan() async {
     if (isSimulator) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Simülatörde yazıcı kullanılamaz. Lütfen fiziksel cihaz kullanın.')),
@@ -83,40 +84,51 @@ class _CheckoutCardState extends State<CheckoutCard>
     }
 
     try {
-      devices = await printer.getBondedDevices();
-      setState(() {});
+      await _printer.getPrinters(connectionTypes: [
+        ConnectionType.BLE,
+        ConnectionType.USB,
+      ]);
+      
+      _printer.devicesStream.listen((List<Printer> printers) {
+        setState(() {
+          devices = printers;
+          devices.removeWhere((element) => element.name == null || element.name == '');
+        });
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Yazıcı başlatılırken hata oluştu. Bluetooth açık olduğundan emin olun.')),
+        SnackBar(content: Text('Yazıcı başlatılırken hata oluştu: $e')),
       );
     }
   }
 
+  // Stop scanning for printers
+  void stopScan() {
+    _printer.stopScan();
+  }
+
   // Connect to printer
-  void connectToPrinter(BluetoothDevice device) async {
+  void connectToPrinter(Printer device) async {
     try {
-      if (device != null) {
-        bool? isConnected = await printer.isConnected;
-        if (isConnected == true) {
-          setState(() {
-            selectedDevice = device;
-            _connected = true;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Yazıcı zaten bağlı: ${device.name}')),
-          );
-          return;
-        }
-        
-        await printer.connect(device);
+      if (device.isConnected ?? false) {
         setState(() {
           selectedDevice = device;
           _connected = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Yazıcıya bağlandı: ${device.name}')),
+          SnackBar(content: Text('Yazıcı zaten bağlı: ${device.name}')),
         );
+        return;
       }
+      
+      await _printer.connect(device);
+      setState(() {
+        selectedDevice = device;
+        _connected = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Yazıcıya bağlandı: ${device.name}')),
+      );
     } catch (e) {
       setState(() {
         _connected = false;
@@ -350,6 +362,8 @@ class _CheckoutCardState extends State<CheckoutCard>
 
   // Print formatted columns with proper width and alignment
   Future<void> printFormattedColumns(String code, String explanation, String piece) async {
+    if (selectedDevice == null) return;
+    
     const int leftMargin = 2;      // 1.5mm margin
     const int codeWidth = 12;      // ~20.5mm
     const int explanationWidth = 45; // ~66mm
@@ -362,14 +376,31 @@ class _CheckoutCardState extends State<CheckoutCard>
     // Wrap long explanation text
     List<String> wrappedExplanation = wrapText(explanation, explanationWidth);
     
-    // Print first line with all columns
-    String line = '${' ' * leftMargin}${code.padRight(codeWidth)}|${wrappedExplanation[0].padRight(explanationWidth)}|${piece.padLeft(pieceWidth)}';
-    await printer.printCustom(line, 1, 0);
-    
-    // Print remaining lines of explanation if any
-    for (int i = 1; i < wrappedExplanation.length; i++) {
-      String continuationLine = '${' ' * leftMargin}${''.padRight(codeWidth)}|${wrappedExplanation[i].padRight(explanationWidth)}|${''.padRight(pieceWidth)}';
-      await printer.printCustom(continuationLine, 1, 0);
+    try {
+      // Print first line with all columns
+      String line = '${' ' * leftMargin}${code.padRight(codeWidth)}|${wrappedExplanation[0].padRight(explanationWidth)}|${piece.padLeft(pieceWidth)}';
+      
+      // Send to printer
+      if (selectedDevice!.connectionType == ConnectionType.BLE) {
+        await _printer.printWidget(
+          context,
+          printer: selectedDevice!,
+          printOnBle: true,
+          widget: Text(line),
+        );
+      } else {
+        // For USB or other connection types
+        await _printer.printWidget(
+          context,
+          printer: selectedDevice!,
+          printOnBle: false,
+          widget: Text(line),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Yazdırma sırasında hata: $e')),
+      );
     }
   }
 
@@ -381,7 +412,7 @@ class _CheckoutCardState extends State<CheckoutCard>
       return;
     }
 
-    if (!_connected) {
+    if (!_connected || selectedDevice == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lütfen önce yazıcıya bağlanın')),
       );
@@ -503,61 +534,37 @@ class _CheckoutCardState extends State<CheckoutCard>
         }
       }
 
-      int totalPieceSum = 0;
-
-      // Print header once
-      await printer.printNewLine();
-      await printer.printNewLine();  // Extra line for 1.5mm spacing
-
-      const totalWidth = 66;  // Total width in characters
-      final separator = ' ' * 2 + '-' * (totalWidth - 2);  // Include left margin in separator
-
-      // Print header with CARI HESAP and date on the same line
-      var date=DateTime.now();
-      final dateStr = '${date.day}-${date.month}-${date.year}';
-      const headerText = "CURRENT ACCOUNT";
-      // Ensure date stays on same line by calculating exact position
-      final headerLine = '  $headerText${' '.repeat(totalWidth - headerText.length - dateStr.length - 2)}$dateStr';
-      await printer.printCustom(headerLine, 2, 0);  
-      await printer.printNewLine();
+      // Generate receipt
+      await CapabilityProfile.load();
       
-      await printer.printCustom('  DESCRIPTION', 2, 0);  
-      await printer.printNewLine();
+      int totalPieceSum = 0;
 
       // Print each sack group
       for (var entry in groupedBySackNo.entries) {
-        final sackNo = entry.key;
         final items = entry.value;
-
         final totalPiece = items.fold<int>(0, (sum, item) => sum + (item.miktar));
         totalPieceSum += totalPiece;
-        // Print sack header
-        await printer.printCustom("  $sackNo. SACK".padLeft(30), 2, 1);
-        await printer.printNewLine();
-
-        // Print table header with adjusted widths
-        final headerLine = '${' ' * 2}${'CODE'.padRight(12)}|${'EXPLANATION'.padRight(45)}|PIECE';
-        await printer.printCustom(headerLine, 2, 0);  
-        await printer.printCustom(separator, 1, 0);
-
-        // Print items
-        for (var item in items) {
-          await printFormattedColumns(
-            item.urunKodu ?? '',
-            item.urunAdi ?? '',
-            item.miktar.toString()
-          );
-          await printer.printCustom(separator, 1, 0);
-        }
-        await printer.printNewLine();
       }
 
-      // Print total at the end
-      final totalLine = '${'${' ' * 2}${' '.padRight(45)} TOTAL PIECE'}: ${totalPieceSum.toString().padLeft(1)}';
-      await printer.printCustom(totalLine, 2, 0);  
-      await printer.printNewLine();
-      await printer.printNewLine();
-      await printer.paperCut();
+      var date = DateTime.now();
+      
+      // Send to printer
+      if (selectedDevice!.connectionType == ConnectionType.BLE) {
+        await _printer.printWidget(
+          context,
+          printer: selectedDevice!,
+          printOnBle: true,
+          widget: receiptWidget(groupedBySackNo, totalPieceSum, date),
+        );
+      } else {
+        // For USB or other connection types
+        await _printer.printWidget(
+          context,
+          printer: selectedDevice!,
+          printOnBle: false,
+          widget: receiptWidget(groupedBySackNo, totalPieceSum, date),
+        );
+      }
 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -589,7 +596,10 @@ class _CheckoutCardState extends State<CheckoutCard>
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(devices[index].name ?? 'Bilinmeyen Cihaz'),
-                        subtitle: Text(devices[index].address ?? ''),
+                        subtitle: Text(devices[index].connectionTypeString),
+                        trailing: devices[index].isConnected ?? false 
+                            ? const Icon(Icons.check_circle, color: Colors.green)
+                            : null,
                         onTap: () {
                           connectToPrinter(devices[index]);
                           Navigator.of(context).pop();
@@ -601,8 +611,8 @@ class _CheckoutCardState extends State<CheckoutCard>
           actions: <Widget>[
             TextButton(
               child: const Text('Yenile'),
-              onPressed: () async {
-                devices = await printer.getBondedDevices();
+              onPressed: () {
+                startScan();
                 setState(() {});
               },
             ),
@@ -615,6 +625,95 @@ class _CheckoutCardState extends State<CheckoutCard>
           ],
         );
       },
+    );
+  }
+
+  // Widget for receipt printing
+  Widget receiptWidget(Map<String, List<HazirlananSiparisBilgileri>> groupedBySackNo, int totalPieceSum, DateTime date) {
+    return Container(
+      width: 550,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Center(
+              child: Text(
+                'CURRENT ACCOUNT',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              '${date.day}-${date.month}-${date.year}',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 8),
+            Center(
+              child: Text(
+                'DESCRIPTION',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Divider(thickness: 2),
+            SizedBox(height: 10),
+            
+            // Content for each sack
+            ...groupedBySackNo.entries.map((entry) {
+              final sackNo = entry.key;
+              final items = entry.value;
+              
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      "$sackNo. SACK",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(flex: 3, child: Text('CODE', style: TextStyle(fontWeight: FontWeight.bold))),
+                      Expanded(flex: 8, child: Text('EXPLANATION', style: TextStyle(fontWeight: FontWeight.bold))),
+                      Expanded(flex: 1, child: Text('PIECE', style: TextStyle(fontWeight: FontWeight.bold))),
+                    ],
+                  ),
+                  Divider(),
+                  ...items.map((item) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(flex: 3, child: Text(convertTurkishToEnglish(item.urunKodu ?? ''))),
+                          Expanded(flex: 8, child: Text(convertTurkishToEnglish(item.urunAdi ?? ''))),
+                          Expanded(flex: 1, child: Text(item.miktar.toString())),
+                        ],
+                      ),
+                      Divider(),
+                    ],
+                  )).toList(),
+                  SizedBox(height: 10),
+                ],
+              );
+            }).toList(),
+            
+            // Footer with total
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('TOTAL PIECE: ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(totalPieceSum.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
     );
   }
 
