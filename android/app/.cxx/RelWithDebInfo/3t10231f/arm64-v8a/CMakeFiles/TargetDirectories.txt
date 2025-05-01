@@ -1,0 +1,2 @@
+D:/workspace/stoktakip_app2/android/app/.cxx/RelWithDebInfo/3t10231f/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/workspace/stoktakip_app2/android/app/.cxx/RelWithDebInfo/3t10231f/arm64-v8a/CMakeFiles/rebuild_cache.dir

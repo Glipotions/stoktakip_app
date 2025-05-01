@@ -14,7 +14,7 @@ import 'package:stoktakip_app/model/satis_fatura/satis_fatura.dart';
 import 'package:stoktakip_app/model/urun/urun.dart';
 import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/cart_hazirlanan_siparis/cart_screen.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:stoktakip_app/screens/siparis_hazirla/hazirlanan_siparis_bilgileri/components/check_out_card.dart';
 import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
@@ -586,10 +586,16 @@ class _HazirlananSiparisBilgileriAddState
   }
 
   Future scanBarcode() async {
-    barkodController.text = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "İptal", false, ScanMode.DEFAULT);
-    await getUrunIdByBarcode();
-    await getUrunById();
+    final barcodeScanRes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SimpleBarcodeScannerPage(),
+        ));
+    if (barcodeScanRes is String && barcodeScanRes.isNotEmpty) {
+      barkodController.text = barcodeScanRes;
+      await getUrunIdByBarcode();
+      await getUrunById();
+    }
   }
 
   Future getUrunIdByBarcode() async {
@@ -673,6 +679,7 @@ class _HazirlananSiparisBilgileriAddState
                   onPressed: () {
                     Navigator.pop(context, 'EVET');
                     checkUrunItBeAdded = true; // Ürün eklenebilir
+                    _alinanSiparisBilgisiId = null;
                   },
                   child: const Text('EVET'),
                 ),

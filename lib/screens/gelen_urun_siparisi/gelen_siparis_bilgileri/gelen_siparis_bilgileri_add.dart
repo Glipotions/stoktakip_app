@@ -14,7 +14,7 @@ import 'package:stoktakip_app/functions/will_pop_scope_back_function.dart';
 import 'package:stoktakip_app/model/gelen_urun_siparis/gelen_siparis_bilgileri.dart';
 import 'package:stoktakip_app/model/urun/urun.dart';
 import 'package:stoktakip_app/model/urun/urun_barkod_bilgileri.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:stoktakip_app/screens/gelen_urun_siparisi/cart_gelen_siparis/cart_screen.dart';
 import 'package:stoktakip_app/services/api_services/urun_api_service.dart';
 import 'package:stoktakip_app/size_config.dart';
@@ -525,10 +525,16 @@ class _GelenSiparisBilgileriAddState extends State<GelenSiparisBilgileriAdd> {
   }
 
   Future scanBarcode() async {
-    barkodController.text = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "İptal", false, ScanMode.DEFAULT);
-    await getUrunIdByBarcode();
-    await getUrunById();
+    final barcodeScanRes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SimpleBarcodeScannerPage(),
+        ));
+    if (barcodeScanRes is String && barcodeScanRes.isNotEmpty) {
+      barkodController.text = barcodeScanRes;
+      await getUrunIdByBarcode();
+      await getUrunById();
+    }
   }
 
   Future getUrunIdByBarcode() async {
